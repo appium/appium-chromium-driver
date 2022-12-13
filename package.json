@@ -1,0 +1,97 @@
+{
+  "name": "@appium/googlechrome-driver",
+  "version": "0.0.1",
+  "description": "Appium 2.x driver for the Google Chrome browser",
+  "keywords": [
+    "appium",
+    "automation",
+    "javascript",
+    "selenium",
+    "webdriver",
+    "chrome",
+    "google"
+  ],
+  "homepage": "https://appium.io",
+  "bugs": {
+    "url": "https://github.com/appium/appium-googlechrome-driver/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/appium/appium-googlechrome-driver.git"
+  },
+  "license": "Apache-2.0",
+  "author": "https://github.com/appium",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib",
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc --watch",
+    "clean": "npx rimraf build",
+    "reinstall": "npm run clean && npx rimraf node_modules && npm install",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "npm run test:unit",
+    "test:unit": "mocha \"./test/unit/**/*.spec.js\"",
+    "test:e2e": "mocha --timeout 20s --slow 10s \"./test/e2e/**/*.spec.js\"",
+    "test:smoke": "node ./build/lib/index.js"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "lodash": "^4.17.21"
+  },
+  "peerDependencies": {
+    "appium": "^2.0.0-beta.46"
+  },
+  "engines": {
+    "node": "^14.17.0 || ^16.13.0 || >=18.0.0",
+    "npm": ">=8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "access": "public",
+  "appium": {
+    "driverName": "chrome",
+    "automationName": "Chrome",
+    "platformNames": [
+      "Windows",
+      "macOS",
+      "Linux",
+      "Android"
+    ],
+    "mainClass": "ChromeDriver"
+  },
+  "typedoc": {
+    "entryPoint": "./build/lib/index.js"
+  },
+  "types": "./build/lib/driver.d.ts",
+  "devDependencies": {
+    "@appium/eslint-config-appium": "^7.0.0",
+    "@semantic-release/changelog": "^6.0.2",
+    "@semantic-release/git": "^10.0.1",
+    "@tsconfig/node14": "^1.0.3",
+    "@types/bluebird": "^3.5.38",
+    "@types/chai": "^4.3.4",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.14",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.29.0",
+    "mocha": "^10.2.0",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^19.0.5",
+    "typescript": "^4.9.4",
+    "webdriverio": "^7.27.0"
+  }
+}
