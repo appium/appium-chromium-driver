@@ -1,7 +1,7 @@
 {
-  "name": "@appium/googlechrome-driver",
+  "name": "appium-chromium-driver",
   "version": "0.0.1",
-  "description": "Appium 2.x driver for the Google Chrome browser",
+  "description": "Appium 2.x driver for Chromium-based browsers that work with Chromedriver",
   "keywords": [
     "appium",
     "automation",
@@ -9,15 +9,16 @@
     "selenium",
     "webdriver",
     "chrome",
+    "chromium",
     "google"
   ],
   "homepage": "https://appium.io",
   "bugs": {
-    "url": "https://github.com/appium/appium-googlechrome-driver/issues"
+    "url": "https://github.com/appium/appium-chromium-driver/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/appium/appium-googlechrome-driver.git"
+    "url": "https://github.com/appium/appium-chromium-driver.git"
   },
   "license": "Apache-2.0",
   "author": "https://github.com/appium",
@@ -31,7 +32,7 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "npm run build -- --watch",
-    "clean": "npx rimraf build",
+    "clean": "npx rimraf build && npx rimraf node_modules/.cache",
     "reinstall": "npm run clean && npx rimraf node_modules && npm install",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -63,15 +64,15 @@
   },
   "access": "public",
   "appium": {
-    "driverName": "chrome",
-    "automationName": "Chrome",
+    "driverName": "chromium",
+    "automationName": "Chromium",
     "platformNames": [
       "Windows",
       "macOS",
       "Linux",
       "Android"
     ],
-    "mainClass": "ChromeDriver"
+    "mainClass": "ChromiumDriver"
   },
   "typedoc": {
     "entryPoint": "./build/lib/index.js"

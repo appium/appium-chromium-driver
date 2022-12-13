@@ -8,13 +8,13 @@ const HOST = 'localhost';
 const DEF_CAPS = {
   platformName: PLATFORM,
   browserName: 'chrome',
-  'appium:automationName': 'Chrome',
+  'appium:automationName': 'Chromium',
 };
 
 const WDIO_OPTS = {
   hostname: HOST,
   port: PORT,
-  connectionRetryCount: 1,
+  connectionRetryCount: 0,
   capabilities: DEF_CAPS,
 };
 
@@ -39,11 +39,18 @@ describe('ChromeDriver', function() {
     });
 
     after(async function() {
-      await driver.deleteSession();
+      if (driver) {
+        await driver.deleteSession();
+        driver = null;
+      }
     });
 
     it('should navigate to a url', async function() {
       await driver.navigateTo(`http://${HOST}:${PORT}/status`);
+    });
+
+    it('should get page soruce', async function() {
+      await driver.getPageSource().should.eventually.match(/value.+build.+version/);
     });
   });
 });
