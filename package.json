@@ -40,7 +40,8 @@
     "test": "npm run test:unit",
     "test:unit": "mocha \"./test/unit/**/*.spec.js\"",
     "test:e2e": "mocha --timeout 20s --slow 10s \"./test/e2e/**/*.spec.js\"",
-    "test:smoke": "node ./build/lib/index.js"
+    "test:smoke": "node ./index.js",
+    "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
   "prettier": {
     "bracketSpacing": false,
