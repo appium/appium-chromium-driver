@@ -1,4 +1,3 @@
 #!/usr/bin/env node
 
-const {ChromeDriver} = require('./build/lib/driver.js');
-module.exports = ChromeDriver;
+exports.ChromeDriver = require('./build/lib/driver.js').ChromeDriver;

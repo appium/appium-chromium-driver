@@ -30,11 +30,12 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsc --watch",
+    "dev": "npm run build -- --watch",
     "clean": "npx rimraf build",
     "reinstall": "npm run clean && npx rimraf node_modules && npm install",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
+    "prepare": "npm run build",
     "test": "npm run test:unit",
     "test:unit": "mocha \"./test/unit/**/*.spec.js\"",
     "test:e2e": "mocha --timeout 20s --slow 10s \"./test/e2e/**/*.spec.js\"",
