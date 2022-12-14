@@ -4,12 +4,19 @@ import {remote} from 'webdriverio';
 const PLATFORM = process.env.TEST_PLATFORM || 'macOS';
 const PORT = process.env.TEST_PORT || 4780;
 const HOST = '127.0.0.1';
+const CHROME_BIN = process.env.TEST_CHROME;
 
 const DEF_CAPS = {
   platformName: PLATFORM,
   browserName: 'chrome',
   'appium:automationName': 'Chromium',
 };
+
+if (CHROME_BIN) {
+  DEF_CAPS['goog:chromeOptions'] = {
+    binary: CHROME_BIN,
+  };
+}
 
 const WDIO_OPTS = {
   hostname: HOST,
