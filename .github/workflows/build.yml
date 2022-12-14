@@ -29,6 +29,7 @@ jobs:
           install-command: npm ci --foreground-scripts
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@latest
+      - name: Print Chrome version
         run: chrome --version
       - name: Start Display
         shell: bash
