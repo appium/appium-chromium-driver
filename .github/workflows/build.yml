@@ -1,18 +1,34 @@
-name: ChromiumDriver Build
+name: ChromiumDriver CI
 on: [push, pull_request]
 
 permissions:
   contents: read
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
+      - name: Install dependencies
+        uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
+        with:
+          useRollingCache: true
+          install-command: npm ci --foreground-scripts
+      - name: ESLint
+        run: npm run lint
+      - name: Validate Renovate Config
+        uses: rinchsan/renovate-config-validator@1ea1e8514f6a33fdd71c40b0a5fa3512b9e7b936 # tag=v0
+        with:
+          pattern: '{.renovaterc.json,renovate/default.json}'
   test:
+    needs: lint
     name: Tests
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [14.x, 16.x, 18.x]
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -51,20 +67,31 @@ jobs:
           else
             DISPLAY=:99 npm run test:ci
           fi
-
-  lint:
-    name: Lint
+  release:
+    if: github.ref == 'refs/heads/main'
+    needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
-      - name: Install dependencies
-        uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
-        with:
-          useRollingCache: true
-          install-command: npm ci --foreground-scripts
-      - name: ESLint
-        run: npm run lint
-      - name: Validate Renovate Config
-        uses: rinchsan/renovate-config-validator@1ea1e8514f6a33fdd71c40b0a5fa3512b9e7b936 # tag=v0
-        with:
-          pattern: '{.renovaterc.json,renovate/default.json}'
+    - uses: actions/checkout@dc323e67f16fb5f7663d20ff7941f27f5809e9b6 # v2
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@f1f314fca9dfce2769ece7d933488f076716723e # v1
+      with:
+        node-version: 16.x
+    - run: npm install
+      name: Install dependencies
+    - run: npm run build
+      name: Run build
+    - run: |
+        rm -rf package-lock.json
+        npm prune --production
+        rm -rf node_modules/appium
+      name: Remove dev dependencies and appium peer dependencies
+    - run: npm shrinkwrap
+      name: Create shrinkwrap
+    - run: npm install --only=dev
+      name: Install dev dependencies for the release
+    - run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      name: Release
