@@ -71,8 +71,7 @@
     "platformNames": [
       "Windows",
       "macOS",
-      "Linux",
-      "Android"
+      "Linux"
     ],
     "mainClass": "ChromiumDriver"
   },
