@@ -21,7 +21,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install latest npm
-        if: ${{ runner.os != 'Windows' }} # for some reason windows can't do this?
         run: npm install -g npm
       - name: Install dependencies
         uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
