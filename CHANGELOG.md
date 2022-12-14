@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/appium/appium-chromium-driver/compare/v1.0.0...v1.0.1) (2022-12-14)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @appium/eslint-config-appium to v8 ([70e0107](https://github.com/appium/appium-chromium-driver/commit/70e0107d93119c135f8bde11a3c479f4759c89dd))
+* **workflows:** update actions/checkout action to v3 ([23a907a](https://github.com/appium/appium-chromium-driver/commit/23a907a3f7586f92e01cb0e98dde4a0b627e2f23))
+* **workflows:** update actions/setup-node action to v3 ([7a93416](https://github.com/appium/appium-chromium-driver/commit/7a93416d10e8bb16fd9617e48a6a2a8a5f8ad5e1))
+
 ## 1.0.0 (2022-12-14)
 
 
