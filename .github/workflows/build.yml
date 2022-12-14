@@ -15,8 +15,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@latest
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3
         with:
@@ -29,8 +27,19 @@ jobs:
         with:
           useRollingCache: true
           install-command: npm ci --foreground-scripts
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+        run: chrome --version
+      - name: Start Display
+        shell: bash
+        run: |
+          if ["$RUNNER_OS" == "Windows"]; then
+            echo "Not starting display since on Windows"
+          else
+            DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          fi
       - name: Run smoke, unit & E2E tests
-        run: npm run test:ci
+        run: DISPLAY=:99 npm run test:ci
 
   lint:
     name: Lint
