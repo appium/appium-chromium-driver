@@ -34,6 +34,7 @@
     "dev": "npm run build -- --watch",
     "clean": "npx rimraf build && npx rimraf node_modules/.cache",
     "reinstall": "npm run clean && npx rimraf node_modules && npm install",
+    "update": "npx rimraf package-lock.json && npm run reinstall",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "npm run build",
