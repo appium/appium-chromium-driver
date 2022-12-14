@@ -8,5 +8,5 @@ module.exports = {
   forbidOnly: Boolean(process.env.CI),
   color: true,
   // increase default timeout for CI since it can be slow
-  timeout: process.env.CI ? '5s' : '2s',
+  timeout: process.env.CI ? '120s' : '45s',
 };
