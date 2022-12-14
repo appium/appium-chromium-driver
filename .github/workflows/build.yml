@@ -30,13 +30,11 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@latest
       - name: Print Chrome version
-        shell: bash
-        run: |
-          if ["$RUNNER_OS" == "macOS"]; then
-            chromium --version
-          else
-            chrome --version
-          fi
+        if: ${{ runner.os != 'macOS' }}
+        run: chrome --version
+      - name: Print Chrome version (mac)
+        if: ${{ runner.os == 'macOS' }}
+        run: chromium --version
       - name: Start Display
         shell: bash
         run: |
