@@ -50,7 +50,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "appium-chromedriver": "5.2.10",
+    "appium-chromedriver": "5.2.11",
     "bluebird": "3.7.2",
     "lodash": "4.17.21"
   },
