@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install latest npm
-        run: npm install -g npm
+        run: npm i -g npm@8 && npm i -g npm@latest # weird double install dance because of windows issue
       - name: Install dependencies
         uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
         with:
