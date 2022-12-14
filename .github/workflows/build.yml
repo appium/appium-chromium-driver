@@ -1,13 +1,12 @@
 name: ChromiumDriver CI
 on: [push, pull_request]
 
-permissions:
-  contents: read
-
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
       - name: Install dependencies
@@ -24,6 +23,8 @@ jobs:
   test:
     needs: lint
     name: Tests
+    permissions:
+      contents: read
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
