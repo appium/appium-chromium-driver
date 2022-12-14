@@ -3,7 +3,7 @@ import {remote} from 'webdriverio';
 
 const PLATFORM = process.env.TEST_PLATFORM || 'macOS';
 const PORT = process.env.TEST_PORT || 4780;
-const HOST = 'localhost';
+const HOST = '127.0.0.1';
 
 const DEF_CAPS = {
   platformName: PLATFORM,
