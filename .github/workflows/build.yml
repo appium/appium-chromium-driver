@@ -44,7 +44,13 @@ jobs:
             DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
           fi
       - name: Run smoke, unit & E2E tests
-        run: DISPLAY=:99 npm run test:ci
+        shell: bash
+        run: |
+          if ["$RUNNER_OS" == "Windows"]; then
+            npm run test:ci
+          else
+            DISPLAY=:99 npm run test:ci
+          fi
 
   lint:
     name: Lint
