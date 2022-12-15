@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/appium/appium-chromium-driver/compare/v1.0.2...v1.0.3) (2022-12-15)
+
+
+### Bug Fixes
+
+* the driver does not officially support Android browsers ([f7cd301](https://github.com/appium/appium-chromium-driver/commit/f7cd301bd347a183b2e08bc1a48eb64b377aeb9c))
+
 ## [1.0.2](https://github.com/appium/appium-chromium-driver/compare/v1.0.1...v1.0.2) (2022-12-14)
 
 
