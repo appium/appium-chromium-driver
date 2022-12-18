@@ -88,7 +88,7 @@
     "@types/chai": "4.3.4",
     "@types/chai-as-promised": "7.1.5",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.16",
+    "@types/node": "18.11.17",
     "chai": "4.3.7",
     "chai-as-promised": "7.1.1",
     "conventional-changelog-conventionalcommits": "5.0.0",
