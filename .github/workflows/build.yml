@@ -74,10 +74,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@dc323e67f16fb5f7663d20ff7941f27f5809e9b6 # v2
-    - name: Use Node.js 16.x
+    - name: Use Node.js 18.x
       uses: actions/setup-node@f1f314fca9dfce2769ece7d933488f076716723e # v1
       with:
-        node-version: 16.x
+        node-version: 18.x
     - run: npm install
       name: Install dependencies
     - run: npm run build
