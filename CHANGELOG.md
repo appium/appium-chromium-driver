@@ -1,3 +1,11 @@
+## [1.0.16](https://github.com/appium/appium-chromium-driver/compare/v1.0.15...v1.0.16) (2023-01-17)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency semantic-release to v20 ([b97add0](https://github.com/appium/appium-chromium-driver/commit/b97add09b4b0e5630065cbeb2f8cca7c13005bb3))
+* use nodejs 18 ([1cb00a7](https://github.com/appium/appium-chromium-driver/commit/1cb00a7316f4bc75406f01e69a17255b8c6d3a89))
+
 ## [1.0.15](https://github.com/appium/appium-chromium-driver/compare/v1.0.14...v1.0.15) (2023-01-15)
 
 
