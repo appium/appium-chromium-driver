@@ -25,9 +25,12 @@
   "directories": {
     "lib": "lib"
   },
+  "main": "index.js",
   "files": [
     "lib",
-    "build"
+    "build",
+    "index.js",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -b",
