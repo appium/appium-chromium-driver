@@ -1,3 +1,10 @@
+## [1.0.37](https://github.com/appium/appium-chromium-driver/compare/v1.0.36...v1.0.37) (2023-03-04)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency semantic-release to v20.1.1 ([87e50f4](https://github.com/appium/appium-chromium-driver/commit/87e50f4dc88ea2fc7c4a6053acfbec6d57796603))
+
 ## [1.0.36](https://github.com/appium/appium-chromium-driver/compare/v1.0.35...v1.0.36) (2023-03-03)
 
 
