@@ -1,3 +1,10 @@
+## [1.0.43](https://github.com/appium/appium-chromium-driver/compare/v1.0.42...v1.0.43) (2023-03-09)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency rimraf to v4.4.0 ([a5ca4a5](https://github.com/appium/appium-chromium-driver/commit/a5ca4a5c9ab8705c3b8bb3397ff0398c4744e0b7))
+
 ## [1.0.42](https://github.com/appium/appium-chromium-driver/compare/v1.0.41...v1.0.42) (2023-03-09)
 
 
