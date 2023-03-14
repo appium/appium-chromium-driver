@@ -1,3 +1,12 @@
+## [1.0.45](https://github.com/appium/appium-chromium-driver/compare/v1.0.44...v1.0.45) (2023-03-14)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v18.15.1 ([42220a5](https://github.com/appium/appium-chromium-driver/commit/42220a5fbf6994d05c718fcde79a57ef42026ce9))
+* **deps:** update dependency @types/node to v18.15.3 ([de5a293](https://github.com/appium/appium-chromium-driver/commit/de5a2931e2a70d1aba7839fb1d38d6d7d901fb63))
+* **deps:** update dependency eslint to v8.36.0 ([ccca02d](https://github.com/appium/appium-chromium-driver/commit/ccca02da6592468aef5d70b371866dd45bd2c0b6))
+
 ## [1.0.44](https://github.com/appium/appium-chromium-driver/compare/v1.0.43...v1.0.44) (2023-03-10)
 
 
