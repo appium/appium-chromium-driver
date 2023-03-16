@@ -1,3 +1,10 @@
+## [1.0.47](https://github.com/appium/appium-chromium-driver/compare/v1.0.46...v1.0.47) (2023-03-16)
+
+
+### Miscellaneous Chores
+
+* **deps:** update npm to v8.19.4 ([3173d52](https://github.com/appium/appium-chromium-driver/commit/3173d520e31b5c8322cbd1070a4d8d234ec6baf5))
+
 ## [1.0.46](https://github.com/appium/appium-chromium-driver/compare/v1.0.45...v1.0.46) (2023-03-16)
 
 
