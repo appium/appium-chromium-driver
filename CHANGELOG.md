@@ -1,3 +1,12 @@
+## [1.0.50](https://github.com/appium/appium-chromium-driver/compare/v1.0.49...v1.0.50) (2023-03-24)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v18.15.5 ([159ee61](https://github.com/appium/appium-chromium-driver/commit/159ee61944615b92993d494ab6a24fda8ee61578))
+* **deps:** update dependency @types/node to v18.15.7 ([a897a9b](https://github.com/appium/appium-chromium-driver/commit/a897a9bafbe447a0111c3b95c8b674f7e6db81e5))
+* **workflows:** update actions/checkout digest ([bb24b06](https://github.com/appium/appium-chromium-driver/commit/bb24b0617364682bc78e38d2a44ac161632acc50))
+
 ## [1.0.49](https://github.com/appium/appium-chromium-driver/compare/v1.0.48...v1.0.49) (2023-03-23)
 
 
