@@ -84,7 +84,7 @@
   "types": "./build/lib/driver.d.ts",
   "devDependencies": {
     "@appium/eslint-config-appium": "8.0.1",
-    "@semantic-release/changelog": "6.0.2",
+    "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@tsconfig/node14": "1.0.3",
     "@types/bluebird": "3.5.38",
