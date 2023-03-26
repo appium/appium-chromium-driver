@@ -1,3 +1,10 @@
+## [1.0.51](https://github.com/appium/appium-chromium-driver/compare/v1.0.50...v1.0.51) (2023-03-26)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v18.15.10 ([fb77165](https://github.com/appium/appium-chromium-driver/commit/fb77165d71b6e7f7438f215b41295e1106f420de))
+
 ## [1.0.50](https://github.com/appium/appium-chromium-driver/compare/v1.0.49...v1.0.50) (2023-03-24)
 
 
