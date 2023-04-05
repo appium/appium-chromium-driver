@@ -83,7 +83,7 @@
   },
   "types": "./build/lib/driver.d.ts",
   "devDependencies": {
-    "@appium/eslint-config-appium": "8.0.2",
+    "@appium/eslint-config-appium": "8.0.3",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@tsconfig/node14": "1.0.3",
