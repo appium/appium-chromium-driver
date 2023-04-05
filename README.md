@@ -1,5 +1,8 @@
 # appium-chromium-driver
 
+[![npm version](http://img.shields.io/npm/v/appium-chromium-driver.svg)](https://npmjs.org/package/appium-chromium-driver)
+[![Downloads](http://img.shields.io/npm/dm/appium-chromium-driver.svg)](https://npmjs.org/package/appium-chromium-driver)
+
 This is an [Appium](https://github.com/appium/appium) driver for Chromium-based browsers (like
 Chrome).
 
