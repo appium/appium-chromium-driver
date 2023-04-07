@@ -40,7 +40,7 @@ any WebDriver client that (minimally) includes the following:
 |Capability|Value|
 |---|---|
 |`platformName`|One of `macOS`, `Linux`, or `Windows` (depending on your system|
-|`browserName`|`chrome`|
+|`browserName`|`chrome`, `MicrosoftEdge`, `msedge`|
 |`appium:automationName`|`Chromium`|
 
 Use these capabilities to start a new session. (Refer to the documentation for your WebDriver
