@@ -24,13 +24,16 @@ using this project are:
 ## Installation
 
 It's assumed that you have an Appium server (version 2.x+) installed, and that you have a browser
-compatible with Chromedriver/MSEdge ready to automate on your system. The recommended installation method
+compatible with Chromedriver ready to automate on your system. The recommended installation method
 is to use the [Appium extension
 CLI](https://appium.github.io/appium/docs/en/latest/cli/extensions/) to install the driver:
 
 ```bash
 appium driver install chromium
 ```
+
+> **Note**
+> MSEdge browser support started since v1.1.0
 
 ## Usage
 
@@ -51,7 +54,7 @@ implement any additional commands. Refer to the Chromedriver documentation or th
 specification](https://w3c.github.io/webdriver/) for a list of the available automation commands.
 
 > **Note**
-> Supported _WebDriver_s are `chromedriver` for Chrome and Chromium browsers and `msedgedriver` for MSEdge.
+> Supported _WebDriver_ kinds are `chromedriver` for Chrome and Chromium browsers and `msedgedriver` for MSEdge.
 
 ## Capabilities
 
