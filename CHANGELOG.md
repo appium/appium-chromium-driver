@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/appium/appium-chromium-driver/compare/v1.0.58...v1.1.0) (2023-04-13)
+
+
+### Features
+
+* partial msedge support ([#76](https://github.com/appium/appium-chromium-driver/issues/76)) ([975de43](https://github.com/appium/appium-chromium-driver/commit/975de4362e7a782e366c3514f0d5c64dd75cef16))
+
 ## [1.0.58](https://github.com/appium/appium-chromium-driver/compare/v1.0.57...v1.0.58) (2023-04-13)
 
 
