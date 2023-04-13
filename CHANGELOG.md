@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/appium/appium-chromium-driver/compare/v1.1.0...v1.1.1) (2023-04-13)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency eslint to v8.38.0 ([4199ab8](https://github.com/appium/appium-chromium-driver/commit/4199ab86516f4eb08d3e8eba8eed38484cd87f28))
+
 ## [1.1.0](https://github.com/appium/appium-chromium-driver/compare/v1.0.58...v1.1.0) (2023-04-13)
 
 
