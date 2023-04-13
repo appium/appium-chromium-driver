@@ -32,6 +32,9 @@ CLI](https://appium.github.io/appium/docs/en/latest/cli/extensions/) to install 
 appium driver install chromium
 ```
 
+> **Note**
+> MSEdge browser support started since v1.1.0
+
 ## Usage
 
 To start an automation session targeting this driver, construct a set of options/capabilities in
@@ -40,32 +43,39 @@ any WebDriver client that (minimally) includes the following:
 |Capability|Value|
 |---|---|
 |`platformName`|One of `macOS`, `Linux`, or `Windows` (depending on your system|
-|`browserName`|`chrome`|
+|`browserName`|`browserName` to the running WebDriver process. For example, `chrome` or `chromium` is for chromedriver, `MicrosoftEdge` or `msedge` is for msedge driver.|
 |`appium:automationName`|`Chromium`|
 
 Use these capabilities to start a new session. (Refer to the documentation for your WebDriver
 client for the particular syntax used to start a session in that client).
 
-At this point, all WebDriver commands are proxied directly to Chromedriver. This driver does not
+At this point, all WebDriver commands are proxied directly to WebDriver. This driver does not
 implement any additional commands. Refer to the Chromedriver documentation or the [WebDriver
 specification](https://w3c.github.io/webdriver/) for a list of the available automation commands.
+
+> **Note**
+> Supported _WebDriver_ kinds are `chromedriver` for Chrome and Chromium browsers and `msedgedriver` for MSEdge.
 
 ## Capabilities
 
 In addition to all of the [Chromedriver
 capabilities](https://chromedriver.chromium.org/capabilities) (nested underneath
-`goog:chromeOptions`), this driver supports the following:
+`goog:chromeOptions` for Chrome and Chromium or `ms:edgeOptions` for MSEdge),
+this driver supports the following:
 
 |Capability|Description|Default Value|
 |---|---|---|
-|`appium:chromedriverPort`|The port to start Chromedriver on|`9515`|
-|`appium:executable`|The absolute path to a `chromedriver` binary executable. If set, the driver will use that path instead of its own Chromedriver||
-|`appium:executableDir`|A directory within which is found any number of `chromedriver` binaries. If set, the driver will search this directory for Chromedrivers of the appropriate version to use for your browser||
-|`appium:verbose`|Set to `true` to add the `--verbose` flag when starting Chromedriver|`false`|
-|`appium:logPath`|The path to use with the `--log-path` parameter directing Chromedriver to write its log to that path, if set||
-|`appium:disableBuildCheck`|Set to `true` to add the `--disable-build-check` flag when starting Chromedriver|`false`|
-|`appium:autodownloadEnabled`|Set to `false` to disable automatic downloading of Chromedrivers|`true`|
-|`appium:useSystemExecutable`|Set to `true` to use the version of Chromedriver bundled with this driver, rather than attempting to download a new one based on the version of the browser under test|`false`|
+|`appium:chromedriverPort`|The port to start WebDriver process on|`9515`|
+|`appium:executable`|The absolute path to a WebDriver binary executable. If set, the driver will use that path instead of its own WebDriver||
+|`appium:executableDir`|A directory within which is found any number of WebDriver binaries. If set, the driver will search this directory for WebDrivers of the appropriate version to use for your browser||
+|`appium:verbose`|Set to `true` to add the `--verbose` flag when starting WebDriver|`false`|
+|`appium:logPath`|The path to use with the `--log-path` parameter directing WebDriver to write its log to that path, if set||
+|`appium:disableBuildCheck`|Set to `true` to add the `--disable-build-check` flag when starting WebDriver|`false`|
+|`appium:autodownloadEnabled`|Set to `false` to disable automatic downloading of Chromedrivers. |`true`|
+|`appium:useSystemExecutable`|Set to `true` to use the version of WebDriver bundled with this driver, rather than attempting to download a new one based on the version of the browser under test|`false`|
+
+> **Note**
+> `msedgedriver` support is limited. `appium:autodownloadEnabled` does not work for the driver, thus `appium:executable` is necessary to automate MSEdge browser properly.
 
 ## Contributing
 
