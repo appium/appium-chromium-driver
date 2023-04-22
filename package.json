@@ -95,7 +95,7 @@
     "chai": "4.3.7",
     "chai-as-promised": "7.1.1",
     "conventional-changelog-conventionalcommits": "5.0.0",
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "mocha": "10.2.0",
     "rimraf": "4.4.1",
     "semantic-release": "20.1.3",
