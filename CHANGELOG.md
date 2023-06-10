@@ -1,3 +1,10 @@
+## [1.1.21](https://github.com/appium/appium-chromium-driver/compare/v1.1.20...v1.1.21) (2023-06-10)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/checkout digest to c85c95e ([7f5a428](https://github.com/appium/appium-chromium-driver/commit/7f5a428ecc35c057fe8f48fe8259589d04386418))
+
 ## [1.1.20](https://github.com/appium/appium-chromium-driver/compare/v1.1.19...v1.1.20) (2023-06-07)
 
 
