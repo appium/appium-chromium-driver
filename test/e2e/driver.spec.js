@@ -1,5 +1,8 @@
 import {main as startAppium} from 'appium';
+import path from 'path';
 import {remote} from 'webdriverio';
+
+
 
 const PLATFORM = process.env.TEST_PLATFORM || 'macOS';
 const PORT = process.env.TEST_PORT || 4780;
@@ -15,7 +18,10 @@ const DEF_CAPS = {
 
 // GitHub Actions
 if (process.env.CHROMEWEBDRIVER) {
-  DEF_CAPS['appium:executable'] = `${process.env.CHROMEWEBDRIVER}/chromedriver${process.platform === 'win32' ? '.exe' : ''}`;
+  DEF_CAPS['appium:executable'] = path.join(
+    process.env.CHROMEWEBDRIVER,
+    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`
+  );
 }
 
 if (CHROME_BIN) {
