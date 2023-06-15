@@ -13,6 +13,11 @@ const DEF_CAPS = {
   'appium:autodownloadEnabled': true,
 };
 
+// GitHub Actions
+if (process.env.CHROMEWEBDRIVER) {
+  DEF_CAPS['appium:executable'] = process.env.CHROMEWEBDRIVER;
+}
+
 if (CHROME_BIN) {
   DEF_CAPS['goog:chromeOptions'] = {
     binary: CHROME_BIN,
