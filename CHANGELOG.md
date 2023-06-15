@@ -1,3 +1,10 @@
+## [1.1.23](https://github.com/appium/appium-chromium-driver/compare/v1.1.22...v1.1.23) (2023-06-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.4.4 ([#97](https://github.com/appium/appium-chromium-driver/issues/97)) ([91fe2ef](https://github.com/appium/appium-chromium-driver/commit/91fe2ef6c33ed4c7aa78ab1f1d6a9b9d5f0842d1))
+
 ## [1.1.22](https://github.com/appium/appium-chromium-driver/compare/v1.1.21...v1.1.22) (2023-06-14)
 
 
