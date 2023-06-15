@@ -15,7 +15,7 @@ const DEF_CAPS = {
 
 // GitHub Actions
 if (process.env.CHROMEWEBDRIVER) {
-  DEF_CAPS['appium:executable'] = `${process.env.CHROMEWEBDRIVER}/chromedriver`;
+  DEF_CAPS['appium:executable'] = `${process.env.CHROMEWEBDRIVER}/chromedriver${process.platform === 'win32' ? '.exe' : ''}`;
 }
 
 if (CHROME_BIN) {
