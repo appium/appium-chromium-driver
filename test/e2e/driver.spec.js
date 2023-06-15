@@ -10,6 +10,7 @@ const DEF_CAPS = {
   platformName: PLATFORM,
   browserName: 'chrome',
   'appium:automationName': 'Chromium',
+  'appium:autodownloadEnabled': true,
 };
 
 if (CHROME_BIN) {
