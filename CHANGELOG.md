@@ -1,3 +1,10 @@
+## [1.1.27](https://github.com/appium/appium-chromium-driver/compare/v1.1.26...v1.1.27) (2023-06-18)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency conventional-changelog-conventionalcommits to v6.1.0 ([#107](https://github.com/appium/appium-chromium-driver/issues/107)) ([e15a9e8](https://github.com/appium/appium-chromium-driver/commit/e15a9e8367a7f0ad52ed6a8134f49e9a3cbb32ed))
+
 ## [1.1.26](https://github.com/appium/appium-chromium-driver/compare/v1.1.25...v1.1.26) (2023-06-17)
 
 
