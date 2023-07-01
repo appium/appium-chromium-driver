@@ -1,3 +1,12 @@
+## [1.1.29](https://github.com/appium/appium-chromium-driver/compare/v1.1.28...v1.1.29) (2023-07-01)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v18.16.19 ([5a87a9f](https://github.com/appium/appium-chromium-driver/commit/5a87a9f2fb0d42c7ea44a611dda3047d84c0858d))
+* **deps:** update dependency typescript to v5.1.5 ([a8f66fa](https://github.com/appium/appium-chromium-driver/commit/a8f66faf0e2ee1111133222e5f748f5dc70b1193))
+* **deps:** update dependency typescript to v5.1.6 ([10a9fad](https://github.com/appium/appium-chromium-driver/commit/10a9fad619c0810940c34b26a5f98d978a633bff))
+
 ## [1.1.28](https://github.com/appium/appium-chromium-driver/compare/v1.1.27...v1.1.28) (2023-06-23)
 
 
