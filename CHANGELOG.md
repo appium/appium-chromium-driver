@@ -1,3 +1,10 @@
+## [1.1.32](https://github.com/appium/appium-chromium-driver/compare/v1.1.31...v1.1.32) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/setup-node digest to e33196f ([b421bd4](https://github.com/appium/appium-chromium-driver/commit/b421bd40a7695df54f58189ec0c7459382f42b8f))
+
 ## [1.1.31](https://github.com/appium/appium-chromium-driver/compare/v1.1.30...v1.1.31) (2023-07-01)
 
 
