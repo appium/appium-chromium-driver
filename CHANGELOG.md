@@ -1,3 +1,10 @@
+## [1.1.35](https://github.com/appium/appium-chromium-driver/compare/v1.1.34...v1.1.35) (2023-08-03)
+
+
+### Bug Fixes
+
+* Cannot find module '@appium/types' ([#118](https://github.com/appium/appium-chromium-driver/issues/118)) ([e9783b4](https://github.com/appium/appium-chromium-driver/commit/e9783b4177fda092b1079f8d362929b2eee1be20))
+
 ## [1.1.34](https://github.com/appium/appium-chromium-driver/compare/v1.1.33...v1.1.34) (2023-08-03)
 
 
