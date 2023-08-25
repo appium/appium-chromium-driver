@@ -1,3 +1,13 @@
+## [1.1.48](https://github.com/appium/appium-chromium-driver/compare/v1.1.47...v1.1.48) (2023-08-25)
+
+
+### Miscellaneous Chores
+
+* **deps:** pin dependency semantic-release to 21.1.1 ([#139](https://github.com/appium/appium-chromium-driver/issues/139)) ([2ca9306](https://github.com/appium/appium-chromium-driver/commit/2ca9306ba3b5d110a306d8011ceaa668eeb6fed6))
+* **deps:** update dependency chai to v4.3.8 ([d7a94e6](https://github.com/appium/appium-chromium-driver/commit/d7a94e62ac340010973af1785d109909b577229f))
+* **deps:** update dependency typescript to v5.2.2 ([#142](https://github.com/appium/appium-chromium-driver/issues/142)) ([f8c969c](https://github.com/appium/appium-chromium-driver/commit/f8c969c4b41258f693d42a1a96b363cc13ad3827))
+* **workflows:** update actions/checkout digest to f43a0e5 ([#137](https://github.com/appium/appium-chromium-driver/issues/137)) ([3864061](https://github.com/appium/appium-chromium-driver/commit/3864061188aeae6676b97bb5e602f60d3e763ac8))
+
 ## [1.1.47](https://github.com/appium/appium-chromium-driver/compare/v1.1.46...v1.1.47) (2023-08-25)
 
 
