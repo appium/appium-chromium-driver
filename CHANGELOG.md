@@ -1,3 +1,10 @@
+## [1.1.47](https://github.com/appium/appium-chromium-driver/compare/v1.1.46...v1.1.47) (2023-08-25)
+
+
+### Miscellaneous Chores
+
+* bump semantics releases ([#136](https://github.com/appium/appium-chromium-driver/issues/136)) ([f611bf2](https://github.com/appium/appium-chromium-driver/commit/f611bf226b6e275b2de550249179aeb03a65f276))
+
 ## [1.1.46](https://github.com/appium/appium-chromium-driver/compare/v1.1.45...v1.1.46) (2023-08-24)
 
 
