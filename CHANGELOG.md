@@ -1,3 +1,15 @@
+## [1.1.52](https://github.com/appium/appium-chromium-driver/compare/v1.1.51...v1.1.52) (2023-08-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.8 ([b7e21c0](https://github.com/appium/appium-chromium-driver/commit/b7e21c0fe3e1d13b26f666c096a06ad8aa1cc79b))
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency rimraf to v5 ([#77](https://github.com/appium/appium-chromium-driver/issues/77)) ([73f98f3](https://github.com/appium/appium-chromium-driver/commit/73f98f3a0602e2698a2d5664b1c97c64b5f45b7c))
+
 ## [1.1.51](https://github.com/appium/appium-chromium-driver/compare/v1.1.50...v1.1.51) (2023-08-28)
 
 
