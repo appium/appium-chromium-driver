@@ -2,6 +2,15 @@ name: ChromiumDriver CI
 on: [push, pull_request]
 
 jobs:
+  prepare_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.generate-matrix.outputs.versions }}
+    steps:
+    - name: Select 3 most recent LTS versions of Node.js
+      id: generate-matrix
+      run: echo "versions=$(curl -s https://endoflife.date/api/nodejs.json | jq -c '[[.[] | select(.lts != false)][:3] | .[].cycle | tonumber]')" >> "$GITHUB_OUTPUT"
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -9,6 +18,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
       - name: Install dependencies
         uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
         with:
@@ -21,14 +34,16 @@ jobs:
         with:
           pattern: '{.renovaterc.json,renovate/default.json}'
   test:
-    needs: lint
-    name: Tests
-    permissions:
-      contents: read
+    needs: 
+    - lint
+    - prepare_matrix
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [14.x, 16.x, 18.x]
+        node-version: ${{ fromJSON(needs.prepare_matrix.outputs.versions) }}
+    name: Tests
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
@@ -37,8 +52,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Install latest npm
-        run: npm i -g npm@8 && npm i -g npm@latest # weird double install dance because of windows issue
       - name: Install dependencies
         uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
         with:
@@ -74,10 +87,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
-    - name: Use Node.js 18.x
-      uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: lts/*
     - run: npm install
       name: Install dependencies
     - run: npm run build
