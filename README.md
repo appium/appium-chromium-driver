@@ -40,11 +40,11 @@ appium driver install chromium
 To start an automation session targeting this driver, construct a set of options/capabilities in
 any WebDriver client that (minimally) includes the following:
 
-|Capability|Value|
-|---|---|
-|`platformName`|One of `macOS`, `Linux`, or `Windows` (depending on your system|
-|`browserName`|`browserName` to the running WebDriver process. For example, `chrome` or `chromium` is for chromedriver, `MicrosoftEdge` or `msedge` is for msedge driver.|
-|`appium:automationName`|`Chromium`|
+|Capability| Value                                                                                                                                                      |
+|---|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`platformName`| One of `macOS`, `mac`, `Linux`, or `Windows` (depending on your system                                                                                     |
+|`browserName`| `browserName` to the running WebDriver process. For example, `chrome` or `chromium` is for chromedriver, `MicrosoftEdge` or `msedge` is for msedge driver. |
+|`appium:automationName`| `Chromium`                                                                                                                                                 |
 
 Use these capabilities to start a new session. (Refer to the documentation for your WebDriver
 client for the particular syntax used to start a session in that client).
