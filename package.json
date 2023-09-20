@@ -73,6 +73,7 @@
     "automationName": "Chromium",
     "platformNames": [
       "Windows",
+      "mac",
       "macOS",
       "Linux"
     ],
