@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/appium/appium-chromium-driver/compare/v1.1.59...v1.2.0) (2023-09-20)
+
+
+### Features
+
+* add mac as an option for platformNames ([#158](https://github.com/appium/appium-chromium-driver/issues/158)) ([046c98a](https://github.com/appium/appium-chromium-driver/commit/046c98ab8f16a7e05af37ebccbc6d3f7e3189cdd))
+
 ## [1.1.59](https://github.com/appium/appium-chromium-driver/compare/v1.1.58...v1.1.59) (2023-09-18)
 
 
