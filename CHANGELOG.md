@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/appium/appium-chromium-driver/compare/v1.2.2...v1.2.3) (2023-09-23)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/checkout digest to 8ade135 ([3ee4a88](https://github.com/appium/appium-chromium-driver/commit/3ee4a88a6f36a8cf833b9c9fc9a33504aa46aa46))
+
 ## [1.2.2](https://github.com/appium/appium-chromium-driver/compare/v1.2.1...v1.2.2) (2023-09-23)
 
 
