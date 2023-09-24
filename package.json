@@ -30,7 +30,10 @@
     "lib",
     "build",
     "index.js",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "npm-shrinkwrap.json"
   ],
   "scripts": {
     "build": "tsc -b",
