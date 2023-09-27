@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/appium/appium-chromium-driver/compare/v1.2.4...v1.2.5) (2023-09-27)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency rimraf to v5.0.5 ([f66032f](https://github.com/appium/appium-chromium-driver/commit/f66032fbc815bcb95aeb336c6a5f9687d544de88))
+
 ## [1.2.4](https://github.com/appium/appium-chromium-driver/compare/v1.2.3...v1.2.4) (2023-09-24)
 
 
