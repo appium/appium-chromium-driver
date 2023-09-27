@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/appium/appium-chromium-driver/compare/v1.2.5...v1.2.6) (2023-09-27)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/mocha to v10.0.2 ([676cc6c](https://github.com/appium/appium-chromium-driver/commit/676cc6c20dd81e83e49bc037cff00d494b9473d8))
+
 ## [1.2.5](https://github.com/appium/appium-chromium-driver/compare/v1.2.4...v1.2.5) (2023-09-27)
 
 
