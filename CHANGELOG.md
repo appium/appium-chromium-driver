@@ -1,3 +1,10 @@
+## [1.2.14](https://github.com/appium/appium-chromium-driver/compare/v1.2.13...v1.2.14) (2023-10-10)
+
+
+### Miscellaneous Chores
+
+* **deps:** update definitelytyped ([e4e619e](https://github.com/appium/appium-chromium-driver/commit/e4e619efe043f0f7239031714851fa483ca7867f))
+
 ## [1.2.13](https://github.com/appium/appium-chromium-driver/compare/v1.2.12...v1.2.13) (2023-10-07)
 
 
