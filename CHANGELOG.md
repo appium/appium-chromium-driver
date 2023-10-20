@@ -1,3 +1,12 @@
+## [1.2.19](https://github.com/appium/appium-chromium-driver/compare/v1.2.18...v1.2.19) (2023-10-20)
+
+
+### Miscellaneous Chores
+
+* **deps:** update definitelytyped ([294ce02](https://github.com/appium/appium-chromium-driver/commit/294ce021057c8b6ef8cf114164735b6e122524b9))
+* **deps:** update dependency @appium/types to v0.14.0 ([#180](https://github.com/appium/appium-chromium-driver/issues/180)) ([0285adf](https://github.com/appium/appium-chromium-driver/commit/0285adfd5e86a52003010566d0b0fd2371e363c6))
+* **workflows:** update actions/checkout digest to b4ffde6 ([98a2b73](https://github.com/appium/appium-chromium-driver/commit/98a2b736e7a2cd4b33ac255ad3b4478f7f3f7ab1))
+
 ## [1.2.18](https://github.com/appium/appium-chromium-driver/compare/v1.2.17...v1.2.18) (2023-10-19)
 
 
