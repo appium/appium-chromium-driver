@@ -1,3 +1,10 @@
+## [1.2.22](https://github.com/appium/appium-chromium-driver/compare/v1.2.21...v1.2.22) (2023-10-24)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/setup-node digest to 1a4442c ([c47727b](https://github.com/appium/appium-chromium-driver/commit/c47727b0fff5f300a5657587f45caae4bc761162))
+
 ## [1.2.21](https://github.com/appium/appium-chromium-driver/compare/v1.2.20...v1.2.21) (2023-10-20)
 
 
