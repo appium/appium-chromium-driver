@@ -1,3 +1,10 @@
+## [1.2.25](https://github.com/appium/appium-chromium-driver/compare/v1.2.24...v1.2.25) (2023-10-25)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/setup-node action to v4 ([#189](https://github.com/appium/appium-chromium-driver/issues/189)) ([4233c0a](https://github.com/appium/appium-chromium-driver/commit/4233c0a0835f07abbfb78d26a0b107155de263d5))
+
 ## [1.2.24](https://github.com/appium/appium-chromium-driver/compare/v1.2.23...v1.2.24) (2023-10-24)
 
 
