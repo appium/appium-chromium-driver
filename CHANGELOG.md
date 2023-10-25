@@ -1,3 +1,10 @@
+## [1.2.26](https://github.com/appium/appium-chromium-driver/compare/v1.2.25...v1.2.26) (2023-10-25)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency semantic-release to v22 ([#156](https://github.com/appium/appium-chromium-driver/issues/156)) ([9445ced](https://github.com/appium/appium-chromium-driver/commit/9445cedb06b461fe394091484c7786a2b550417e))
+
 ## [1.2.25](https://github.com/appium/appium-chromium-driver/compare/v1.2.24...v1.2.25) (2023-10-25)
 
 
