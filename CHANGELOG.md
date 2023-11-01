@@ -1,3 +1,10 @@
+## [1.2.29](https://github.com/appium/appium-chromium-driver/compare/v1.2.28...v1.2.29) (2023-11-01)
+
+
+### Miscellaneous Chores
+
+* **deps:** update npm to v10.2.2 ([c9c3cd1](https://github.com/appium/appium-chromium-driver/commit/c9c3cd15fd3f8dc424dc119f1e4ffb2052694bc9))
+
 ## [1.2.28](https://github.com/appium/appium-chromium-driver/compare/v1.2.27...v1.2.28) (2023-10-31)
 
 
