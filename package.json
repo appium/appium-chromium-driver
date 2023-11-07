@@ -103,7 +103,7 @@
     "eslint": "8.53.0",
     "mocha": "10.2.0",
     "rimraf": "5.0.5",
-    "semantic-release": "22.0.6",
+    "semantic-release": "22.0.7",
     "ts-node": "10.9.1",
     "typescript": "5.2.2",
     "webdriverio": "7.33.0"
