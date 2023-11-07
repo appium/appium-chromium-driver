@@ -94,7 +94,7 @@
     "@tsconfig/node14": "14.1.0",
     "@types/bluebird": "3.5.41",
     "@types/chai": "4.3.9",
-    "@types/chai-as-promised": "7.1.7",
+    "@types/chai-as-promised": "7.1.8",
     "@types/mocha": "10.0.3",
     "@types/node": "20.8.10",
     "chai": "4.3.10",
