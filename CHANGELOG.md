@@ -1,3 +1,10 @@
+## [1.2.34](https://github.com/appium/appium-chromium-driver/compare/v1.2.33...v1.2.34) (2023-11-07)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/chai-as-promised to v7.1.8 ([2727759](https://github.com/appium/appium-chromium-driver/commit/2727759cc7840160d95853031b1d9ea652ac904d))
+
 ## [1.2.33](https://github.com/appium/appium-chromium-driver/compare/v1.2.32...v1.2.33) (2023-11-04)
 
 
