@@ -1,3 +1,10 @@
+## [1.2.39](https://github.com/appium/appium-chromium-driver/compare/v1.2.38...v1.2.39) (2023-11-08)
+
+
+### Miscellaneous Chores
+
+* use omit to prune dev and peer ([#205](https://github.com/appium/appium-chromium-driver/issues/205)) ([de29b16](https://github.com/appium/appium-chromium-driver/commit/de29b16132581d80823f44afdea3575f52c4fc64))
+
 ## [1.2.38](https://github.com/appium/appium-chromium-driver/compare/v1.2.37...v1.2.38) (2023-11-08)
 
 
