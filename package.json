@@ -1,6 +1,6 @@
 {
   "name": "appium-chromium-driver",
-  "version": "1.2.36",
+  "version": "1.2.37",
   "description": "Appium 2.x driver for Chromium-based browsers that work with Chromedriver",
   "keywords": [
     "appium",
