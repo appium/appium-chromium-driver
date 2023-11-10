@@ -61,7 +61,7 @@
     "lodash": "4.17.21"
   },
   "peerDependencies": {
-    "appium": "^2.0.0"
+    "appium": "^2.4.0"
   },
   "engines": {
     "node": "^14.17.0 || ^16.13.0 || >=18.0.0",
@@ -106,6 +106,6 @@
     "semantic-release": "22.0.12",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
-    "webdriverio": "7.34.0"
+    "webdriverio": "8.23.0"
   }
 }
