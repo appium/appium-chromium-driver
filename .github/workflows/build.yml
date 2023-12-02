@@ -91,19 +91,18 @@ jobs:
       uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
       with:
         node-version: lts/*
-    - run: npm install
+    - run: npm install --no-package-lock
       name: Install dependencies
     - run: npm run build
       name: Run build
     - run: |
-        rm -rf package-lock.json
+        rm -rf package-lock.json node_modules
         # Remove dev and peer dependencies from node_modules
-        npm prune --omit=dev --omit=peer
-        rm -rf node_modules/appium
+        npm prune --omit=dev --omit=peer --no-package-lock
       name: Remove dev dependencies and appium peer dependencies
-    - run: npm shrinkwrap
+    - run: npm shrinkwrap --omit=dev --omit=peer
       name: Create shrinkwrap
-    - run: npm install --only=dev
+    - run: npm install --only=dev --no-package-lock
       name: Install dev dependencies for the release
     - run: npx semantic-release
       env:
