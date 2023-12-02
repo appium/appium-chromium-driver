@@ -1,3 +1,10 @@
+## [1.2.52](https://github.com/appium/appium-chromium-driver/compare/v1.2.51...v1.2.52) (2023-12-02)
+
+
+### Miscellaneous Chores
+
+* update build.yml ([#220](https://github.com/appium/appium-chromium-driver/issues/220)) ([4c8a97f](https://github.com/appium/appium-chromium-driver/commit/4c8a97f05a5228a5915a2587699c8a1ed41aa282))
+
 ## [1.2.51](https://github.com/appium/appium-chromium-driver/compare/v1.2.50...v1.2.51) (2023-11-30)
 
 
