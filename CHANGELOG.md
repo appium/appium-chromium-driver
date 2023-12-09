@@ -1,3 +1,10 @@
+## [1.2.60](https://github.com/appium/appium-chromium-driver/compare/v1.2.59...v1.2.60) (2023-12-09)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency ts-node to v10.9.2 ([43b4634](https://github.com/appium/appium-chromium-driver/commit/43b46342c29ce36ea0b8853407708aab402d8e04))
+
 ## [1.2.59](https://github.com/appium/appium-chromium-driver/compare/v1.2.58...v1.2.59) (2023-12-07)
 
 
