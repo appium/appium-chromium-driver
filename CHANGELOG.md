@@ -1,3 +1,10 @@
+## [1.2.65](https://github.com/appium/appium-chromium-driver/compare/v1.2.64...v1.2.65) (2023-12-19)
+
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/setup-node digest to b39b52d ([21af1df](https://github.com/appium/appium-chromium-driver/commit/21af1df7910c9e0a635be777c609ff748e8ff7af))
+
 ## [1.2.64](https://github.com/appium/appium-chromium-driver/compare/v1.2.63...v1.2.64) (2023-12-18)
 
 
