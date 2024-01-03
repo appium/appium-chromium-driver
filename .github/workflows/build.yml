@@ -34,7 +34,7 @@ jobs:
         with:
           pattern: '{.renovaterc.json,renovate/default.json}'
   test:
-    needs: 
+    needs:
     - lint
     - prepare_matrix
     strategy:
@@ -77,9 +77,9 @@ jobs:
         shell: bash
         run: |
           if ["$RUNNER_OS" == "Windows"]; then
-            npm run test:ci
+            TEST_PLATFORM="$RUNNER_OS" npm run test:ci
           else
-            DISPLAY=:99 npm run test:ci
+            DISPLAY=:99 TEST_PLATFORM="$RUNNER_OS" npm run test:ci
           fi
   release:
     if: github.ref == 'refs/heads/main'
