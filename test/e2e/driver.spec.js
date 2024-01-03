@@ -2,7 +2,11 @@ import {main as startAppium} from 'appium';
 import path from 'path';
 import {remote} from 'webdriverio';
 
-const PLATFORM = process.env.TEST_PLATFORM || 'mac';
+const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
+
+const PLATFORM = PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' :
+  PLATFORM_ENV.toLowerCase() ||
+  'mac';
 const PORT = process.env.TEST_PORT || 4780;
 const HOST = '127.0.0.1';
 const CHROME_BIN = process.env.TEST_CHROME;
