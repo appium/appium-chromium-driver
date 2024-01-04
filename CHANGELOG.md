@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/appium/appium-chromium-driver/compare/v1.2.68...v1.3.0) (2024-01-04)
+
+
+### Features
+
+* add webdriver bidi support ([c262131](https://github.com/appium/appium-chromium-driver/commit/c262131ad7f3113aac39dd78f731d8bd39b2fdad))
+
 ## [1.2.68](https://github.com/appium/appium-chromium-driver/compare/v1.2.67...v1.2.68) (2023-12-30)
 
 
