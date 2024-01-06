@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/appium/appium-chromium-driver/compare/v1.3.0...v1.3.1) (2024-01-06)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency chai to v4.4.0 ([#241](https://github.com/appium/appium-chromium-driver/issues/241)) ([885e12d](https://github.com/appium/appium-chromium-driver/commit/885e12d11060fca125965cf94de67741d0f4471b))
+
 ## [1.3.0](https://github.com/appium/appium-chromium-driver/compare/v1.2.68...v1.3.0) (2024-01-04)
 
 
