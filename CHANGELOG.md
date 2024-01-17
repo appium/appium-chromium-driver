@@ -1,3 +1,18 @@
+## [1.3.5](https://github.com/appium/appium-chromium-driver/compare/v1.3.4...v1.3.5) (2024-01-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.29 ([#250](https://github.com/appium/appium-chromium-driver/issues/250)) ([0913298](https://github.com/appium/appium-chromium-driver/commit/09132985dfa11bc446be1e1f8189553612d9ebe3))
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v20.11.5 ([47188ad](https://github.com/appium/appium-chromium-driver/commit/47188ade2f581de7f6036576f7878a86f5f56be9))
+* **deps:** update dependency chai to v4.4.1 ([#247](https://github.com/appium/appium-chromium-driver/issues/247)) ([79f585a](https://github.com/appium/appium-chromium-driver/commit/79f585abe3f469031cc0e9044480b16f05a783d9))
+* **deps:** update dependency semantic-release to v23 ([#248](https://github.com/appium/appium-chromium-driver/issues/248)) ([20d6862](https://github.com/appium/appium-chromium-driver/commit/20d6862348b689d1f1de23d1c3aae981960c4cb3))
+* **deps:** update npm to v10.3.0 ([ffd77dd](https://github.com/appium/appium-chromium-driver/commit/ffd77dd618bec8df54c53c8b8df231be47cff8a4))
+
 ## [1.3.4](https://github.com/appium/appium-chromium-driver/compare/v1.3.3...v1.3.4) (2024-01-14)
 
 
