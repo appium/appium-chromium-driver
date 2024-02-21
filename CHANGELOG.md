@@ -1,3 +1,10 @@
+## [1.3.14](https://github.com/appium/appium-chromium-driver/compare/v1.3.13...v1.3.14) (2024-02-21)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency webdriverio to v8.32.3 ([#267](https://github.com/appium/appium-chromium-driver/issues/267)) ([8706fc8](https://github.com/appium/appium-chromium-driver/commit/8706fc81029a984b10e232e807d9481aa76bef6b))
+
 ## [1.3.13](https://github.com/appium/appium-chromium-driver/compare/v1.3.12...v1.3.13) (2024-02-21)
 
 
