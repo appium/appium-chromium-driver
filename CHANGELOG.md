@@ -1,3 +1,19 @@
+## [1.3.15](https://github.com/appium/appium-chromium-driver/compare/v1.3.14...v1.3.15) (2024-02-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.34 ([#270](https://github.com/appium/appium-chromium-driver/issues/270)) ([2008949](https://github.com/appium/appium-chromium-driver/commit/2008949c2385d6c05db8014668189545300d8799))
+* **deps:** update dependency appium-chromedriver to v5.6.35 ([#272](https://github.com/appium/appium-chromium-driver/issues/272)) ([ec268ce](https://github.com/appium/appium-chromium-driver/commit/ec268cef64506c0a1098379884bddf053043f22d))
+
+
+### Miscellaneous Chores
+
+* **deps:** update definitelytyped ([2d84572](https://github.com/appium/appium-chromium-driver/commit/2d8457232316ff898cbd30e685bbd5d41e896463))
+* **deps:** update dependency eslint to v8.57.0 ([6bb2c7a](https://github.com/appium/appium-chromium-driver/commit/6bb2c7a4356810c0328af6d7c4b00fae0b50b775))
+* **deps:** update dependency mocha to v10.3.0 ([be844a7](https://github.com/appium/appium-chromium-driver/commit/be844a7129041e62a649da25debc733a1fdd7e75))
+* **deps:** update npm to v10.5.0 ([4c16d02](https://github.com/appium/appium-chromium-driver/commit/4c16d028a5024f61a58e697ea4f1b924f6cb2360))
+
 ## [1.3.14](https://github.com/appium/appium-chromium-driver/compare/v1.3.13...v1.3.14) (2024-02-21)
 
 
