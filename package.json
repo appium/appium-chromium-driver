@@ -106,6 +106,6 @@
     "semantic-release": "23.0.5",
     "ts-node": "10.9.2",
     "typescript": "5.4.2",
-    "webdriverio": "8.34.1"
+    "webdriverio": "8.35.1"
   }
 }
