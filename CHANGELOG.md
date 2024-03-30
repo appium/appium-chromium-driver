@@ -1,3 +1,22 @@
+## [1.3.24](https://github.com/appium/appium-chromium-driver/compare/v1.3.23...v1.3.24) (2024-03-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.40 ([#289](https://github.com/appium/appium-chromium-driver/issues/289)) ([202191a](https://github.com/appium/appium-chromium-driver/commit/202191aee59d625ac1271a3db66977aac9f63387))
+* **deps:** update dependency appium-chromedriver to v5.6.41 ([#294](https://github.com/appium/appium-chromium-driver/issues/294)) ([f0badc9](https://github.com/appium/appium-chromium-driver/commit/f0badc91c090ddc9f7c1df571bb2f09775e3ffb4))
+
+
+### Miscellaneous Chores
+
+* **deps:** update definitelytyped ([eb354a1](https://github.com/appium/appium-chromium-driver/commit/eb354a10a6dc63f4d2a10c4a15818617dafe11ec))
+* **deps:** update dependency @tsconfig/node14 to v14.1.2 ([436a7a0](https://github.com/appium/appium-chromium-driver/commit/436a7a0eb72bbaa6587d6cc3633fb5b23b93bfc8))
+* **deps:** update dependency @types/node to v20.12.2 ([d213528](https://github.com/appium/appium-chromium-driver/commit/d213528278bb60e340951416a1bc0e22837fc618))
+* **deps:** update dependency mocha to v10.4.0 ([b8f95b6](https://github.com/appium/appium-chromium-driver/commit/b8f95b622152d767c8e8fb754bfea4fbab51c72d))
+* **deps:** update dependency semantic-release to v23.0.6 ([#293](https://github.com/appium/appium-chromium-driver/issues/293)) ([40aeb70](https://github.com/appium/appium-chromium-driver/commit/40aeb70a1b8ad59dcf75a82fb8ca4ec2f16bc921))
+* **deps:** update dependency typescript to v5.4.3 ([e7dccf6](https://github.com/appium/appium-chromium-driver/commit/e7dccf6f14ef332f9e8380f8bd9a70b03a3ccf1a))
+* **deps:** update dependency webdriverio to v8.35.1 ([#291](https://github.com/appium/appium-chromium-driver/issues/291)) ([2165127](https://github.com/appium/appium-chromium-driver/commit/2165127deeb17c44ecfab28a175e4fe6032feac8))
+
 ## [1.3.23](https://github.com/appium/appium-chromium-driver/compare/v1.3.22...v1.3.23) (2024-03-19)
 
 
