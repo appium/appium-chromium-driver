@@ -38,6 +38,7 @@ jobs:
     - lint
     - prepare_matrix
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: ${{ fromJSON(needs.prepare_matrix.outputs.versions) }}
