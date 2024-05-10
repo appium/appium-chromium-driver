@@ -1,4 +1,5 @@
 import {main as startAppium} from 'appium';
+import { waitForCondition } from 'asyncbox';
 import path from 'path';
 import {remote} from 'webdriverio';
 
@@ -118,7 +119,23 @@ describe('ChromeDriver', function() {
       await d.sessionSubscribe({events: ['network.responseCompleted'], contexts: [contexts[0].context]});
       networkResponses.should.be.empty;
       await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
-      networkResponses.should.not.be.empty;
+      try {
+        await waitForCondition(() => {
+            try {
+              networkResponses.should.not.be.empty;
+              return true;
+            } catch (ign) {
+              return false;
+            }
+          },
+          {
+            waitMs: 5000,
+            intervalMs: 100,
+          },
+        );
+      } catch (err) {
+        networkResponses.should.not.be.empty;
+      }
     });
 
   });
