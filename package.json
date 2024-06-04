@@ -100,11 +100,11 @@
     "asyncbox": "^3.0.0",
     "chai": "4.4.1",
     "chai-as-promised": "7.1.1",
-    "conventional-changelog-conventionalcommits": "7.0.2",
+    "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "8.57.0",
     "mocha": "10.4.0",
     "rimraf": "5.0.5",
-    "semantic-release": "23.1.1",
+    "semantic-release": "24.0.0",
     "ts-node": "10.9.2",
     "typescript": "5.4.3",
     "webdriverio": "8.35.1"
