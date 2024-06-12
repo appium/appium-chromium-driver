@@ -1,3 +1,15 @@
+## [1.3.26](https://github.com/appium/appium-chromium-driver/compare/v1.3.25...v1.3.26) (2024-06-12)
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.57 ([#313](https://github.com/appium/appium-chromium-driver/issues/313)) ([cf4875e](https://github.com/appium/appium-chromium-driver/commit/cf4875e21da6579c92526438f9a93d744939f590))
+
+### Miscellaneous Chores
+
+* **deps:** pin dependency asyncbox to 3.0.0 ([#310](https://github.com/appium/appium-chromium-driver/issues/310)) ([5cb35b3](https://github.com/appium/appium-chromium-driver/commit/5cb35b3a0286b0a42d3f9dfbe001366b8b3cfe93))
+* **deps:** update dependency @appium/types to v0.17.0 ([#235](https://github.com/appium/appium-chromium-driver/issues/235)) ([4799bdd](https://github.com/appium/appium-chromium-driver/commit/4799bddb7146785475bc7874cc72472987423a6d))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v8 ([#307](https://github.com/appium/appium-chromium-driver/issues/307)) ([024e7f3](https://github.com/appium/appium-chromium-driver/commit/024e7f3069670feaa4a5e3a2a3de3123946a7117))
+
 ## [1.3.25](https://github.com/appium/appium-chromium-driver/compare/v1.3.24...v1.3.25) (2024-05-21)
 
 
