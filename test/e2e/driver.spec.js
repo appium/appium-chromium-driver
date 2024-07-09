@@ -65,8 +65,15 @@ function setupDriver() {
 describe('ChromeDriver', function() {
   /** @type import('@appium/types').AppiumServer */
   let appium;
+  let chai;
 
   before(async function() {
+    chai = await import('chai');
+    const chaiAsPromised = await import('chai-as-promised');
+
+    chai.should();
+    chai.use(chaiAsPromised.default);
+
     appium = await startAppium({port: PORT});
   });
 
