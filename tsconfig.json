@@ -15,7 +15,7 @@
     "sourceMap": true,
     "removeComments": false,
     "strict": false,
-    "types": ["node", "mocha", "chai", "chai-as-promised"],
+    "types": ["node", "mocha"],
     "outDir": "build",
     "checkJs": true
   },
