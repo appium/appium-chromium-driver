@@ -1,3 +1,14 @@
+## [1.3.28](https://github.com/appium/appium-chromium-driver/compare/v1.3.27...v1.3.28) (2024-07-11)
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.62 ([#318](https://github.com/appium/appium-chromium-driver/issues/318)) ([28f7178](https://github.com/appium/appium-chromium-driver/commit/28f7178b5de0d52c7ca1200f97c6f6067c1b27b8))
+
+### Miscellaneous Chores
+
+* **deps:** update dependency chai and chai-as-promised to v8 ([#315](https://github.com/appium/appium-chromium-driver/issues/315)) ([c2559aa](https://github.com/appium/appium-chromium-driver/commit/c2559aa2690bf17961008406b26d4476e3a2680d))
+* **workflows:** update actions/setup-node digest to 1e60f62 ([#321](https://github.com/appium/appium-chromium-driver/issues/321)) ([8ad9a2e](https://github.com/appium/appium-chromium-driver/commit/8ad9a2e6b7a2883675627b48b862bf1fb19235a0))
+
 ## [1.3.27](https://github.com/appium/appium-chromium-driver/compare/v1.3.26...v1.3.27) (2024-07-04)
 
 ### Miscellaneous Chores
