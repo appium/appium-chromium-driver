@@ -1,3 +1,15 @@
+## [1.3.29](https://github.com/appium/appium-chromium-driver/compare/v1.3.28...v1.3.29) (2024-07-25)
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.63 ([#322](https://github.com/appium/appium-chromium-driver/issues/322)) ([a24edb2](https://github.com/appium/appium-chromium-driver/commit/a24edb2217e52421cb774cffadffb23cab59cdaf))
+* **deps:** update dependency appium-chromedriver to v5.6.65 ([#323](https://github.com/appium/appium-chromium-driver/issues/323)) ([4ffc77f](https://github.com/appium/appium-chromium-driver/commit/4ffc77f0fbb03095f0df554746685b3c3527ef1a))
+* **deps:** update dependency appium-chromedriver to v5.6.66 ([#325](https://github.com/appium/appium-chromium-driver/issues/325)) ([6d73093](https://github.com/appium/appium-chromium-driver/commit/6d73093aa1138ed5dd47b8b53ef370c8dd26c6cf))
+
+### Miscellaneous Chores
+
+* **deps:** update dependency mocha to v10.6.0 ([f4f8476](https://github.com/appium/appium-chromium-driver/commit/f4f84765ebd273ca439b1f1e2e4146a1418d2a49))
+
 ## [1.3.28](https://github.com/appium/appium-chromium-driver/compare/v1.3.27...v1.3.28) (2024-07-11)
 
 ### Bug Fixes
