@@ -1,3 +1,13 @@
+## [1.3.32](https://github.com/appium/appium-chromium-driver/compare/v1.3.31...v1.3.32) (2024-08-23)
+
+### Miscellaneous Chores
+
+* **deps:** update dependency mocha to v10.7.3 ([57b0f47](https://github.com/appium/appium-chromium-driver/commit/57b0f47bab56ff16ef0985965f3847909a87649f))
+* **deps:** update dependency rimraf to v5.0.10 ([535c1a7](https://github.com/appium/appium-chromium-driver/commit/535c1a7ab805cc45f81a10023861aec99d5fa165))
+* **deps:** update dependency typescript to v5.5.4 ([178b481](https://github.com/appium/appium-chromium-driver/commit/178b4817c298b574604f3e68c5a937815036db6a))
+* **deps:** update dependency webdriverio to v8.40.3 ([43221de](https://github.com/appium/appium-chromium-driver/commit/43221de1386e289d10a2925313b4cc0616f9892a))
+* **deps:** update npm to v10.8.2 ([72c3147](https://github.com/appium/appium-chromium-driver/commit/72c3147b682a877cd3190f9582afb04df9f3acf8))
+
 ## [1.3.31](https://github.com/appium/appium-chromium-driver/compare/v1.3.30...v1.3.31) (2024-08-22)
 
 ### Miscellaneous Chores
