@@ -104,7 +104,7 @@
     "rimraf": "5.0.10",
     "semantic-release": "24.0.0",
     "ts-node": "10.9.2",
-    "typescript": "5.4.3",
+    "typescript": "5.5.4",
     "webdriverio": "8.40.3"
   }
 }
