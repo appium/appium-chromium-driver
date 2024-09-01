@@ -15,7 +15,6 @@
     "sourceMap": true,
     "removeComments": false,
     "strict": false,
-    "esModuleInterop": true,
     "types": ["node", "mocha"],
     "outDir": "build",
     "checkJs": true
