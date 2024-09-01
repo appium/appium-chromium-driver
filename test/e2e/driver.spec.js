@@ -70,7 +70,7 @@ describe('ChromeDriver', function() {
     chai = await import('chai');
     const chaiAsPromised = await import('chai-as-promised');
 
-    const appiumPkg = await import('appium')
+    const appiumPkg = await import('appium');
 
     chai.should();
     chai.use(chaiAsPromised.default);
