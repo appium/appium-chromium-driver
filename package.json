@@ -96,7 +96,7 @@
     "@types/mocha": "10.0.7",
     "@types/node": "20.16.1",
     "asyncbox": "3.0.0",
-    "chai": "^5.1.1",
+    "chai": "5.1.1",
     "chai-as-promised": "8.0.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "8.57.0",
