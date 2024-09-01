@@ -1,3 +1,16 @@
+## [1.3.33](https://github.com/appium/appium-chromium-driver/compare/v1.3.32...v1.3.33) (2024-09-01)
+
+### Bug Fixes
+
+* **deps:** update dependency appium-chromedriver to v5.6.73 ([#334](https://github.com/appium/appium-chromium-driver/issues/334)) ([d698b18](https://github.com/appium/appium-chromium-driver/commit/d698b18615f94ccf7e3e9c0f21885fa905a95a39))
+* **deps:** update dependency appium-chromedriver to v5.6.74 ([#335](https://github.com/appium/appium-chromium-driver/issues/335)) ([6779a13](https://github.com/appium/appium-chromium-driver/commit/6779a1345bd4130158e4d66a00cb6b308138204a))
+
+### Miscellaneous Chores
+
+* **deps:** update dependency semantic-release to v24.1.0 ([#328](https://github.com/appium/appium-chromium-driver/issues/328)) ([2a39573](https://github.com/appium/appium-chromium-driver/commit/2a3957373180449037391639909336eb06ef5e61))
+* **deps:** update dependency webdriverio to v8.40.5 ([#332](https://github.com/appium/appium-chromium-driver/issues/332)) ([d33550c](https://github.com/appium/appium-chromium-driver/commit/d33550c3d317482a49ada9731d967105ce11df8b))
+* **workflows:** update actions/checkout digest to 692973e ([#316](https://github.com/appium/appium-chromium-driver/issues/316)) ([aab4d1c](https://github.com/appium/appium-chromium-driver/commit/aab4d1cb2f9007e9a18a6e37a1369756029ba4f1))
+
 ## [1.3.32](https://github.com/appium/appium-chromium-driver/compare/v1.3.31...v1.3.32) (2024-08-23)
 
 ### Miscellaneous Chores
