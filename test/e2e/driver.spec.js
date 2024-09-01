@@ -75,7 +75,7 @@ describe('ChromeDriver', function() {
     chai.should();
     chai.use(chaiAsPromised.default);
 
-    appium = await appiumPkg.main({port: PORT});
+    appium = await appiumPkg.default.main({port: PORT});
   });
 
   after(async function() {
