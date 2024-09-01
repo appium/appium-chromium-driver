@@ -1,9 +1,6 @@
-import appium from 'appium';
 import { waitForCondition } from 'asyncbox';
 import path from 'path';
 import {remote} from 'webdriverio';
-
-const {main: startAppium} = appium;
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
@@ -73,10 +70,12 @@ describe('ChromeDriver', function() {
     chai = await import('chai');
     const chaiAsPromised = await import('chai-as-promised');
 
+    const appiumPkg = await import('appium')
+
     chai.should();
     chai.use(chaiAsPromised.default);
 
-    appium = await startAppium({port: PORT});
+    appium = await appiumPkg.main({port: PORT});
   });
 
   after(async function() {
