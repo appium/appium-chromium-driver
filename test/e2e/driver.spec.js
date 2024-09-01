@@ -1,7 +1,9 @@
-import {main as startAppium} from 'appium';
+import appium from 'appium';
 import { waitForCondition } from 'asyncbox';
 import path from 'path';
 import {remote} from 'webdriverio';
+
+const {main: startAppium} = appium;
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
