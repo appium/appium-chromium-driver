@@ -1,3 +1,10 @@
+## [1.3.37](https://github.com/appium/appium-chromium-driver/compare/v1.3.36...v1.3.37) (2024-09-24)
+
+### Miscellaneous Chores
+
+* **deps:** update definitelytyped ([01329cf](https://github.com/appium/appium-chromium-driver/commit/01329cf6f455b655b6cdbbbff90e8279daf0cbef))
+* **workflows:** update actions/setup-node digest to 0a44ba7 ([#345](https://github.com/appium/appium-chromium-driver/issues/345)) ([c92b8cf](https://github.com/appium/appium-chromium-driver/commit/c92b8cffe2c206ad4b64ebf0e1a72c8472696279))
+
 ## [1.3.36](https://github.com/appium/appium-chromium-driver/compare/v1.3.35...v1.3.36) (2024-09-18)
 
 ### Bug Fixes
