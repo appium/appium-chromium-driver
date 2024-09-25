@@ -18,6 +18,7 @@ const DEF_CAPS = {
   browserName: 'chrome',
   'appium:automationName': 'Chromium',
   'appium:autodownloadEnabled': true,
+  'appium:newCommandTimeout': 300,
   webSocketUrl: true,
 };
 
