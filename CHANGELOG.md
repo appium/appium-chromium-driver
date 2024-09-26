@@ -1,3 +1,11 @@
+## [1.3.41](https://github.com/appium/appium-chromium-driver/compare/v1.3.40...v1.3.41) (2024-09-26)
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v20.16.9 ([663863e](https://github.com/appium/appium-chromium-driver/commit/663863e96c3dfb062de0ae14990627717519550c))
+* **deps:** update dependency eslint to v8.57.1 ([7cf4528](https://github.com/appium/appium-chromium-driver/commit/7cf45288e75cffff92cdd47fff8494fbde43bd48))
+* **deps:** update dependency typescript to v5.6.2 ([26bd43a](https://github.com/appium/appium-chromium-driver/commit/26bd43ac6582c1f27e18a5e6680cf7fe35605029))
+
 ## [1.3.40](https://github.com/appium/appium-chromium-driver/compare/v1.3.39...v1.3.40) (2024-09-25)
 
 ### Miscellaneous Chores
