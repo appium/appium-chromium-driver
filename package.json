@@ -61,7 +61,7 @@
     "lodash": "4.17.21"
   },
   "peerDependencies": {
-    "appium": "^2.4.0"
+    "appium": "^2.11.5"
   },
   "engines": {
     "node": "^14.17.0 || ^16.13.0 || >=18.0.0",
