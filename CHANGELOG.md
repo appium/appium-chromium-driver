@@ -1,3 +1,9 @@
+## [1.3.42](https://github.com/appium/appium-chromium-driver/compare/v1.3.41...v1.3.42) (2024-09-27)
+
+### Bug Fixes
+
+* bump minimum appium version with bidi fix ([#350](https://github.com/appium/appium-chromium-driver/issues/350)) ([724a112](https://github.com/appium/appium-chromium-driver/commit/724a11273c9dc51ab73ee411c50a001031680873))
+
 ## [1.3.41](https://github.com/appium/appium-chromium-driver/compare/v1.3.40...v1.3.41) (2024-09-26)
 
 ### Miscellaneous Chores
