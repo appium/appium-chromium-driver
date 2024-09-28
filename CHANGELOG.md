@@ -1,3 +1,9 @@
+## [1.3.43](https://github.com/appium/appium-chromium-driver/compare/v1.3.42...v1.3.43) (2024-09-28)
+
+### Miscellaneous Chores
+
+* **deps:** update dependency semantic-release to v24.1.2 ([#352](https://github.com/appium/appium-chromium-driver/issues/352)) ([ee97ffb](https://github.com/appium/appium-chromium-driver/commit/ee97ffbc4a88048fe5af82aaa4d964f37702b5a7))
+
 ## [1.3.42](https://github.com/appium/appium-chromium-driver/compare/v1.3.41...v1.3.42) (2024-09-27)
 
 ### Bug Fixes
