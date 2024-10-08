@@ -1,3 +1,9 @@
+## [1.3.48](https://github.com/appium/appium-chromium-driver/compare/v1.3.47...v1.3.48) (2024-10-08)
+
+### Miscellaneous Chores
+
+* **workflows:** update actions/checkout digest to eef6144 ([f4514e8](https://github.com/appium/appium-chromium-driver/commit/f4514e839dcd36f38cd37626da58df7ba41df8f7))
+
 ## [1.3.47](https://github.com/appium/appium-chromium-driver/compare/v1.3.46...v1.3.47) (2024-10-04)
 
 ### Miscellaneous Chores
