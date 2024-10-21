@@ -87,8 +87,8 @@ with `appium driver run chromium install-chromedriver`.
 
 Below environment arguments are available:
 - `CHROMEDRIVER_EXECUTABLE_DIR`
-  - Let the command to download chromedrivers in the given directory. Defaults to `node_modules/appium-chromedriver/chromedriver`.
-  - `CHROMEDRIVER_EXECUTABLE_DIR=/Users/tmp/chromedrivers  appium driver run chromium install-chromedriver`
+  - Let the command to download chromedrivers in the given directory. Once you set `appium:executableDir` to the same directory, a new session will refer to the same directory. Defaults to `node_modules/appium-chromedriver/chromedriver` in `appium-chromium-driver` package.
+  - `CHROMEDRIVER_EXECUTABLE_DIR=/tmp/chromedrivers  appium driver run chromium install-chromedriver`
 - `CHROMEDRIVER_VERSION`
   - Let the command download a specific version.
   - i.e. `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
