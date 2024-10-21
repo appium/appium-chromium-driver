@@ -77,6 +77,22 @@ this driver supports the following:
 > **Note**
 > `msedgedriver` support is limited. `appium:autodownloadEnabled` does not work for the driver, thus `appium:executable` is necessary to automate MSEdge browser properly.
 
+## Scripts
+
+### install-chromedriver
+
+This script is used to install the given or latest stable version of chromedriver from
+[Chorme for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
+with `appium driver run chromium install-chromedriver`.
+
+As same as [appium-chromedriver](https://github.com/appium/appium-chromedriver),
+`CHROMEDRIVER_VERSION` and `CHROMELABS_URL` environment variables are available.
+
+`CHROMEDRIVER_VERSION` lets the command download a specific chromedriver. i.e. `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
+
+`CHROMELABS_URL` lets the command get the list of available chromedrivers from instead of the default `https://googlechromelabs.github.io`.
+
+
 ## Contributing
 
 Contributions to this project are welcome! Feel free to submit a PR on GitHub.
