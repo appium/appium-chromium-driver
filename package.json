@@ -34,7 +34,7 @@
     "CHANGELOG.md",
     "LICENSE",
     "npm-shrinkwrap.json",
-    "scripts/*.mjs"
+    "scripts"
   ],
   "scripts": {
     "build": "tsc -b",
