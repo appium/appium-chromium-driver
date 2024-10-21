@@ -26,7 +26,7 @@ async function formatCdVersion (ver) {
       versions = (await axios({
         url,
         headers: {
-            'user-agent': 'appium',
+            'user-agent': 'appium-chromium-driver',
             accept: `application/json, */*`,
           },
         timeout: 15000,
