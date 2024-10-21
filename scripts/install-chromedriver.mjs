@@ -9,9 +9,7 @@ function getChromedriverUrl() {
 }
 
 function getChromedriverVersion() {
-    return process.env.npm_config_chromedriver_version ||
-        process.env.CHROMEDRIVER_VERSION ||
-        VERSION_LATEST;
+    return process.env.CHROMEDRIVER_VERSION || VERSION_LATEST;
 }
 
 function getExecutableDir() {
