@@ -5,7 +5,7 @@ import axios from 'axios';
 const VERSION_LATEST = 'LATEST';
 
 function getChromedriverUrl() {
-    return process.env.CHROMELABS_URL || 'https://googlechromelabs.github.io'
+    return process.env.CHROMELABS_URL || 'https://googlechromelabs.github.io';
 }
 
 function getChromedriverVersion() {
@@ -13,7 +13,7 @@ function getChromedriverVersion() {
 }
 
 function getExecutableDir() {
-  return process.env.CHROMEDRIVER_EXECUTABLE_DIR || import.meta.dirname
+  return process.env.CHROMEDRIVER_EXECUTABLE_DIR || import.meta.dirname;
 }
 
 async function formatCdVersion (ver) {
@@ -35,7 +35,7 @@ async function formatCdVersion (ver) {
     } catch (e) {
       throw new Error(`Cannot fetch the latest Chromedriver version. ` +
         `Make sure you can access ${url} from your machine or provide a mirror by setting ` +
-        `a custom value to CHROMELABS_URL enironment variable. Original error: ${err.message}`);
+        `a custom value to CHROMELABS_URL enironment variable. Original error: ${e.message}`);
     }
 
     /**

@@ -6,6 +6,13 @@
       "rules": {
         "func-names": "off"
       }
+    },
+    {
+      "files": "scripts/**/*",
+      "parserOptions": {"sourceType": "module"},
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off"
+      }
     }
   ]
 }
