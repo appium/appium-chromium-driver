@@ -86,9 +86,9 @@ This script is used to install the given or latest stable version of chromedrive
 with `appium driver run chromium install-chromedriver`.
 
 Below environment arguments are available:
-- `CHROMEDRIVERS_EXECUTABLE_DIR`
+- `CHROMEDRIVER_EXECUTABLE_DIR`
   - Let the command to download chromedrivers in the given directory. Defaults to `node_modules/appium-chromedriver/chromedriver`.
-  - `CHROMEDRIVERS_EXECUTABLE_DIR=/Users/tmp/chromedrivers  appium driver run chromium install-chromedriver`
+  - `CHROMEDRIVER_EXECUTABLE_DIR=/Users/tmp/chromedrivers  appium driver run chromium install-chromedriver`
 - `CHROMEDRIVER_VERSION`
   - Let the command download a specific version.
   - i.e. `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
