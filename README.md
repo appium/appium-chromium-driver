@@ -83,7 +83,7 @@ this driver supports the following:
 
 This script is used to install the given or latest stable version of chromedriver from
 [Chorme for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
-with `appium driver run chromium install-chromedriver`.
+in `node_modules/appium-chromedriver/chromedriver` directory with `appium driver run chromium install-chromedriver`.
 
 As same as [appium-chromedriver](https://github.com/appium/appium-chromedriver),
 `CHROMEDRIVER_VERSION` and `CHROMELABS_URL` environment variables are available.
