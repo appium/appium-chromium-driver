@@ -14,6 +14,10 @@ function getChromedriverVersion() {
         VERSION_LATEST;
 }
 
+function getExecutableDir() {
+  return process.env.CHROMEDRIVERS_EXECUTABLE_DIR || import.meta.dirname
+}
+
 async function formatCdVersion (ver) {
     if (_.toUpper(ver) !== VERSION_LATEST) {
       return ver;
@@ -60,7 +64,7 @@ async function formatCdVersion (ver) {
 
 async function install () {
   const client = new ChromedriverStorageClient({
-    chromedriverDir: import.meta.dirname,
+    chromedriverDir: getExecutableDir(),
   });
   await client.syncDrivers({
     versions: [await formatCdVersion(getChromedriverVersion())],

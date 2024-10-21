@@ -81,17 +81,19 @@ this driver supports the following:
 
 ### install-chromedriver
 
-This script is used to install the given or latest stable version of chromedriver from
-[Chorme for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
-in `node_modules/appium-chromedriver/chromedriver` directory with `appium driver run chromium install-chromedriver`.
+This script is used to install the given or latest stable version of chromedriver (113+) from
+[Chrome for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
+with `appium driver run chromium install-chromedriver`.
 
-As same as [appium-chromedriver](https://github.com/appium/appium-chromedriver),
-`CHROMEDRIVER_VERSION` and `CHROMELABS_URL` environment variables are available.
-
-`CHROMEDRIVER_VERSION` lets the command download a specific chromedriver. i.e. `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
-
-`CHROMELABS_URL` lets the command get the list of available chromedrivers from instead of the default `https://googlechromelabs.github.io`.
-
+Below environment arguments are available:
+- `CHROMEDRIVERS_EXECUTABLE_DIR`
+  - Let the command to download chromedrivers in the given directory. Defaults to `node_modules/appium-chromedriver/chromedriver`.
+  - `CHROMEDRIVERS_EXECUTABLE_DIR=/Users/tmp/chromedrivers  appium driver run chromium install-chromedriver`
+- `CHROMEDRIVER_VERSION`
+  - Let the command download a specific version.
+  - i.e. `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
+- `CHROMELABS_URL`
+  - Let the command get the list of available chromedrivers from instead of the default `https://googlechromelabs.github.io`.
 
 ## Contributing
 
