@@ -58,7 +58,6 @@
   },
   "dependencies": {
     "appium-chromedriver": "^6.1.0",
-    "axios": "^1.6.5",
     "bluebird": "3.7.2",
     "lodash": "4.17.21"
   },
