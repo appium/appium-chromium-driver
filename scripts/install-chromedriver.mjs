@@ -5,7 +5,7 @@ function getChromedriverVersion() {
 }
 
 function getExecutableDir() {
-  return process.env.CHROMEDRIVER_EXECUTABLE_DIR || import.meta.dirname;
+  return process.env.CHROMEDRIVER_EXECUTABLE_DIR;
 }
 
 async function install () {
