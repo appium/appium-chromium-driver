@@ -77,6 +77,30 @@ this driver supports the following:
 > **Note**
 > `msedgedriver` support is limited. `appium:autodownloadEnabled` does not work for the driver, thus `appium:executable` is necessary to automate MSEdge browser properly.
 
+## Scripts
+
+### install-chromedriver
+
+This script is used to install the given or latest stable version of chromedriver (113+) from
+[Chrome for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
+with `appium driver run chromium install-chromedriver`.
+Please read [Version selection](https://developer.chrome.com/docs/chromedriver/downloads/version-selection) document
+to find a proper chromedriver manually that is good for your current browser.
+
+Below environment arguments are available:
+- `CHROMEDRIVER_EXECUTABLE_DIR`
+  - Let the command to download chromedrivers in the given directory. Defaults to `node_modules/appium-chromedriver/chromedriver` in `appium-chromium-driver` package.
+  - i.e.
+    - macOS/Linux: `CHROMEDRIVER_EXECUTABLE_DIR=/path/to/dir appium driver run chromium install-chromedriver`
+    - Windows: `$env:CHROMEDRIVER_EXECUTABLE_DIR='C:\path\to\folder'; appium driver run chromium install-chromedriver; Remove-Item Env:\CHROMEDRIVER_EXECUTABLE_DIR`
+- `CHROMEDRIVER_VERSION`
+  - Let the command download a specific version.
+  - i.e.
+    - macOS/Linux: `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
+    - Windows: `$env:CHROMEDRIVER_VERSION='131.0.6778.3'; appium driver run chromium install-chromedriver; Remove-Item Env:\CHROMEDRIVER_VERSION`
+- `CHROMELABS_URL`
+  - Let the command get the list of available chromedrivers from the given mirror instead of the default one.
+
 ## Contributing
 
 Contributions to this project are welcome! Feel free to submit a PR on GitHub.

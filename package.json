@@ -33,7 +33,8 @@
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
-    "npm-shrinkwrap.json"
+    "npm-shrinkwrap.json",
+    "scripts"
   ],
   "scripts": {
     "build": "tsc -b",
@@ -56,7 +57,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "appium-chromedriver": "6.1.0",
+    "appium-chromedriver": "^6.1.0",
     "bluebird": "^3.7.2",
     "lodash": "^4.17.21"
   },
@@ -80,7 +81,10 @@
       "macOS",
       "Linux"
     ],
-    "mainClass": "ChromiumDriver"
+    "mainClass": "ChromiumDriver",
+    "scripts": {
+      "install-chromedriver": "./scripts/install-chromedriver.mjs"
+    }
   },
   "typedoc": {
     "entryPoint": "./build/lib/index.js"
