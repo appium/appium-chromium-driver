@@ -24,9 +24,6 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
-        with:
-          useRollingCache: true
-          install-command: npm install
       - name: ESLint
         run: npm run lint
       - name: Validate Renovate Config
@@ -54,10 +51,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install dependencies
-        uses: bahmutov/npm-install@1a235c31658a322a3b024444759650ee6345c26d # tag=v1
-        with:
-          useRollingCache: true
-          install-command: npm ci --foreground-scripts
+        uses: bahmutov/npm-install@v1
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@latest
       - name: Print Chrome version
