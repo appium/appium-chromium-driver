@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: lts/*
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: npm install
       - name: ESLint
         run: npm run lint
       - name: Validate Renovate Config
@@ -51,7 +51,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        run: npm install
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@latest
       - name: Print Chrome version
