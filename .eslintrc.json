@@ -9,7 +9,6 @@
     },
     {
       "files": ["scripts/**/*.{mjs,cjs,js.ts}"],
-      "parserOptions": {"sourceType": "module"},
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }
