@@ -8,7 +8,7 @@
       }
     },
     {
-      "files": "scripts/**/*",
+      "files": ["**/*.{mjs,cjs,js}"],
       "parserOptions": {"sourceType": "module"},
       "rules": {
         "@typescript-eslint/no-var-requires": "off"

@@ -99,7 +99,7 @@ Below environment arguments are available:
     - macOS/Linux: `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
     - Windows: `$env:CHROMEDRIVER_VERSION='131.0.6778.3'; appium driver run chromium install-chromedriver; Remove-Item Env:\CHROMEDRIVER_VERSION`
 - `CHROMELABS_URL`
-  - Let the command get the list of available chromedrivers from instead of the default `https://googlechromelabs.github.io`.
+  - Let the command get the list of available chromedrivers from the given mirror instead of the default one.
 
 ## Contributing
 
