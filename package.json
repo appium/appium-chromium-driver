@@ -57,7 +57,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "appium-chromedriver": "^6.1.0",
+    "appium-chromedriver": "6.1.0",
     "bluebird": "3.7.2",
     "lodash": "4.17.21"
   },
@@ -100,7 +100,7 @@
     "@types/mocha": "10.0.9",
     "@types/node": "20.17.0",
     "asyncbox": "3.0.0",
-    "chai": "^5.1.1",
+    "chai": "5.1.1",
     "chai-as-promised": "8.0.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "8.57.1",
