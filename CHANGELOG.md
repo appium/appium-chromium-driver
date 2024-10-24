@@ -1,3 +1,9 @@
+## [1.4.3](https://github.com/appium/appium-chromium-driver/compare/v1.4.2...v1.4.3) (2024-10-24)
+
+### Miscellaneous Chores
+
+* **deps:** update dependency @types/node to v20.17.0 ([6e71c57](https://github.com/appium/appium-chromium-driver/commit/6e71c571ddf96b0a021ebbc19dbc03635eb3bd27))
+
 ## [1.4.2](https://github.com/appium/appium-chromium-driver/compare/v1.4.1...v1.4.2) (2024-10-24)
 
 ### Miscellaneous Chores
