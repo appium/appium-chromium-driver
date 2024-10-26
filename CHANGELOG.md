@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/appium/appium-chromium-driver/compare/v1.4.3...v1.4.4) (2024-10-26)
+
+### Miscellaneous Chores
+
+* remove package-lock.json ([#371](https://github.com/appium/appium-chromium-driver/issues/371)) ([2264507](https://github.com/appium/appium-chromium-driver/commit/22645079cac9548a4018a874949672c9d7deb76d))
+* **workflows:** update actions/setup-node digest to 39370e3 ([ff114ff](https://github.com/appium/appium-chromium-driver/commit/ff114ff46811efe4a312baf0ccc0d9a75aa442fd))
+
 ## [1.4.3](https://github.com/appium/appium-chromium-driver/compare/v1.4.2...v1.4.3) (2024-10-24)
 
 ### Miscellaneous Chores
