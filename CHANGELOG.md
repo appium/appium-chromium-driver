@@ -1,3 +1,9 @@
+## [1.4.5](https://github.com/appium/appium-chromium-driver/compare/v1.4.4...v1.4.5) (2024-12-03)
+
+### Miscellaneous Chores
+
+* **deps:** update dependency mocha to v11 ([#377](https://github.com/appium/appium-chromium-driver/issues/377)) ([f64fa03](https://github.com/appium/appium-chromium-driver/commit/f64fa03c1f624dda7c2391f14d0b935bd5e509c3))
+
 ## [1.4.4](https://github.com/appium/appium-chromium-driver/compare/v1.4.3...v1.4.4) (2024-10-26)
 
 ### Miscellaneous Chores
