@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-top-level-hooks */
 import { waitForCondition } from 'asyncbox';
 import path from 'path';
 import {remote} from 'webdriverio';
@@ -133,7 +134,7 @@ describe('ChromeDriver', function() {
             try {
               networkResponses.should.not.be.empty;
               return true;
-            } catch (ign) {
+            } catch {
               return false;
             }
           },
@@ -142,7 +143,7 @@ describe('ChromeDriver', function() {
             intervalMs: 100,
           },
         );
-      } catch (err) {
+      } catch {
         networkResponses.should.not.be.empty;
       }
     });
