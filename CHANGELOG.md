@@ -1,3 +1,17 @@
+## [1.5.0](https://github.com/appium/appium-chromium-driver/compare/v1.4.5...v1.5.0) (2025-01-24)
+
+### Features
+
+* Replace renovate with dependabot ([#380](https://github.com/appium/appium-chromium-driver/issues/380)) ([d9b36a4](https://github.com/appium/appium-chromium-driver/commit/d9b36a4ca806d88df2ba99b033ba6f080b673811))
+
+### Miscellaneous Chores
+
+* Bump appium-chromedriver ([#386](https://github.com/appium/appium-chromium-driver/issues/386)) ([36da185](https://github.com/appium/appium-chromium-driver/commit/36da185a1e85fc0356b9226025c2a7f1a72becb7))
+* Bump eslint ([#384](https://github.com/appium/appium-chromium-driver/issues/384)) ([62eab1a](https://github.com/appium/appium-chromium-driver/commit/62eab1a7e3f9a2f6ea248f993209a1dfa8c66b74))
+* **deps-dev:** bump @types/node from 20.17.12 to 22.10.5 ([#382](https://github.com/appium/appium-chromium-driver/issues/382)) ([8d3a63f](https://github.com/appium/appium-chromium-driver/commit/8d3a63f37d65a7b76d7acdc399343a15b955593b))
+* **deps:** pin dependencies ([#375](https://github.com/appium/appium-chromium-driver/issues/375)) ([c1248b4](https://github.com/appium/appium-chromium-driver/commit/c1248b4fd1adf02e1c3f7f2140a68fa1fe057e62))
+* **deps:** pin dependencies ([#379](https://github.com/appium/appium-chromium-driver/issues/379)) ([0455dab](https://github.com/appium/appium-chromium-driver/commit/0455dab7338921cdd3615cbffafcd906b5013e96))
+
 ## [1.4.5](https://github.com/appium/appium-chromium-driver/compare/v1.4.4...v1.4.5) (2024-12-03)
 
 ### Miscellaneous Chores
