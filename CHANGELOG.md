@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/appium/appium-chromium-driver/compare/v1.5.0...v1.5.1) (2025-02-22)
+
+### Bug Fixes
+
+* Pass reqBasePath to chromeOptions ([#387](https://github.com/appium/appium-chromium-driver/issues/387)) ([bea2bf8](https://github.com/appium/appium-chromium-driver/commit/bea2bf8e6f4d78e71bac32308b70837c944b62cd))
+
 ## [1.5.0](https://github.com/appium/appium-chromium-driver/compare/v1.4.5...v1.5.0) (2025-01-24)
 
 ### Features
