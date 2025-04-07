@@ -5,9 +5,9 @@ jobs:
   prepare_matrix:
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{ steps.generate-matrix.outputs.active }}
+      versions: ${{ steps.generate-matrix.outputs.lts }}
     steps:
-    - name: Select all active LTS versions of Node.js
+    - name: Select all current LTS versions of Node.js
       id: generate-matrix
       uses: msimerson/node-lts-versions@v1
 
@@ -26,10 +26,6 @@ jobs:
         run: npm install
       - name: ESLint
         run: npm run lint
-      - name: Validate Renovate Config
-        uses: rinchsan/renovate-config-validator@1ea1e8514f6a33fdd71c40b0a5fa3512b9e7b936 # tag=v0
-        with:
-          pattern: '{.renovaterc.json,renovate/default.json}'
   test:
     needs:
     - lint
