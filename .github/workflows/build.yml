@@ -1,6 +1,9 @@
 name: ChromiumDriver CI
 on: [push, pull_request]
 
+permissions:
+  contents: write
+
 jobs:
   prepare_matrix:
     runs-on: ubuntu-latest
