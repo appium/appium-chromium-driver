@@ -3,6 +3,8 @@ on: [push, pull_request]
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
   prepare_matrix:
