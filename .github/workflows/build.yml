@@ -68,7 +68,7 @@ jobs:
       - name: Configure Chrome
         shell: bash
         run: |
-          ${{ steps.setup-chrome.outputs.chrome-path }} --version
+          "${{ steps.setup-chrome.outputs.chrome-path }}" --version
           echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
       - name: Start Display
         if: ${{ runner.os != 'Windows' }}
