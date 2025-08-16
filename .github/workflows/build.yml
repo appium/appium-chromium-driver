@@ -56,7 +56,8 @@ jobs:
       - name: Configure Appium Server
         shell: bash
         run: |
-          npm install -g appium@rc
+          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
+          npm install -g "appium@$appium_ver"
           cwd=$(pwd)
           pushd "$cwd"
           cd ~
