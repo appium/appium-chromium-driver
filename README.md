@@ -6,6 +6,9 @@
 This is an [Appium](https://github.com/appium/appium) driver for Chromium-based browsers (like
 Chrome).
 
+> [!IMPORTANT]
+> Since major version *2.0.0* this driver is only compatible to Appium 3
+
 ### Why does this project exist?
 
 It is already possible to automate Chromium browsers with
