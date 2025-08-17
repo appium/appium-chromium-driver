@@ -1,3 +1,20 @@
+## [2.0.0](https://github.com/appium/appium-chromium-driver/compare/v1.5.1...v2.0.0) (2025-08-17)
+
+### ⚠ BREAKING CHANGES
+
+* Required Node.js version has been bumped to ^20.19.0 || ^22.12.0 || >=24.0.0
+* Required npm version has been bumped to >=10
+* Required Appium server version has been bumped to >=3.0.0-rc.2
+
+### Features
+
+* Update server compatibility ([#397](https://github.com/appium/appium-chromium-driver/issues/397)) ([98c5017](https://github.com/appium/appium-chromium-driver/commit/98c5017deeec3847f609b97f003155d5ff956996))
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @types/node from 22.15.34 to 24.0.8 ([#395](https://github.com/appium/appium-chromium-driver/issues/395)) ([b242b23](https://github.com/appium/appium-chromium-driver/commit/b242b23643f1595cbf294b03fb541a9c85ef01ef))
+* **deps-dev:** bump conventional-changelog-conventionalcommits ([#389](https://github.com/appium/appium-chromium-driver/issues/389)) ([0da8ca2](https://github.com/appium/appium-chromium-driver/commit/0da8ca2536a87ae94e1b4de823c07605b49941a9))
+
 ## [1.5.1](https://github.com/appium/appium-chromium-driver/compare/v1.5.0...v1.5.1) (2025-02-22)
 
 ### Bug Fixes
