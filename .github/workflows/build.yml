@@ -31,6 +31,7 @@ jobs:
         run: npm install
       - name: ESLint
         run: npm run lint
+
   test:
     needs:
     - lint
@@ -52,30 +53,34 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm install
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@latest
-      - name: Print Chrome version
-        if: ${{ runner.os != 'macOS' }}
-        run: chrome --version
-      - name: Print Chrome version (mac)
-        if: ${{ runner.os == 'macOS' }}
-        run: chromium --version
-      - name: Start Display
+      - name: Configure Appium Server
         shell: bash
         run: |
-          if ["$RUNNER_OS" == "Windows"]; then
-            echo "Not starting display since on Windows"
-          else
-            DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          fi
+          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
+          npm install -g "appium@$appium_ver"
+          cwd=$(pwd)
+          pushd "$cwd"
+          cd ~
+          appium driver install --source=local "$cwd"
+          popd
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+        id: setup-chrome
+      - name: Configure Chrome
+        shell: bash
+        run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+      - name: Start Display
+        if: ${{ runner.os != 'Windows' }}
+        run: DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
       - name: Run smoke, unit & E2E tests
         shell: bash
         run: |
-          if ["$RUNNER_OS" == "Windows"]; then
-            TEST_PLATFORM="$RUNNER_OS" npm run test:ci
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            TEST_PLATFORM="${{ runner.os }}" npm run test:ci
           else
-            DISPLAY=:99 TEST_PLATFORM="$RUNNER_OS" npm run test:ci
+            DISPLAY=:99 TEST_PLATFORM="${{ runner.os }}" npm run test:ci
           fi
+
   release:
     if: github.ref == 'refs/heads/main'
     needs: test
