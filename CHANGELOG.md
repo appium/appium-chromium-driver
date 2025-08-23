@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/appium/appium-chromium-driver/compare/v2.0.0...v2.0.1) (2025-08-23)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump chai from 5.3.2 to 6.0.0 ([#398](https://github.com/appium/appium-chromium-driver/issues/398)) ([be4f406](https://github.com/appium/appium-chromium-driver/commit/be4f40611cb75331f7d9f483084040357cbd45fc))
+
 ## [2.0.0](https://github.com/appium/appium-chromium-driver/compare/v1.5.1...v2.0.0) (2025-08-17)
 
 ### ⚠ BREAKING CHANGES
