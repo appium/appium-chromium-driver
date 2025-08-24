@@ -1,3 +1,9 @@
+## [2.0.2](https://github.com/appium/appium-chromium-driver/compare/v2.0.1...v2.0.2) (2025-08-24)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump rimraf from 5.0.10 to 6.0.1 ([#383](https://github.com/appium/appium-chromium-driver/issues/383)) ([8231986](https://github.com/appium/appium-chromium-driver/commit/8231986094e5fecdb8ca449f03c55af426c83742))
+
 ## [2.0.1](https://github.com/appium/appium-chromium-driver/compare/v2.0.0...v2.0.1) (2025-08-23)
 
 ### Miscellaneous Chores
