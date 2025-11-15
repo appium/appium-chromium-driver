@@ -1,3 +1,9 @@
+## [2.0.3](https://github.com/appium/appium-chromium-driver/compare/v2.0.2...v2.0.3) (2025-11-15)
+
+### Miscellaneous Chores
+
+* publish via trusted publisher and modify a bit to pass build ([#404](https://github.com/appium/appium-chromium-driver/issues/404)) ([1855c76](https://github.com/appium/appium-chromium-driver/commit/1855c76706bdc5e7e2072ed42ecbde274566568f))
+
 ## [2.0.2](https://github.com/appium/appium-chromium-driver/compare/v2.0.1...v2.0.2) (2025-08-24)
 
 ### Miscellaneous Chores
