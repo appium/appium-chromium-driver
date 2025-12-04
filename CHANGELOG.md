@@ -1,3 +1,9 @@
+## [2.0.4](https://github.com/appium/appium-chromium-driver/compare/v2.0.3...v2.0.4) (2025-12-04)
+
+### Miscellaneous Chores
+
+* remvoe NPM_TOKEN to release it via npm ([96733ea](https://github.com/appium/appium-chromium-driver/commit/96733ea006f0d3c8e51b2f8d570a03e0410d8da5))
+
 ## [2.0.3](https://github.com/appium/appium-chromium-driver/compare/v2.0.2...v2.0.3) (2025-11-15)
 
 ### Miscellaneous Chores
