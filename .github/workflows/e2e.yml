@@ -1,0 +1,49 @@
+name: E2E Tests
+on: [pull_request]
+
+jobs:
+  e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: E2E Tests
+    permissions:
+      contents: read
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm install
+      - name: Configure Appium Server
+        shell: bash
+        run: |
+          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
+          npm install -g "appium@$appium_ver"
+          cwd=$(pwd)
+          pushd "$cwd"
+          cd ~
+          appium driver install --source=local "$cwd"
+          popd
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+        id: setup-chrome
+      - name: Configure Chrome
+        shell: bash
+        run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+      - name: Start Display
+        if: ${{ runner.os != 'Windows' }}
+        run: DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+      - name: Run E2E tests
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
+          else
+            DISPLAY=:99 TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
+          fi
+
