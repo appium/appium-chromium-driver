@@ -12,7 +12,7 @@ jobs:
       contents: read
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Use Node.js LTS
         uses: actions/setup-node@v4
         with:
