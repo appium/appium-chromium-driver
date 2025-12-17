@@ -1,20 +1,26 @@
 /* eslint-disable mocha/no-top-level-hooks */
-import { waitForCondition } from 'asyncbox';
+import {waitForCondition} from 'asyncbox';
 import path from 'path';
-import {remote} from 'webdriverio';
+import {expect, use} from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+
+type AppiumServer = any;
+type Browser = any;
+
+use(chaiAsPromised);
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
 const PLATFORM = PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' :
   PLATFORM_ENV.toLowerCase() ||
   'mac';
-const PORT = process.env.TEST_PORT || 4780;
+const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 const CHROME_BIN = process.env.TEST_CHROME;
 
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
-const DEF_CAPS = {
+const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
   browserName: 'chrome',
   'appium:automationName': 'Chromium',
@@ -39,16 +45,17 @@ if (CHROME_BIN) {
 
 const WDIO_OPTS = {
   hostname: HOST,
-  port: PORT,
+  port: PORT as number,
   connectionRetryCount: 0,
   capabilities: DEF_CAPS,
 };
 
 function setupDriver() {
-  /** @type {{driver: import('webdriverio').Browser}} */
-  let ctx = {driver: null};
+  /** @type {{driver: Browser | null}} */
+  const ctx: {driver: Browser | null} = {driver: null};
 
   before(async function() {
+    const {remote} = await import('webdriverio');
     ctx.driver = await remote(WDIO_OPTS);
   });
 
@@ -64,35 +71,29 @@ function setupDriver() {
 
 
 describe('ChromeDriver', function() {
-  /** @type import('@appium/types').AppiumServer */
-  let appium;
-  let chai;
+  let appium: AppiumServer | null = null;
 
   before(async function() {
-    chai = await import('chai');
-    const chaiAsPromised = await import('chai-as-promised');
-
     const appiumPkg = await import('appium');
-
-    chai.should();
-    chai.use(chaiAsPromised.default);
-
-    appium = await appiumPkg.default.main({port: PORT});
+    appium = await appiumPkg.default.main({port: Number(PORT)});
   });
 
   after(async function() {
-    await appium.close();
+    if (appium) {
+      await appium.close();
+    }
   });
 
   describe('basic session handling', function() {
     const ctx = setupDriver();
 
     it('should navigate to a url', async function() {
-      await ctx.driver.navigateTo(`${SERVER_URL}/status`);
+      await ctx.driver!.navigateTo(`${SERVER_URL}/status`);
     });
 
     it('should get page soruce', async function() {
-      await ctx.driver.getPageSource().should.eventually.match(/value.+build.+version/);
+      const pageSource = await ctx.driver!.getPageSource();
+      expect(pageSource).to.match(/value.+build.+version/);
     });
   });
 
@@ -100,39 +101,44 @@ describe('ChromeDriver', function() {
     const ctx = setupDriver();
 
     it('should navigate to a url', async function() {
-      const d = ctx.driver;
+      const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
         context: contexts[0].context,
         url: `${SERVER_URL}/test/guinea-pig`,
         wait: 'complete',
       });
-      await d.getUrl().should.eventually.include('guinea-pig');
+      const url = await d.getUrl();
+      expect(url).to.include('guinea-pig');
     });
 
     it('should execute javascript', async function() {
-      const d = ctx.driver;
+      const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const res = await d.scriptEvaluate({
         expression: 'document.title',
         target: {context: contexts[0].context},
         awaitPromise: false,
       });
-      res.result.value.should.eql('I am a page title');
+      if ('result' in res && res.result && 'value' in res.result) {
+        expect(res.result.value).to.eql('I am a page title');
+      } else {
+        throw new Error('Unexpected scriptEvaluate result format');
+      }
     });
 
     it('should receive bidi events', async function() {
-      const d = ctx.driver;
+      const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
-      const networkResponses = [];
+      const networkResponses: any[] = [];
       d.on('network.responseCompleted', (response) => networkResponses.push(response));
       await d.sessionSubscribe({events: ['network.responseCompleted'], contexts: [contexts[0].context]});
-      networkResponses.should.be.empty;
+      expect(networkResponses).to.be.empty;
       await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
       try {
         await waitForCondition(() => {
             try {
-              networkResponses.should.not.be.empty;
+              expect(networkResponses).to.not.be.empty;
               return true;
             } catch {
               return false;
@@ -144,9 +150,10 @@ describe('ChromeDriver', function() {
           },
         );
       } catch {
-        networkResponses.should.not.be.empty;
+        expect(networkResponses).to.not.be.empty;
       }
     });
 
   });
 });
+
