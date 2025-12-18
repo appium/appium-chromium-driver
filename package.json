@@ -57,9 +57,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "appium-chromedriver": "^8.0.0",
-    "bluebird": "^3.7.2",
-    "lodash": "^4.17.21"
+    "appium-chromedriver": "^8.0.0"
   },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"
