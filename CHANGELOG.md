@@ -1,3 +1,9 @@
+## [2.1.0](https://github.com/appium/appium-chromium-driver/compare/v2.0.5...v2.1.0) (2025-12-18)
+
+### Features
+
+* Migrate driver sources to typescript ([#411](https://github.com/appium/appium-chromium-driver/issues/411)) ([2f84ea5](https://github.com/appium/appium-chromium-driver/commit/2f84ea5f2f356f8c44bb61d774232f7d1bf02897))
+
 ## [2.0.5](https://github.com/appium/appium-chromium-driver/compare/v2.0.4...v2.0.5) (2025-12-13)
 
 ### Miscellaneous Chores
