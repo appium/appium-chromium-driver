@@ -46,8 +46,8 @@
     "lint:fix": "npm run lint -- --fix",
     "prepare": "npm run build",
     "test": "npm run test:unit",
-    "test:unit": "mocha \"./test/unit/**/*.spec.js\"",
-    "test:e2e": "mocha \"./test/e2e/**/*.spec.js\"",
+    "test:unit": "mocha \"./test/unit/**/*.spec.ts\"",
+    "test:e2e": "mocha \"./test/e2e/**/*.spec.ts\"",
     "test:smoke": "node ./index.js",
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
