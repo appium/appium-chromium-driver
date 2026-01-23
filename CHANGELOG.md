@@ -1,3 +1,9 @@
+## [2.1.1](https://github.com/appium/appium-chromium-driver/compare/v2.1.0...v2.1.1) (2026-01-23)
+
+### Miscellaneous Chores
+
+* Exclude tests from published dist ([10e9d72](https://github.com/appium/appium-chromium-driver/commit/10e9d72e44d1fe1c35b516daaf393ef3ed3b7ff3))
+
 ## [2.1.0](https://github.com/appium/appium-chromium-driver/compare/v2.0.5...v2.1.0) (2025-12-18)
 
 ### Features
