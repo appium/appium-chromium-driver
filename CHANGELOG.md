@@ -1,3 +1,9 @@
+## [2.1.2](https://github.com/appium/appium-chromium-driver/compare/v2.1.1...v2.1.2) (2026-01-23)
+
+### Miscellaneous Chores
+
+* Migrate index to typescript ([4884187](https://github.com/appium/appium-chromium-driver/commit/4884187305ed68eb6fd81e1f02a8c17f04a4dd8b))
+
 ## [2.1.1](https://github.com/appium/appium-chromium-driver/compare/v2.1.0...v2.1.1) (2026-01-23)
 
 ### Miscellaneous Chores
