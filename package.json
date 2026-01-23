@@ -1,7 +1,7 @@
 {
   "name": "appium-chromium-driver",
   "version": "2.1.1",
-  "description": "Appium 2.x driver for Chromium-based browsers that work with Chromedriver",
+  "description": "Appium driver for Chromium-based browsers that work with Chromedriver",
   "keywords": [
     "appium",
     "automation",
@@ -25,11 +25,10 @@
   "directories": {
     "lib": "lib"
   },
-  "main": "index.js",
+  "main": "build/lib/index.js",
   "files": [
     "lib",
     "build",
-    "index.js",
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
@@ -49,7 +48,7 @@
     "test": "npm run test:unit",
     "test:unit": "mocha \"./test/unit/**/*.spec.ts\"",
     "test:e2e": "mocha \"./test/e2e/**/*.spec.ts\"",
-    "test:smoke": "node ./index.js",
+    "test:smoke": "node ./build/lib/index.js",
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
   "prettier": {
@@ -88,7 +87,7 @@
   "typedoc": {
     "entryPoint": "./build/lib/index.js"
   },
-  "types": "./build/lib/driver.d.ts",
+  "types": "./build/lib/index.d.ts",
   "devDependencies": {
     "@appium/eslint-config-appium-ts": "^2.0.0-rc.1",
     "@appium/tsconfig": "^1.0.0-rc.1",
