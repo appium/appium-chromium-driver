@@ -1,3 +1,9 @@
+## [2.1.3](https://github.com/appium/appium-chromium-driver/compare/v2.1.2...v2.1.3) (2026-01-27)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @appium/eslint-config-appium-ts ([#415](https://github.com/appium/appium-chromium-driver/issues/415)) ([f588fd0](https://github.com/appium/appium-chromium-driver/commit/f588fd03d59976677cde6dd5dd8b0f81e4be8750))
+
 ## [2.1.2](https://github.com/appium/appium-chromium-driver/compare/v2.1.1...v2.1.2) (2026-01-23)
 
 ### Miscellaneous Chores
