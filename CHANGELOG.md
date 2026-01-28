@@ -1,3 +1,9 @@
+## [2.1.4](https://github.com/appium/appium-chromium-driver/compare/v2.1.3...v2.1.4) (2026-01-28)
+
+### Bug Fixes
+
+* lint ([0bb4cc5](https://github.com/appium/appium-chromium-driver/commit/0bb4cc58dea1a935b6b469c0a8df4055c415fa78))
+
 ## [2.1.3](https://github.com/appium/appium-chromium-driver/compare/v2.1.2...v2.1.3) (2026-01-27)
 
 ### Miscellaneous Chores
