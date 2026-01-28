@@ -1,6 +1,6 @@
 /* eslint-disable mocha/no-top-level-hooks */
 import {waitForCondition} from 'asyncbox';
-import path from 'path';
+import path from 'node:path';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
