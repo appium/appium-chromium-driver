@@ -1,3 +1,9 @@
+## [2.1.5](https://github.com/appium/appium-chromium-driver/compare/v2.1.4...v2.1.5) (2026-01-31)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump asyncbox from 3.0.0 to 6.1.0 ([#416](https://github.com/appium/appium-chromium-driver/issues/416)) ([1f66d2e](https://github.com/appium/appium-chromium-driver/commit/1f66d2ecd67c692301a970654f88dd7ab094282c))
+
 ## [2.1.4](https://github.com/appium/appium-chromium-driver/compare/v2.1.3...v2.1.4) (2026-01-28)
 
 ### Bug Fixes
