@@ -4,10 +4,9 @@ import {ChromiumDriver} from '../../lib/driver';
 
 use(chaiAsPromised);
 
-describe('ChromeDriver', function() {
-  it('should be exported', function() {
+describe('ChromeDriver', function () {
+  it('should be exported', function () {
     const c = new ChromiumDriver({} as any);
     expect(c).to.exist;
   });
 });
-
