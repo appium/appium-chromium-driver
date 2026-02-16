@@ -1,3 +1,9 @@
+## [2.1.6](https://github.com/appium/appium-chromium-driver/compare/v2.1.5...v2.1.6) (2026-02-16)
+
+### Bug Fixes
+
+* format ([#417](https://github.com/appium/appium-chromium-driver/issues/417)) ([e99d899](https://github.com/appium/appium-chromium-driver/commit/e99d899c98bb45c79af63fc99fd2abfee01311b4))
+
 ## [2.1.5](https://github.com/appium/appium-chromium-driver/compare/v2.1.4...v2.1.5) (2026-01-31)
 
 ### Miscellaneous Chores
