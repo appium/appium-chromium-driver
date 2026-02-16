@@ -26,7 +26,7 @@ export class ChromiumDriver
   proxyCommand?: <TReq = any, TRes = unknown>(
     url: string,
     method: HTTPMethod,
-    body?: TReq
+    body?: TReq,
   ) => Promise<TRes>;
   doesSupportBidi = true;
   private _bidiProxyUrl: string | null = null;
@@ -58,13 +58,13 @@ export class ChromiumDriver
     jsonwpDesiredCapabilities: W3CChromiumDriverCaps,
     jsonwpRequiredCaps?: W3CChromiumDriverCaps,
     w3cCapabilities?: W3CChromiumDriverCaps,
-    driverData?: DriverData[]
+    driverData?: DriverData[],
   ): Promise<DefaultCreateSessionResult<CDConstraints>> {
     const [sessionId] = await super.createSession(
       jsonwpDesiredCapabilities,
       jsonwpRequiredCaps,
       w3cCapabilities,
-      driverData
+      driverData,
     );
     const returnedCaps = await this.startChromedriverSession();
     if (returnedCaps.webSocketUrl) {
@@ -123,4 +123,3 @@ export class ChromiumDriver
 }
 
 export default ChromiumDriver;
-

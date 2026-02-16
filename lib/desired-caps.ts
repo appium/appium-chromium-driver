@@ -31,4 +31,3 @@ export const desiredCapConstraints = {
 } as const satisfies Constraints;
 
 export type CDConstraints = typeof desiredCapConstraints;
-

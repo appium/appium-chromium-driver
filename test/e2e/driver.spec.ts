@@ -11,9 +11,8 @@ use(chaiAsPromised);
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
-const PLATFORM = PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' :
-  PLATFORM_ENV.toLowerCase() ||
-  'mac';
+const PLATFORM =
+  PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 const CHROME_BIN = process.env.TEST_CHROME;
@@ -33,7 +32,7 @@ const DEF_CAPS: Record<string, any> = {
 if (process.env.CHROMEWEBDRIVER) {
   DEF_CAPS['appium:executable'] = path.join(
     process.env.CHROMEWEBDRIVER,
-    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`
+    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`,
   );
 }
 
@@ -54,12 +53,12 @@ function setupDriver() {
   /** @type {{driver: Browser | null}} */
   const ctx: {driver: Browser | null} = {driver: null};
 
-  before(async function() {
+  before(async function () {
     const {remote} = await import('webdriverio');
     ctx.driver = await remote(WDIO_OPTS);
   });
 
-  after(async function() {
+  after(async function () {
     if (ctx.driver) {
       await ctx.driver.deleteSession();
       ctx.driver = null;
@@ -69,38 +68,37 @@ function setupDriver() {
   return ctx;
 }
 
-
-describe('ChromeDriver', function() {
+describe('ChromeDriver', function () {
   let appium: AppiumServer | null = null;
 
-  before(async function() {
+  before(async function () {
     const appiumPkg = await import('appium');
     appium = await appiumPkg.default.main({port: Number(PORT)});
   });
 
-  after(async function() {
+  after(async function () {
     if (appium) {
       await appium.close();
     }
   });
 
-  describe('basic session handling', function() {
+  describe('basic session handling', function () {
     const ctx = setupDriver();
 
-    it('should navigate to a url', async function() {
+    it('should navigate to a url', async function () {
       await ctx.driver!.navigateTo(`${SERVER_URL}/status`);
     });
 
-    it('should get page soruce', async function() {
+    it('should get page soruce', async function () {
       const pageSource = await ctx.driver!.getPageSource();
       expect(pageSource).to.match(/value.+build.+version/);
     });
   });
 
-  describe('bidi commands', function() {
+  describe('bidi commands', function () {
     const ctx = setupDriver();
 
-    it('should navigate to a url', async function() {
+    it('should navigate to a url', async function () {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
@@ -112,7 +110,7 @@ describe('ChromeDriver', function() {
       expect(url).to.include('guinea-pig');
     });
 
-    it('should execute javascript', async function() {
+    it('should execute javascript', async function () {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const res = await d.scriptEvaluate({
@@ -127,16 +125,20 @@ describe('ChromeDriver', function() {
       }
     });
 
-    it('should receive bidi events', async function() {
+    it('should receive bidi events', async function () {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const networkResponses: any[] = [];
       d.on('network.responseCompleted', (response) => networkResponses.push(response));
-      await d.sessionSubscribe({events: ['network.responseCompleted'], contexts: [contexts[0].context]});
+      await d.sessionSubscribe({
+        events: ['network.responseCompleted'],
+        contexts: [contexts[0].context],
+      });
       expect(networkResponses).to.be.empty;
       await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
       try {
-        await waitForCondition(() => {
+        await waitForCondition(
+          () => {
             try {
               expect(networkResponses).to.not.be.empty;
               return true;
@@ -153,7 +155,5 @@ describe('ChromeDriver', function() {
         expect(networkResponses).to.not.be.empty;
       }
     });
-
   });
 });
-
