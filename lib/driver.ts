@@ -96,7 +96,7 @@ export class ChromiumDriver
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersion = await this.getBrowserVersion();
+    const browserVersionInfo = await this.getBrowserVersion();
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
@@ -105,7 +105,7 @@ export class ChromiumDriver
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
-      details: browserVersion,
+      details: browserVersionInfo,
       isAutodownloadEnabled,
     };
     if (this.basePath) {
