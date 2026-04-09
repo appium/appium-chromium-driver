@@ -9,8 +9,8 @@ import type {
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import {BrowserInfo, getBrowserVersion} from './browser';
-import type {W3CChromiumDriverCaps, ChromiumDriverCaps} from './types';
+import {getBrowserVersion} from './browser';
+import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));

@@ -12,3 +12,11 @@ export type W3CChromiumDriverCaps = W3CDriverCaps<CDConstraints>;
  * @public
  */
 export type ChromiumDriverCaps = DriverCaps<CDConstraints>;
+
+/**
+ * Browser information returned by `getBrowserVersion`
+ * @public
+ */
+export type BrowserInfo = {
+  info: {Browser: string} & Record<string, string>;
+};

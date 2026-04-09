@@ -1,9 +1,6 @@
 import {exec} from 'teen_process';
 
 type ExecFn = (binary: string, args: string[]) => Promise<{stdout: string}>;
-export type BrowserInfo = {
-  info: {Browser: string} & Record<string, string>;
-};
 
 const DEFAULT_WIN_CANDIDATES = () => {
   const programFiles = process.env.PROGRAMFILES;
