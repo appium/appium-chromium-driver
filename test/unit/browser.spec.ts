@@ -50,14 +50,14 @@ describe('getBrowserVersion', function () {
     it('throws when the binary fails', async function () {
       const exec = makeExec({});
       await expect(getBrowserVersion('/nonexistent/chrome', exec)).to.be.rejectedWith(
-        'Could not determine Chrome version',
+        'Could not determine browser version',
       );
     });
 
     it('throws when stdout has no recognisable version string', async function () {
       const exec = makeExec({'/usr/bin/chrome': 'something unexpected'});
       await expect(getBrowserVersion('/usr/bin/chrome', exec)).to.be.rejectedWith(
-        'Could not determine Chrome version',
+        'Could not determine browser version',
       );
     });
   });
@@ -105,7 +105,7 @@ describe('getBrowserVersion', function () {
         throw new Error('not found');
       };
       await expect(getBrowserVersion(undefined, exec)).to.be.rejectedWith(
-        'Could not determine Chrome version',
+        'Could not determine browser version',
       );
     });
   });

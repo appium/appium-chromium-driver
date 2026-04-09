@@ -79,5 +79,5 @@ export async function getBrowserVersion(
       // binary not found or failed; try next candidate
     }
   }
-  throw new Error(`Could not determine Chrome version from candidates: ${candidates.join(', ')}`);
+  throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
 }
