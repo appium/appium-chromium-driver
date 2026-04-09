@@ -9,7 +9,9 @@ import type {
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
+import {getBrowserVersion} from './browser';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps} from './types';
+import path from 'node:path';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
@@ -73,16 +75,28 @@ export class ChromiumDriver
     return [sessionId, returnedCaps];
   }
 
+  async getBrowserVersion(): Promise<string> {
+    const chromeBinary: string | undefined = (this.opts['goog:chromeOptions'] as any)?.binary;
+    return getBrowserVersion(chromeBinary);
+  }
+
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const pkgJson = require.resolve('appium-chromedriver/package.json');
+    const packageDir = path.dirname(pkgJson);
+    const browserVersion = await this.getBrowserVersion();
+
+    this.log.info(`Detected browser version: ${browserVersion}`);
+
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
       executable: this.opts.executable,
-      executableDir: this.opts.executableDir,
+      executableDir: this.opts.executableDir || path.join(packageDir, 'chromedriver'),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
+      details: {info: {Browser: browserVersion}},
       isAutodownloadEnabled,
     };
     if (this.basePath) {
