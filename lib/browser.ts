@@ -19,28 +19,45 @@ export async function getBrowserVersion(
       `${process.env.PROGRAMFILES}\\Google\\Chrome\\Application\\chrome.exe`,
       `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome\\Application\\chrome.exe`,
       `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
+      `${process.env.PROGRAMFILES}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+      `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+      `${process.env.LOCALAPPDATA}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+      `${process.env.PROGRAMFILES}\\Google\\Chrome Dev\\Application\\chrome.exe`,
+      `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome Dev\\Application\\chrome.exe`,
+      `${process.env.LOCALAPPDATA}\\Google\\Chrome Dev\\Application\\chrome.exe`,
       `${process.env.PROGRAMFILES}\\Chromium\\Application\\chrome.exe`,
       'msedge',
       `${process.env.PROGRAMFILES}\\Microsoft\\Edge\\Application\\msedge.exe`,
       `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge\\Application\\msedge.exe`,
       `${process.env.LOCALAPPDATA}\\Microsoft\\Edge\\Application\\msedge.exe`,
+      `${process.env.PROGRAMFILES}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+      `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+      `${process.env.LOCALAPPDATA}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+      `${process.env.PROGRAMFILES}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+      `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+      `${process.env.LOCALAPPDATA}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
     ];
   } else if (process.platform === 'darwin') {
     defaultCandidates = [
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
+      '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
       '/Applications/Chromium.app/Contents/MacOS/Chromium',
       '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-      'google-chrome',
-      'chromium',
-      'microsoft-edge',
+      '/Applications/Microsoft Edge Beta.app/Contents/MacOS/Microsoft Edge Beta',
+      '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev',
     ];
   } else {
     // Linux and other Unixes
     defaultCandidates = [
       'google-chrome',
+      'google-chrome-beta',
+      'google-chrome-unstable',
       'chromium',
       'chromium-browser',
       'microsoft-edge',
+      'microsoft-edge-beta',
+      'microsoft-edge-dev',
       'msedge',
     ];
   }

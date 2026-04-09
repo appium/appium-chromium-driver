@@ -78,6 +78,28 @@ describe('getBrowserVersion', function () {
       expect(version).to.equal('135.0.7049.0');
     });
 
+    it('supports beta/dev channel candidates as fallback', async function () {
+      const channelCandidate =
+        process.platform === 'win32'
+          ? '\\Google\\Chrome Beta\\Application\\chrome.exe'
+          : process.platform === 'darwin'
+            ? '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta'
+            : 'google-chrome-beta';
+
+      const exec: ExecFn = async (binary) => {
+        if (
+          (process.platform === 'win32' && binary.includes(channelCandidate)) ||
+          (process.platform !== 'win32' && binary === channelCandidate)
+        ) {
+          return {stdout: 'Google Chrome 136.0.7103.10'};
+        }
+        throw new Error('not found');
+      };
+
+      const version = await getBrowserVersion(undefined, exec);
+      expect(version).to.equal('136.0.7103.10');
+    });
+
     it('throws when no candidate succeeds', async function () {
       const exec: ExecFn = async () => {
         throw new Error('not found');
