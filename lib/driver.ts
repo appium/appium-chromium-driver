@@ -9,7 +9,7 @@ import type {
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import {getBrowserVersion} from './browser';
+import {BrowserInfo, getBrowserVersion} from './browser';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps} from './types';
 import path from 'node:path';
 
@@ -75,11 +75,17 @@ export class ChromiumDriver
     return [sessionId, returnedCaps];
   }
 
-  private async getBrowserVersion(): Promise<string> {
-    const chromeBinary: string | undefined =
+  private async getBrowserVersion(): Promise<BrowserInfo | undefined> {
+    const browserBinary: string | undefined =
       (this.opts['goog:chromeOptions'] as any)?.binary ??
       (this.opts['ms:edgeOptions'] as any)?.binary;
-    return getBrowserVersion(chromeBinary);
+    try {
+      const bv = await getBrowserVersion(browserBinary);
+      this.log.info(`Detected browser version: ${bv}`);
+      return {info: {Browser: bv}};
+    } catch (err) {
+      this.log.warn(`Failed to get browser version from binary: ${(err as Error).message}`);
+    }
   }
 
   private getDefaultChromeDriverDir(): string {
@@ -90,10 +96,7 @@ export class ChromiumDriver
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-
     const browserVersion = await this.getBrowserVersion();
-    this.log.info(`Detected browser version: ${browserVersion}`);
-
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
@@ -102,7 +105,7 @@ export class ChromiumDriver
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
-      details: {info: {Browser: browserVersion}},
+      details: browserVersion,
       isAutodownloadEnabled,
     };
     if (this.basePath) {
