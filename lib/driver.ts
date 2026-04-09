@@ -75,24 +75,30 @@ export class ChromiumDriver
     return [sessionId, returnedCaps];
   }
 
-  async getBrowserVersion(): Promise<string> {
-    const chromeBinary: string | undefined = (this.opts['goog:chromeOptions'] as any)?.binary;
+  private async getBrowserVersion(): Promise<string> {
+    const chromeBinary: string | undefined =
+      (this.opts['goog:chromeOptions'] as any)?.binary ??
+      (this.opts['ms:edgeOptions'] as any)?.binary;
     return getBrowserVersion(chromeBinary);
+  }
+
+  private getDefaultChromeDriverDir(): string {
+    const pkgJson = require.resolve('appium-chromedriver/package.json');
+    const packageDir = path.dirname(pkgJson);
+    return path.join(packageDir, 'chromedriver');
   }
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const pkgJson = require.resolve('appium-chromedriver/package.json');
-    const packageDir = path.dirname(pkgJson);
-    const browserVersion = await this.getBrowserVersion();
 
+    const browserVersion = await this.getBrowserVersion();
     this.log.info(`Detected browser version: ${browserVersion}`);
 
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
       executable: this.opts.executable,
-      executableDir: this.opts.executableDir || path.join(packageDir, 'chromedriver'),
+      executableDir: this.opts.executableDir || this.getDefaultChromeDriverDir(),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
