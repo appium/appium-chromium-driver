@@ -14,28 +14,56 @@ export async function getBrowserVersion(
 ): Promise<string> {
   let defaultCandidates: string[];
   if (process.platform === 'win32') {
+    const programFiles = process.env.PROGRAMFILES;
+    const programFilesX86 = process.env['PROGRAMFILES(X86)'];
+    const localAppData = process.env.LOCALAPPDATA;
+
     defaultCandidates = [
       'chrome',
-      `${process.env.PROGRAMFILES}\\Google\\Chrome\\Application\\chrome.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome\\Application\\chrome.exe`,
-      `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`,
-      `${process.env.PROGRAMFILES}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-      `${process.env.LOCALAPPDATA}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-      `${process.env.PROGRAMFILES}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-      `${process.env.LOCALAPPDATA}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-      `${process.env.PROGRAMFILES}\\Chromium\\Application\\chrome.exe`,
+      ...(programFiles
+        ? [
+            `${programFiles}\\Google\\Chrome\\Application\\chrome.exe`,
+            `${programFiles}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+            `${programFiles}\\Google\\Chrome Dev\\Application\\chrome.exe`,
+            `${programFiles}\\Chromium\\Application\\chrome.exe`,
+          ]
+        : []),
+      ...(programFilesX86
+        ? [
+            `${programFilesX86}\\Google\\Chrome\\Application\\chrome.exe`,
+            `${programFilesX86}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+            `${programFilesX86}\\Google\\Chrome Dev\\Application\\chrome.exe`,
+          ]
+        : []),
+      ...(localAppData
+        ? [
+            `${localAppData}\\Google\\Chrome\\Application\\chrome.exe`,
+            `${localAppData}\\Google\\Chrome Beta\\Application\\chrome.exe`,
+            `${localAppData}\\Google\\Chrome Dev\\Application\\chrome.exe`,
+          ]
+        : []),
       'msedge',
-      `${process.env.PROGRAMFILES}\\Microsoft\\Edge\\Application\\msedge.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge\\Application\\msedge.exe`,
-      `${process.env.LOCALAPPDATA}\\Microsoft\\Edge\\Application\\msedge.exe`,
-      `${process.env.PROGRAMFILES}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-      `${process.env.LOCALAPPDATA}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-      `${process.env.PROGRAMFILES}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
-      `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
-      `${process.env.LOCALAPPDATA}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+      ...(programFiles
+        ? [
+            `${programFiles}\\Microsoft\\Edge\\Application\\msedge.exe`,
+            `${programFiles}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+            `${programFiles}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+          ]
+        : []),
+      ...(programFilesX86
+        ? [
+            `${programFilesX86}\\Microsoft\\Edge\\Application\\msedge.exe`,
+            `${programFilesX86}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+            `${programFilesX86}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+          ]
+        : []),
+      ...(localAppData
+        ? [
+            `${localAppData}\\Microsoft\\Edge\\Application\\msedge.exe`,
+            `${localAppData}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
+            `${localAppData}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
+          ]
+        : []),
     ];
   } else if (process.platform === 'darwin') {
     defaultCandidates = [
