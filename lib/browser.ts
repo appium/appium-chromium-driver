@@ -67,7 +67,14 @@ async function getBrowserVersionWin(binaryPath: string, execFn: ExecFn): Promise
     const {stdout} = await execFn('powershell', [
       '-NoProfile',
       '-Command',
-      `(Get-Item '${safePath}').VersionInfo.ProductVersion`,
+      [
+        `$target = '${safePath}'`,
+        `if (-not [System.IO.Path]::IsPathRooted($target)) {`,
+        `  $resolved = Get-Command $target -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Source`,
+        `  if ($resolved) { $target = $resolved }`,
+        `}`,
+        `if (Test-Path $target) { (Get-Item $target).VersionInfo.ProductVersion }`,
+      ].join('; '),
     ]);
     const version = stdout.trim();
     if (/^\d+\.\d+/.test(version)) {
