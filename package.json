@@ -75,11 +75,11 @@
   "access": "public",
   "appium": {
     "driverName": "chromium",
-    "automationName": "Chromium",
+    "automationName": "chromium",
     "platformNames": [
-      "Windows",
+      "windows",
       "mac",
-      "Linux"
+      "linux"
     ],
     "mainClass": "ChromiumDriver",
     "scripts": {

@@ -32,31 +32,41 @@ function makeExec(outputs: Record<string, string>): ExecFn {
 describe('getBrowserVersion', function () {
   describe('with a supplied chromeBinary', function () {
     it('parses Chrome/X.Y.Z.W format', async function () {
-      const exec = makeExec({'/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome/135.0.7049.84'});
+      const exec = makeExec({
+        '/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome/135.0.7049.84',
+      });
       const version = await getBrowserVersion('/usr/bin/chrome', undefined, exec);
       expect(version).to.equal('135.0.7049.84');
     });
 
     it('parses "Google Chrome X.Y.Z.W" format (no slash)', async function () {
-      const exec = makeExec({'/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome 135.0.7049.84'});
+      const exec = makeExec({
+        '/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome 135.0.7049.84',
+      });
       const version = await getBrowserVersion('/usr/bin/chrome', undefined, exec);
       expect(version).to.equal('135.0.7049.84');
     });
 
     it('parses Chromium/X.Y.Z.W format', async function () {
-      const exec = makeExec({'/usr/bin/chromium': IS_WIN ? '135.0.7049.84' : 'Chromium/135.0.7049.84'});
+      const exec = makeExec({
+        '/usr/bin/chromium': IS_WIN ? '135.0.7049.84' : 'Chromium/135.0.7049.84',
+      });
       const version = await getBrowserVersion('/usr/bin/chromium', undefined, exec);
       expect(version).to.equal('135.0.7049.84');
     });
 
     it('parses Edge/X.Y.Z.W format', async function () {
-      const exec = makeExec({'/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85'});
+      const exec = makeExec({
+        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85',
+      });
       const version = await getBrowserVersion('/usr/bin/msedge', undefined, exec);
       expect(version).to.equal('135.0.3179.85');
     });
 
     it('parses "Microsoft Edge X.Y.Z.W" format (no slash)', async function () {
-      const exec = makeExec({'/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge 135.0.3179.85'});
+      const exec = makeExec({
+        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge 135.0.3179.85',
+      });
       const version = await getBrowserVersion('/usr/bin/msedge', undefined, exec);
       expect(version).to.equal('135.0.3179.85');
     });
