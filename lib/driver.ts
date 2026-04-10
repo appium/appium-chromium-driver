@@ -80,7 +80,7 @@ export class ChromiumDriver
       (this.opts['goog:chromeOptions'] as any)?.binary ??
       (this.opts['ms:edgeOptions'] as any)?.binary;
     try {
-      const bv = await getBrowserVersion(browserBinary);
+      const bv = await getBrowserVersion(browserBinary, this.opts.browserName);
       this.log.info(`Detected browser version: ${bv}`);
       return {info: {Browser: bv}};
     } catch (err) {
