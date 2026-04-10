@@ -105,9 +105,8 @@ function getCandidates(isEdge: boolean): string[] {
     return isEdge ? DEFAULT_WIN_EDGE_CANDIDATES() : DEFAULT_WIN_CHROME_CANDIDATES();
   } else if (process.platform === 'darwin') {
     return isEdge ? DEFAULT_MAC_EDGE_CANDIDATES : DEFAULT_MAC_CHROME_CANDIDATES;
-  } else {
-    return isEdge ? DEFAULT_LINUX_EDGE_CANDIDATES : DEFAULT_LINUX_CHROME_CANDIDATES;
   }
+  return isEdge ? DEFAULT_LINUX_EDGE_CANDIDATES : DEFAULT_LINUX_CHROME_CANDIDATES;
 }
 
 /**
