@@ -2,63 +2,35 @@ import {exec} from 'teen_process';
 
 type ExecFn = (binary: string, args: string[]) => Promise<{stdout: string}>;
 
-const DEFAULT_WIN_CHROME_CANDIDATES = () => {
-  const programFiles = process.env.PROGRAMFILES;
-  const programFilesX86 = process.env['PROGRAMFILES(X86)'];
-  const localAppData = process.env.LOCALAPPDATA;
-  return [
-    ...(programFiles
-      ? [
-          `${programFiles}\\Google\\Chrome\\Application\\chrome.exe`,
-          `${programFiles}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-          `${programFiles}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-          `${programFiles}\\Chromium\\Application\\chrome.exe`,
-        ]
-      : []),
-    ...(programFilesX86
-      ? [
-          `${programFilesX86}\\Google\\Chrome\\Application\\chrome.exe`,
-          `${programFilesX86}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-          `${programFilesX86}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-        ]
-      : []),
-    ...(localAppData
-      ? [
-          `${localAppData}\\Google\\Chrome\\Application\\chrome.exe`,
-          `${localAppData}\\Google\\Chrome Beta\\Application\\chrome.exe`,
-          `${localAppData}\\Google\\Chrome Dev\\Application\\chrome.exe`,
-        ]
-      : []),
+function winCandidates(subdirs: string[], exe: string): string[] {
+  const bases = [
+    process.env.PROGRAMFILES,
+    process.env['PROGRAMFILES(X86)'],
+    process.env.LOCALAPPDATA,
   ];
-};
-const DEFAULT_WIN_EDGE_CANDIDATES = () => {
-  const programFiles = process.env.PROGRAMFILES;
-  const programFilesX86 = process.env['PROGRAMFILES(X86)'];
-  const localAppData = process.env.LOCALAPPDATA;
-  return [
-    ...(programFiles
-      ? [
-          `${programFiles}\\Microsoft\\Edge\\Application\\msedge.exe`,
-          `${programFiles}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-          `${programFiles}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
-        ]
-      : []),
-    ...(programFilesX86
-      ? [
-          `${programFilesX86}\\Microsoft\\Edge\\Application\\msedge.exe`,
-          `${programFilesX86}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-          `${programFilesX86}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
-        ]
-      : []),
-    ...(localAppData
-      ? [
-          `${localAppData}\\Microsoft\\Edge\\Application\\msedge.exe`,
-          `${localAppData}\\Microsoft\\Edge Beta\\Application\\msedge.exe`,
-          `${localAppData}\\Microsoft\\Edge Dev\\Application\\msedge.exe`,
-        ]
-      : []),
-  ];
-};
+  return bases.flatMap((base) => (base ? subdirs.map((sub) => `${base}\\${sub}\\${exe}`) : []));
+}
+
+const DEFAULT_WIN_CHROME_CANDIDATES = () =>
+  winCandidates(
+    [
+      'Google\\Chrome\\Application',
+      'Google\\Chrome Beta\\Application',
+      'Google\\Chrome Dev\\Application',
+      'Chromium\\Application',
+    ],
+    'chrome.exe',
+  );
+
+const DEFAULT_WIN_EDGE_CANDIDATES = () =>
+  winCandidates(
+    [
+      'Microsoft\\Edge\\Application',
+      'Microsoft\\Edge Beta\\Application',
+      'Microsoft\\Edge Dev\\Application',
+    ],
+    'msedge.exe',
+  );
 const DEFAULT_MAC_CHROME_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
