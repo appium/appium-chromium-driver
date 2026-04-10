@@ -75,7 +75,7 @@ export class ChromiumDriver
     return [sessionId, returnedCaps];
   }
 
-  private async getBrowserVersion(): Promise<BrowserInfo | undefined> {
+  private async getBrowserInfo(): Promise<BrowserInfo | undefined> {
     const browserBinary: string | undefined =
       (this.opts['goog:chromeOptions'] as any)?.binary ??
       (this.opts['ms:edgeOptions'] as any)?.binary;
@@ -96,7 +96,7 @@ export class ChromiumDriver
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersionInfo = await this.getBrowserVersion();
+    const browserVersionInfo = await this.getBrowserInfo();
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
