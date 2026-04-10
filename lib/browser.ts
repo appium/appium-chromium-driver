@@ -150,7 +150,7 @@ export async function getBrowserVersion(
   browserName?: string,
   execFn: ExecFn = exec,
 ): Promise<string> {
-  const isEdge = /edge/i.test(browserName ?? '');
+  const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
   const candidates = chromeBinary ? [chromeBinary] : getCandidates(isEdge);
 
   for (const binary of candidates) {

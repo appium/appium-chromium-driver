@@ -165,5 +165,25 @@ describe('getBrowserVersion', function () {
       await getBrowserVersion(undefined, 'msedge', exec).catch(() => {});
       expect(visited.every((b) => /edge/i.test(b))).to.be.true;
     });
+
+    it('only checks Edge candidates when browserName is "MicrosoftEdge"', async function () {
+      const visited: string[] = [];
+      const exec: ExecFn = async (binary, args) => {
+        visited.push(resolveEffectiveBinary(binary, args));
+        throw new Error('not found');
+      };
+      await getBrowserVersion(undefined, 'MicrosoftEdge', exec).catch(() => {});
+      expect(visited.every((b) => /edge/i.test(b))).to.be.true;
+    });
+
+    it('is case-insensitive for Edge browserName (e.g. "microsoftedge")', async function () {
+      const visited: string[] = [];
+      const exec: ExecFn = async (binary, args) => {
+        visited.push(resolveEffectiveBinary(binary, args));
+        throw new Error('not found');
+      };
+      await getBrowserVersion(undefined, 'MICROSOFTEDGE', exec).catch(() => {});
+      expect(visited.every((b) => /edge/i.test(b))).to.be.true;
+    });
   });
 });
