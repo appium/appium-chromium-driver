@@ -77,8 +77,8 @@ export class ChromiumDriver
 
   private async getBrowserInfo(): Promise<BrowserInfo | undefined> {
     const browserBinary: string | undefined =
-      (this.opts['goog:chromeOptions'] as any)?.binary ??
-      (this.opts['ms:edgeOptions'] as any)?.binary;
+      (this.opts['goog:chromeOptions'] as Record<string, any>)?.binary ??
+      (this.opts['ms:edgeOptions'] as Record<string, any>)?.binary;
     try {
       const bv = await getBrowserVersion(browserBinary, this.opts.browserName);
       this.log.info(`Detected browser version: ${bv}`);
