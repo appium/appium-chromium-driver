@@ -1,6 +1,6 @@
+import path from 'node:path';
 import {exec} from 'teen_process';
 
-type ExecFn = (binary: string, args: string[]) => Promise<{stdout: string}>;
 
 function winCandidates(subdirs: string[], exe: string): string[] {
   const bases = [
@@ -8,7 +8,7 @@ function winCandidates(subdirs: string[], exe: string): string[] {
     process.env['PROGRAMFILES(X86)'],
     process.env.LOCALAPPDATA,
   ];
-  return bases.flatMap((base) => (base ? subdirs.map((sub) => `${base}\\${sub}\\${exe}`) : []));
+  return bases.flatMap((base) => (base ? subdirs.map((sub) => path.join(base, sub, exe)) : []));
 }
 
 const DEFAULT_WIN_CHROME_CANDIDATES = () =>
@@ -60,7 +60,7 @@ const DEFAULT_LINUX_EDGE_CANDIDATES = [
  * On Windows, retrieve the browser version via PowerShell's VersionInfo instead of --version,
  * because Chrome/Edge do not reliably write to stdout when spawned via exec.
  */
-async function getBrowserVersionWin(binaryPath: string, execFn: ExecFn): Promise<string | null> {
+async function getBrowserVersionWin(binaryPath: string, execFn: typeof exec): Promise<string | null> {
   // Escape single quotes for PowerShell single-quoted strings
   const safePath = binaryPath.replace(/'/g, "''");
   try {
@@ -89,7 +89,7 @@ async function getBrowserVersionWin(binaryPath: string, execFn: ExecFn): Promise
 /**
  * On Unix, retrieve the browser version by running the binary with `--version` and parsing stdout.
  */
-async function getBrowserVersionUnix(binary: string, execFn: ExecFn): Promise<string | null> {
+async function getBrowserVersionUnix(binary: string, execFn: typeof exec): Promise<string | null> {
   try {
     const {stdout} = await execFn(binary, ['--version']);
     const match = /(?:Chrome|Chromium|Edg(?:e|HTML)?)\/([\d.]+)/.exec(stdout);
@@ -126,7 +126,7 @@ function getCandidates(isEdge: boolean): string[] {
 export async function getBrowserVersion(
   chromeBinary?: string,
   browserName?: string,
-  execFn: ExecFn = exec,
+  execFn: typeof exec = exec,
 ): Promise<string> {
   const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
   const candidates = chromeBinary ? [chromeBinary] : getCandidates(isEdge);
