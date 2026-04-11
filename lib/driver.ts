@@ -88,6 +88,13 @@ export class ChromiumDriver
     }
   }
 
+  /**
+   * FIXME: Please use this driver's local storage instead of the node_modules path
+   * to avoid potential read-only issue.
+   * Please update the `appium driver run chromium install-chromedriver` command behavior
+   * also to reflect the change.
+   * This change is a breaking change.
+   */
   private getDefaultChromeDriverDir(): string {
     const pkgJson = require.resolve('appium-chromedriver/package.json');
     const packageDir = path.dirname(pkgJson);
