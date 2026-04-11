@@ -1,3 +1,9 @@
+## [2.1.8](https://github.com/appium/appium-chromium-driver/compare/v2.1.7...v2.1.8) (2026-04-11)
+
+### Bug Fixes
+
+* autodownloadEnabled ([#421](https://github.com/appium/appium-chromium-driver/issues/421)) ([62c7b41](https://github.com/appium/appium-chromium-driver/commit/62c7b41228983e9c531e501e5c115842db80c4a0))
+
 ## [2.1.7](https://github.com/appium/appium-chromium-driver/compare/v2.1.6...v2.1.7) (2026-04-11)
 
 ### Miscellaneous Chores
