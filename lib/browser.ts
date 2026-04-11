@@ -123,7 +123,7 @@ function getCandidates(isEdge: boolean): string[] {
 export async function getBrowserVersion(
   browserBinary?: string,
   browserName?: string,
-): Promise<string | null> {
+): Promise<string> {
   if (browserBinary) {
     const version =
       process.platform === 'win32'
