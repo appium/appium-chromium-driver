@@ -28,13 +28,12 @@
   "main": "build/lib/index.js",
   "files": [
     "lib",
-    "build",
+    "build/lib",
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
     "npm-shrinkwrap.json",
-    "scripts",
-    "!build/test"
+    "scripts"
   ],
   "scripts": {
     "build": "tsc -b",
@@ -108,7 +107,7 @@
     "rimraf": "^6.0.1",
     "semantic-release": "^25.0.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3",
+    "typescript": "^6.0.2",
     "webdriverio": "^9.0.9"
   }
 }
