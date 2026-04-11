@@ -115,18 +115,32 @@ function getCandidates(isEdge: boolean): string[] {
 
 /**
  * Get the version of the Chrome/Chromium/Edge browser by executing the binary with `--version` and parsing the output.
- * @param chromeBinary
+ * @param browserBinary
  * @param browserName
  * @param execFn
  * @returns
  */
 export async function getBrowserVersion(
-  chromeBinary?: string,
+  browserBinary?: string,
   browserName?: string,
-): Promise<string> {
-  const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
-  const candidates = chromeBinary ? [chromeBinary] : getCandidates(isEdge);
+): Promise<string | null> {
+  if (browserBinary) {
+    const version =
+      process.platform === 'win32'
+        ? await getBrowserVersionWin(browserBinary)
+        : await getBrowserVersionUnix(browserBinary);
+    if (version) {
+      return version;
+    }
+    // Do not go to the followup since this means the user provides
+    // unexpected browser binary which might not work.
+    throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
 
+  // TODO: Refactor later
+  // Default candidates.
+  const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
+  const candidates = getCandidates(isEdge);
   for (const binary of candidates) {
     const version =
       process.platform === 'win32'
