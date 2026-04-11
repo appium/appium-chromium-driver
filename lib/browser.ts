@@ -1,7 +1,6 @@
 import path from 'node:path';
 import {exec} from 'teen_process';
 
-
 function winCandidates(subdirs: string[], exe: string): string[] {
   const bases = [
     process.env.PROGRAMFILES,
@@ -60,7 +59,10 @@ const DEFAULT_LINUX_EDGE_CANDIDATES = [
  * On Windows, retrieve the browser version via PowerShell's VersionInfo instead of --version,
  * because Chrome/Edge do not reliably write to stdout when spawned via exec.
  */
-async function getBrowserVersionWin(binaryPath: string, execFn: typeof exec): Promise<string | null> {
+async function getBrowserVersionWin(
+  binaryPath: string,
+  execFn: typeof exec,
+): Promise<string | null> {
   // Escape single quotes for PowerShell single-quoted strings
   const safePath = binaryPath.replace(/'/g, "''");
   try {
