@@ -58,7 +58,8 @@
     "singleQuote": true
   },
   "dependencies": {
-    "appium-chromedriver": "^8.0.0"
+    "appium-chromedriver": "^8.0.0",
+    "teen_process": "^4.1.0"
   },
   "peerDependencies": {
     "appium": "^3.0.0-rc.2"
@@ -73,12 +74,11 @@
   "access": "public",
   "appium": {
     "driverName": "chromium",
-    "automationName": "Chromium",
+    "automationName": "chromium",
     "platformNames": [
-      "Windows",
+      "windows",
       "mac",
-      "macOS",
-      "Linux"
+      "linux"
     ],
     "mainClass": "ChromiumDriver",
     "scripts": {
@@ -106,6 +106,7 @@
     "prettier": "^3.0.3",
     "rimraf": "^6.0.1",
     "semantic-release": "^25.0.2",
+    "sinon": "^21.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2",
     "webdriverio": "^9.0.9"

@@ -9,7 +9,9 @@ import type {
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import type {W3CChromiumDriverCaps, ChromiumDriverCaps} from './types';
+import {getBrowserVersion} from './browser';
+import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
+import path from 'node:path';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
@@ -73,16 +75,44 @@ export class ChromiumDriver
     return [sessionId, returnedCaps];
   }
 
+  private async getBrowserInfo(): Promise<BrowserInfo | undefined> {
+    const browserBinary: string | undefined =
+      (this.opts['goog:chromeOptions'] as Record<string, any>)?.binary ??
+      (this.opts['ms:edgeOptions'] as Record<string, any>)?.binary;
+    try {
+      const bv = await getBrowserVersion(browserBinary, this.opts.browserName);
+      this.log.info(`Detected browser version: ${bv}`);
+      return {info: {Browser: bv}};
+    } catch (err) {
+      this.log.warn(`Failed to get browser version from binary: ${(err as Error).message}`);
+    }
+  }
+
+  /**
+   * FIXME: Please use this driver's local storage instead of the node_modules path
+   * to avoid potential read-only issue.
+   * Please update the `appium driver run chromium install-chromedriver` command behavior
+   * also to reflect the change.
+   * This change is a breaking change.
+   */
+  private getDefaultChromeDriverDir(): string {
+    const pkgJson = require.resolve('appium-chromedriver/package.json');
+    const packageDir = path.dirname(pkgJson);
+    return path.join(packageDir, 'chromedriver');
+  }
+
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const browserVersionInfo = await this.getBrowserInfo();
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
       executable: this.opts.executable,
-      executableDir: this.opts.executableDir,
+      executableDir: this.opts.executableDir || this.getDefaultChromeDriverDir(),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
+      details: browserVersionInfo,
       isAutodownloadEnabled,
     };
     if (this.basePath) {

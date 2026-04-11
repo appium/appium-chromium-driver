@@ -45,7 +45,7 @@ any WebDriver client that (minimally) includes the following:
 
 |Capability|Value|
 |---|---|
-|`platformName`|One of `macOS`, `mac`, `Linux`, or `Windows` (depending on your system)|
+|`platformName`|One of `mac`, `linux`, or `windows` (depending on your system)|
 |`browserName`|`browserName` to the running WebDriver process. For example, `chrome` or `chromium` is for chromedriver, `MicrosoftEdge` or `msedge` is for msedge driver.|
 |`appium:automationName`|`Chromium`|
 
