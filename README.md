@@ -52,6 +52,12 @@ any WebDriver client that (minimally) includes the following:
 Use these capabilities to start a new session. (Refer to the documentation for your WebDriver
 client for the particular syntax used to start a session in that client).
 
+For CI or other controlled automation environments, it is recommended to set the browser binary
+explicitly so the session uses the expected browser installation instead of relying on platform
+defaults or whichever browser happens to be first on the system path. In practice, set
+`goog:chromeOptions.binary` for Chrome/Chromium or `ms:edgeOptions.binary` for MSEdge to the full
+path of the browser executable you want to automate.
+
 At this point, all WebDriver commands are proxied directly to WebDriver. This driver does not
 implement any additional commands. Refer to the Chromedriver documentation or the [WebDriver
 specification](https://w3c.github.io/webdriver/) for a list of the available automation commands.
@@ -65,6 +71,10 @@ In addition to all of the [Chromedriver
 capabilities](https://chromedriver.chromium.org/capabilities) (nested underneath
 `goog:chromeOptions` for Chrome and Chromium or `ms:edgeOptions` for MSEdge),
 this driver supports the following:
+
+> **Recommendation**
+> For reproducible automation, especially in CI, set `goog:chromeOptions.binary` or
+> `ms:edgeOptions.binary` to select the exact browser build/channel you want to run.
 
 |Capability|Description|Default Value|
 |---|---|---|
