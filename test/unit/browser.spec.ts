@@ -2,13 +2,10 @@ import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
 import {getBrowserVersion} from '../../lib/browser';
-import {exec as teenExec} from 'teen_process';
 
 use(chaiAsPromised);
 
-type ExecFn = typeof teenExec;
 const teenProcess = require('teen_process') as {exec};
-
 const IS_WIN = process.platform === 'win32';
 
 /** Resolves the effective binary path from either a direct call or a Windows powershell Get-Item call. */
@@ -22,14 +19,14 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
   return binary;
 }
 
-function makeExec(outputs: Record<string, string>): ExecFn {
-  return (async (binary: string, args: string[] = []) => {
+function makeExec(outputs: Record<string, string>) {
+  return async (binary: string, args: string[] = []) => {
     const effective = resolveEffectiveBinary(binary, args);
     if (effective in outputs) {
       return {stdout: outputs[effective], stderr: '', code: 0};
     }
     return {stdout: '', stderr: `${effective}: not found`, code: 1};
-  }) as ExecFn;
+  };
 }
 
 async function withMockExec<T>(mockExec, run: () => Promise<T>): Promise<T> {
