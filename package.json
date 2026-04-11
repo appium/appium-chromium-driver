@@ -28,13 +28,12 @@
   "main": "build/lib/index.js",
   "files": [
     "lib",
-    "build",
+    "build/lib",
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
     "npm-shrinkwrap.json",
-    "scripts",
-    "!build/test"
+    "scripts"
   ],
   "scripts": {
     "build": "tsc -b",
