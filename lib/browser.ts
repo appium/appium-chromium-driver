@@ -59,14 +59,11 @@ const DEFAULT_LINUX_EDGE_CANDIDATES = [
  * On Windows, retrieve the browser version via PowerShell's VersionInfo instead of --version,
  * because Chrome/Edge do not reliably write to stdout when spawned via exec.
  */
-async function getBrowserVersionWin(
-  binaryPath: string,
-  execFn: typeof exec,
-): Promise<string | null> {
+async function getBrowserVersionWin(binaryPath: string): Promise<string | null> {
   // Escape single quotes for PowerShell single-quoted strings
   const safePath = binaryPath.replace(/'/g, "''");
   try {
-    const {stdout} = await execFn('powershell', [
+    const {stdout} = await exec('powershell', [
       '-NoProfile',
       '-Command',
       [
@@ -91,17 +88,12 @@ async function getBrowserVersionWin(
 /**
  * On Unix, retrieve the browser version by running the binary with `--version` and parsing stdout.
  */
-async function getBrowserVersionUnix(binary: string, execFn: typeof exec): Promise<string | null> {
+async function getBrowserVersionUnix(binary: string): Promise<string | null> {
   try {
-    const {stdout} = await execFn(binary, ['--version']);
-    const match = /(?:Chrome|Chromium|Edg(?:e|HTML)?)\/([\d.]+)/.exec(stdout);
+    const {stdout} = await exec(binary, ['--version']);
+    const match = /(\d+\.\d+\.\d+\.\d+)/.exec(stdout);
     if (match) {
       return match[1];
-    }
-    // Some builds print "Google Chrome X.Y.Z.W" or "Microsoft Edge X.Y.Z.W" without a slash
-    const fallback = /(?:Google Chrome|Chromium|Microsoft Edge)\s+([\d.]+)/.exec(stdout);
-    if (fallback) {
-      return fallback[1];
     }
   } catch {
     // binary not found or failed; caller will try next candidate
@@ -128,7 +120,6 @@ function getCandidates(isEdge: boolean): string[] {
 export async function getBrowserVersion(
   chromeBinary?: string,
   browserName?: string,
-  execFn: typeof exec = exec,
 ): Promise<string> {
   const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
   const candidates = chromeBinary ? [chromeBinary] : getCandidates(isEdge);
@@ -136,8 +127,8 @@ export async function getBrowserVersion(
   for (const binary of candidates) {
     const version =
       process.platform === 'win32'
-        ? await getBrowserVersionWin(binary, execFn)
-        : await getBrowserVersionUnix(binary, execFn);
+        ? await getBrowserVersionWin(binary)
+        : await getBrowserVersionUnix(binary);
     if (version) {
       return version;
     }
