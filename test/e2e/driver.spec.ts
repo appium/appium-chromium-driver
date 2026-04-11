@@ -29,12 +29,12 @@ const DEF_CAPS: Record<string, any> = {
 };
 
 // GitHub Actions
-// if (process.env.CHROMEWEBDRIVER) {
-//   DEF_CAPS['appium:executable'] = path.join(
-//     process.env.CHROMEWEBDRIVER,
-//     `chromedriver${process.platform === 'win32' ? '.exe' : ''}`,
-//   );
-// }
+if (process.env.CHROMEWEBDRIVER) {
+  DEF_CAPS['appium:executable'] = path.join(
+    process.env.CHROMEWEBDRIVER,
+    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`,
+  );
+}
 
 if (CHROME_BIN) {
   DEF_CAPS['goog:chromeOptions'] = {
