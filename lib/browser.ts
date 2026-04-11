@@ -16,6 +16,7 @@ const DEFAULT_WIN_CHROME_CANDIDATES = () =>
       'Google\\Chrome\\Application',
       'Google\\Chrome Beta\\Application',
       'Google\\Chrome Dev\\Application',
+      'Google\\Google Chrome for Testing\\Application',
       'Chromium\\Application',
     ],
     'chrome.exe',
@@ -34,6 +35,7 @@ const DEFAULT_MAC_CHROME_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
   '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
+  '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
   '/Applications/Chromium.app/Contents/MacOS/Chromium',
 ];
 const DEFAULT_MAC_EDGE_CANDIDATES = [
@@ -42,6 +44,7 @@ const DEFAULT_MAC_EDGE_CANDIDATES = [
   '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev',
 ];
 const DEFAULT_LINUX_CHROME_CANDIDATES = [
+  'chrome',
   'google-chrome',
   'google-chrome-beta',
   'google-chrome-unstable',
