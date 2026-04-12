@@ -19,6 +19,9 @@ const CHROME_BIN = process.env.CHROME_BIN;
 
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
+// Newer Chrome browser versions require these flags to run in CI environments
+const chromeArgs = process.platform === 'linux' ? ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage'] : ['--headless=new'];
+
 const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
   browserName: 'chrome',
@@ -32,6 +35,7 @@ const DEF_CAPS: Record<string, any> = {
 if (CHROME_BIN) {
   DEF_CAPS['goog:chromeOptions'] = {
     binary: CHROME_BIN,
+    args: chromeArgs,
   };
 }
 

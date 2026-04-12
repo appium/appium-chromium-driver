@@ -43,18 +43,6 @@ jobs:
       - name: Configure Chrome
         shell: bash
         run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
-      - name: Configure Chrome driver
-        shell: bash
-        run: echo "CHROME_DRIVER_BIN=${{ steps.setup-chrome.outputs.chromedriver-path }}" >> $GITHUB_ENV
-      - name: Start Display
-        if: ${{ runner.os != 'Windows' }}
-        run: DISPLAY=:99 sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
       - name: Run E2E tests
         shell: bash
-        run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
-          else
-            DISPLAY=:99 TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
-          fi
-
+        run: TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
