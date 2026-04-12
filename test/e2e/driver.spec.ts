@@ -15,7 +15,7 @@ const PLATFORM =
   PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
-const CHROME_BIN = process.env.TEST_CHROME;
+const CHROME_BIN = process.env.CHROME_BIN;
 
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
@@ -27,14 +27,6 @@ const DEF_CAPS: Record<string, any> = {
   'appium:newCommandTimeout': 300,
   webSocketUrl: true,
 };
-
-// GitHub Actions
-if (process.env.CHROMEWEBDRIVER) {
-  DEF_CAPS['appium:executable'] = path.join(
-    process.env.CHROMEWEBDRIVER,
-    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`,
-  );
-}
 
 if (CHROME_BIN) {
   DEF_CAPS['goog:chromeOptions'] = {
