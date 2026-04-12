@@ -25,6 +25,7 @@ const DEF_CAPS: Record<string, any> = {
   'appium:automationName': 'Chromium',
   'appium:autodownloadEnabled': true,
   'appium:newCommandTimeout': 300,
+  'appium:verbose': true,
   webSocketUrl: true,
 };
 
