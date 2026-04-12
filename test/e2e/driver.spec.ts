@@ -1,6 +1,5 @@
 /* eslint-disable mocha/no-top-level-hooks */
 import {waitForCondition} from 'asyncbox';
-import path from 'node:path';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -20,7 +19,8 @@ const CHROME_BIN = process.env.CHROME_BIN;
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
 // Newer Chrome browser versions require these flags to run in CI environments
-const chromeArgs = process.platform === 'linux' ? ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage'] : ['--headless=new'];
+const chromeArgs = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+chromeArgs.push('--headless=new');
 
 const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
