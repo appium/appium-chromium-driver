@@ -98,6 +98,13 @@ jobs:
         run: |
           sudo chmod +x /usr/local/share/edge_driver
           echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
+      - name: Inspect Edge WebDriver
+        shell: bash
+        run: |
+          echo "EDGEWEBDRIVER=$EDGEWEBDRIVER"
+          echo "MSEDGE_BIN=$MSEDGE_BIN"
+          which msedgedriver || true
+          ls -l "$EDGEWEBDRIVER" || true
       - name: Run E2E tests on Microsoft Edge
         shell: bash
         run: npm run test:e2e -- --browser=edge
