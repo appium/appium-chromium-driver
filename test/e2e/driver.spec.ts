@@ -2,6 +2,7 @@
 import {waitForCondition} from 'asyncbox';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import path from 'node:path';
 
 type AppiumServer = any;
 type Browser = any;
@@ -14,7 +15,6 @@ const PLATFORM =
   PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
-const CHROME_BIN = process.env.CHROME_BIN;
 
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
@@ -24,19 +24,39 @@ const DEF_CAPS: Record<string, any> = {
   'appium:automationName': 'Chromium',
   'appium:autodownloadEnabled': true,
   'appium:newCommandTimeout': 300,
-  'appium:verbose': true,
   webSocketUrl: true,
 };
 
-if (CHROME_BIN) {
-  // Newer Chrome browser versions require these flags to run in CI environments
-  const chromeArgs =
-    process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
-  chromeArgs.push('--headless=new');
-  DEF_CAPS['goog:chromeOptions'] = {
-    binary: CHROME_BIN,
-    args: chromeArgs,
+function getCiHeadlessArgs() {
+  const args = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+  args.push('--headless=new');
+  return args;
+}
+
+function setBrowserOptions(optionName: string, binary: string) {
+  DEF_CAPS[optionName] = {
+    binary,
+    args: getCiHeadlessArgs(),
   };
+}
+
+const isMsEdge = Boolean(process.env.IS_MSEDGE);
+const msEdgeBin = process.env.MSEDGE_BIN;
+const chromeBin = process.env.CHROME_BIN;
+
+if (isMsEdge && msEdgeBin) {
+  DEF_CAPS.browserName = 'msedge';
+  setBrowserOptions('ms:edgeOptions', msEdgeBin);
+
+  // TODO: Remove after supporting auto downlaod.
+  if (process.env.EDGEWEBDRIVER) {
+    DEF_CAPS['appium:executable'] = path.join(
+      process.env.EDGEWEBDRIVER,
+      process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver',
+    );
+  }
+} else if (!isMsEdge && chromeBin) {
+  setBrowserOptions('goog:chromeOptions', chromeBin);
 }
 
 const WDIO_OPTS = {
