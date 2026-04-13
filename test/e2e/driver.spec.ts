@@ -27,11 +27,7 @@ const DEF_CAPS: Record<string, any> = {
   webSocketUrl: true,
 };
 
-if (process.env.IS_MSEDGE) {
-  DEF_CAPS.browserName = 'msedge';
-}
-
-if (process.env.CHROME_BIN) {
+if (!process.env.IS_MSEDGE && process.env.CHROME_BIN) {
   // Newer Chrome browser versions require these flags to run in CI environments
   const chromeArgs =
     process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
@@ -42,7 +38,9 @@ if (process.env.CHROME_BIN) {
   };
 }
 
-if (process.env.MSEDGE_BIN) {
+if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
+  DEF_CAPS.browserName = 'msedge';
+
   // Newer Edge browser versions require these flags to run in CI environments
   const edgeArgs =
     process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
