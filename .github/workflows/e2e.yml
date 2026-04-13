@@ -43,12 +43,6 @@ jobs:
       - name: Configure Chrome
         shell: bash
         run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
-      - name: Apply xattr for macOS
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          sudo xattr -r -d com.apple.quarantine "${{ steps.setup-chrome.outputs.chrome-path }}"
-          codesign --force --deep --sign - "${{ steps.setup-chrome.outputs.chrome-path }}"
       - name: Run E2E tests
         shell: bash
         run: TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
