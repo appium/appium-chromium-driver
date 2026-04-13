@@ -47,7 +47,7 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          xattr -d com.apple.quarantine "${{ steps.setup-chrome.outputs.chrome-path }}"
+          sudo chmod -R +x "${{ steps.setup-chrome.outputs.chrome-path }}"
       - name: Run E2E tests
         shell: bash
         run: TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
