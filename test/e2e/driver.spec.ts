@@ -50,7 +50,10 @@ if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
   };
 
   if (process.env.EDGEWEBDRIVER) {
-    DEF_CAPS['appium:executable'] = path.join(process.env.EDGEWEBDRIVER, 'msedgedriver');
+    DEF_CAPS['appium:executable'] = path.join(
+      process.env.EDGEWEBDRIVER,
+      process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver',
+    );
   }
 }
 
