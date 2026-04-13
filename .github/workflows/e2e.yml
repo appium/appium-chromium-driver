@@ -90,13 +90,13 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          chmod +x /usr/local/share/edge_driver
+          sudo chmod +x /usr/local/share/edge_driver
           echo "MSEDGE_BIN=/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" >> $GITHUB_ENV
       - name: Configure Microsoft Edge
         if: runner.os == 'linux'
         shell: bash
         run: |
-          chmod +x /usr/local/share/edge_driver
+          sudo chmod +x /usr/local/share/edge_driver
           echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
       - name: Run E2E tests on Microsoft Edge
         shell: bash

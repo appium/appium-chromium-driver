@@ -51,7 +51,11 @@ if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
   };
 
   if (process.env.EDGEWEBDRIVER) {
-    DEF_CAPS['appium:executable'] = process.env.EDGEWEBDRIVER;
+    let executable = process.env.EDGEWEBDRIVER;
+    if (process.platform === 'win32') {
+      executable = `${process.env.EDGEWEBDRIVER}.exe`;
+    }
+    DEF_CAPS['appium:executable'] = executable;
   }
 }
 
