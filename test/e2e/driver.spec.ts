@@ -42,8 +42,7 @@ if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
   DEF_CAPS.browserName = 'msedge';
 
   // Newer Edge browser versions require these flags to run in CI environments
-  const edgeArgs =
-    process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+  const edgeArgs = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
   edgeArgs.push('--headless=new');
   DEF_CAPS['ms:edgeOptions'] = {
     binary: process.env.MSEDGE_BIN,
