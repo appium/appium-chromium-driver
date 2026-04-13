@@ -48,6 +48,7 @@ jobs:
       - name: Configure Chrome
         if: runner.os == 'macOS'
         shell: bash
+        # To avoid several permission errors on macOS which could occur with the setup-chrome action.
         run: echo "CHROME_BIN=/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" >> $GITHUB_ENV
       - name: Run E2E tests
         shell: bash
