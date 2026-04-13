@@ -48,6 +48,7 @@ if (isMsEdge && msEdgeBin) {
   DEF_CAPS.browserName = 'msedge';
   setBrowserOptions('ms:edgeOptions', msEdgeBin);
 
+  // TODO: Remove after supporting auto downlaod.
   if (process.env.EDGEWEBDRIVER) {
     DEF_CAPS['appium:executable'] = path.join(
       process.env.EDGEWEBDRIVER,
