@@ -8,12 +8,13 @@ on:
       - '*.md'
 
 jobs:
-  e2e-chrome:
+  e2e:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    name: E2E Tests on Chrome
+        browser: [chrome, edge]
+    name: E2E Tests on ${{ matrix.browser }}
     permissions:
       contents: read
     runs-on: ${{ matrix.os }}
@@ -36,68 +37,40 @@ jobs:
           appium driver install --source=local "$cwd"
           popd
       - name: Setup Chrome
-        if: runner.os != 'macOS'
+        if: matrix.browser == 'chrome' && runner.os != 'macOS'
         uses: browser-actions/setup-chrome@latest
         id: setup-chrome
         with:
           chrome-version: stable
       - name: Configure Chrome
-        if: runner.os != 'macOS'
+        if: matrix.browser == 'chrome' && runner.os != 'macOS'
         shell: bash
         run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
       - name: Configure Chrome
-        if: runner.os == 'macOS'
+        if: matrix.browser == 'chrome' && runner.os == 'macOS'
         shell: bash
         # To avoid several permission errors on macOS which could occur with the setup-chrome action.
         run: echo "CHROME_BIN=/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" >> $GITHUB_ENV
-      - name: Run E2E tests
+      - name: Configure Microsoft Edge
+        if: matrix.browser == 'edge' && runner.os == 'Windows'
+        shell: bash
+        run: echo "MSEDGE_BIN=C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" >> $GITHUB_ENV
+      - name: Configure Microsoft Edge
+        if: matrix.browser == 'edge' && runner.os == 'macOS'
+        shell: bash
+        run: echo "MSEDGE_BIN=/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" >> $GITHUB_ENV
+      - name: Configure Microsoft Edge
+        if: matrix.browser == 'edge' && runner.os == 'linux'
+        shell: bash
+        run: echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
+      - name: Run E2E tests on Chrome
+        if: matrix.browser == 'chrome'
         shell: bash
         run: npm run test:e2e
         env:
           TEST_PLATFORM: ${{ runner.os }}
-  e2e-msedge:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    name: E2E Tests on Microsoft Edge
-    permissions:
-      contents: read
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v6
-      - name: Use Node.js LTS
-        uses: actions/setup-node@v6
-        with:
-          node-version: lts/*
-      - name: Install dependencies
-        run: npm install
-      - name: Configure Appium Server
-        shell: bash
-        run: |
-          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
-          npm install -g "appium@$appium_ver"
-          cwd=$(pwd)
-          pushd "$cwd"
-          cd ~
-          appium driver install --source=local "$cwd"
-          popd
-      - name: Configure Microsoft Edge
-        if: runner.os == 'Windows'
-        shell: bash
-        run: echo "MSEDGE_BIN=C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" >> $GITHUB_ENV
-      - name: Configure Microsoft Edge
-        if: runner.os == 'macOS'
-        shell: bash
-        run: echo "MSEDGE_BIN=/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" >> $GITHUB_ENV
-      - name: Configure Microsoft Edge
-        if: runner.os == 'linux'
-        shell: bash
-        run: echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
-      - name: Verify Edge and Driver
-        run: |
-          /usr/local/share/edge_driver/msedgedriver --version
       - name: Run E2E tests on Microsoft Edge
+        if: matrix.browser == 'edge'
         shell: bash
         run: npm run test:e2e -- --browser=edge
         env:
