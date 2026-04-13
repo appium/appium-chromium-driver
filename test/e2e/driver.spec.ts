@@ -2,7 +2,7 @@
 import {waitForCondition} from 'asyncbox';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import path from 'path';
+import path from 'node:path';
 
 type AppiumServer = any;
 type Browser = any;
