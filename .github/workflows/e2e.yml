@@ -89,15 +89,11 @@ jobs:
       - name: Configure Microsoft Edge
         if: runner.os == 'macOS'
         shell: bash
-        run: |
-          sudo chmod +x /usr/local/share/edge_driver
-          echo "MSEDGE_BIN=/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" >> $GITHUB_ENV
+        run: echo "MSEDGE_BIN=/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" >> $GITHUB_ENV
       - name: Configure Microsoft Edge
         if: runner.os == 'linux'
         shell: bash
-        run: |
-          sudo chmod +x /usr/local/share/edge_driver
-          echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
+        run: echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
       - name: Verify Edge and Driver
         run: |
           /usr/local/share/edge_driver/msedgedriver --version

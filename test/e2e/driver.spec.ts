@@ -2,6 +2,7 @@
 import {waitForCondition} from 'asyncbox';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import path from 'path';
 
 type AppiumServer = any;
 type Browser = any;
@@ -49,11 +50,7 @@ if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
   };
 
   if (process.env.EDGEWEBDRIVER) {
-    let executable = process.env.EDGEWEBDRIVER;
-    if (process.platform === 'win32') {
-      executable = `${process.env.EDGEWEBDRIVER}.exe`;
-    }
-    DEF_CAPS['appium:executable'] = executable;
+    DEF_CAPS['appium:executable'] = path.join(process.env.EDGEWEBDRIVER, 'msedgedriver');
   }
 }
 
