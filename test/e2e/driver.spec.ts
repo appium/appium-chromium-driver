@@ -1,6 +1,5 @@
 /* eslint-disable mocha/no-top-level-hooks */
 import {waitForCondition} from 'asyncbox';
-import path from 'node:path';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
@@ -15,7 +14,7 @@ const PLATFORM =
   PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
-const CHROME_BIN = process.env.TEST_CHROME;
+const CHROME_BIN = process.env.CHROME_BIN;
 
 const SERVER_URL = `http://${HOST}:${PORT}`;
 
@@ -25,20 +24,18 @@ const DEF_CAPS: Record<string, any> = {
   'appium:automationName': 'Chromium',
   'appium:autodownloadEnabled': true,
   'appium:newCommandTimeout': 300,
+  'appium:verbose': true,
   webSocketUrl: true,
 };
 
-// GitHub Actions
-if (process.env.CHROMEWEBDRIVER) {
-  DEF_CAPS['appium:executable'] = path.join(
-    process.env.CHROMEWEBDRIVER,
-    `chromedriver${process.platform === 'win32' ? '.exe' : ''}`,
-  );
-}
-
 if (CHROME_BIN) {
+  // Newer Chrome browser versions require these flags to run in CI environments
+  const chromeArgs =
+    process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+  chromeArgs.push('--headless=new');
   DEF_CAPS['goog:chromeOptions'] = {
     binary: CHROME_BIN,
+    args: chromeArgs,
   };
 }
 
