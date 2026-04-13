@@ -51,6 +51,10 @@ if (process.env.MSEDGE_BIN) {
     binary: process.env.MSEDGE_BIN,
     args: edgeArgs,
   };
+
+  if (process.env.EDGEWEBDRIVER) {
+    DEF_CAPS['appium:executable'] = process.env.EDGEWEBDRIVER;
+  }
 }
 
 const WDIO_OPTS = {
