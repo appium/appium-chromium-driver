@@ -27,27 +27,26 @@ const DEF_CAPS: Record<string, any> = {
   webSocketUrl: true,
 };
 
-if (!process.env.IS_MSEDGE && process.env.CHROME_BIN) {
-  // Newer Chrome browser versions require these flags to run in CI environments
-  const chromeArgs =
-    process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
-  chromeArgs.push('--headless=new');
-  DEF_CAPS['goog:chromeOptions'] = {
-    binary: process.env.CHROME_BIN,
-    args: chromeArgs,
+function getCiHeadlessArgs() {
+  const args = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+  args.push('--headless=new');
+  return args;
+}
+
+function setBrowserOptions(optionName: string, binary: string) {
+  DEF_CAPS[optionName] = {
+    binary,
+    args: getCiHeadlessArgs(),
   };
 }
 
-if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
-  DEF_CAPS.browserName = 'msedge';
+const isMsEdge = Boolean(process.env.IS_MSEDGE);
+const msEdgeBin = process.env.MSEDGE_BIN;
+const chromeBin = process.env.CHROME_BIN;
 
-  // Newer Edge browser versions require these flags to run in CI environments
-  const edgeArgs = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
-  edgeArgs.push('--headless=new');
-  DEF_CAPS['ms:edgeOptions'] = {
-    binary: process.env.MSEDGE_BIN,
-    args: edgeArgs,
-  };
+if (isMsEdge && msEdgeBin) {
+  DEF_CAPS.browserName = 'msedge';
+  setBrowserOptions('ms:edgeOptions', msEdgeBin);
 
   if (process.env.EDGEWEBDRIVER) {
     DEF_CAPS['appium:executable'] = path.join(
@@ -55,6 +54,8 @@ if (process.env.IS_MSEDGE && process.env.MSEDGE_BIN) {
       process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver',
     );
   }
+} else if (!isMsEdge && chromeBin) {
+  setBrowserOptions('goog:chromeOptions', chromeBin);
 }
 
 const WDIO_OPTS = {
