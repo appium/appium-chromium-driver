@@ -36,13 +36,19 @@ jobs:
           appium driver install --source=local "$cwd"
           popd
       - name: Setup Chrome
+        if: runner.os != 'macOS'
         uses: browser-actions/setup-chrome@latest
         id: setup-chrome
         with:
           chrome-version: stable
       - name: Configure Chrome
+        if: runner.os != 'macOS'
         shell: bash
         run: echo "CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
+      - name: Configure Chrome
+        if: runner.os == 'macOS'
+        shell: bash
+        run: echo "CHROME_BIN=/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" >> $GITHUB_ENV
       - name: Run E2E tests
         shell: bash
         run: TEST_PLATFORM="${{ runner.os }}" npm run test:e2e
