@@ -100,7 +100,7 @@ jobs:
           echo "MSEDGE_BIN=/usr/bin/microsoft-edge" >> $GITHUB_ENV
       - name: Verify Edge and Driver
         run: |
-          /usr/local/share/edge_driver --version
+          /usr/local/share/edge_driver/msedgedriver --version
       - name: Run E2E tests on Microsoft Edge
         shell: bash
         run: npm run test:e2e -- --browser=edge
