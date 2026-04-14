@@ -7,7 +7,6 @@ const MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 // const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
-
 type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
 
 interface EdgePlatformConfig {
@@ -131,7 +130,9 @@ export async function getMsEdgeDriverVersion(browserVersion: string): Promise<st
   }
   const text = decodeMicrosoftVersionResponse(Buffer.from(await response.arrayBuffer()));
   if (!/^\d+\.\d+\.\d+\.\d+$/.test(text)) {
-    throw new Error(`Received an unexpected MSEdgeDriver version response from '${releaseUrl}': ${text}`);
+    throw new Error(
+      `Received an unexpected MSEdgeDriver version response from '${releaseUrl}': ${text}`,
+    );
   }
   return text;
 }
