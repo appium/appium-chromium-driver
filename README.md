@@ -84,11 +84,11 @@ this driver supports the following:
 |`appium:verbose`|Set to `true` to add the `--verbose` flag when starting WebDriver|`false`|
 |`appium:logPath`|The path to use with the `--log-path` parameter directing WebDriver to write its log to that path, if set||
 |`appium:disableBuildCheck`|Set to `true` to add the `--disable-build-check` flag when starting WebDriver|`false`|
-|`appium:autodownloadEnabled`|Set to `false` to disable automatic downloading of Chromedrivers. |`true`|
+|`appium:autodownloadEnabled`|Set to `false` to disable automatic downloading of compatible WebDriver binaries. |`true`|
 |`appium:useSystemExecutable`|Set to `true` to use the version of WebDriver bundled with this driver, rather than attempting to download a new one based on the version of the browser under test|`false`|
 
 > **Note**
-> `msedgedriver` support is limited. `appium:autodownloadEnabled` does not work for the driver, thus `appium:executable` is necessary to automate MSEdge browser properly.
+> For MSEdge sessions, this driver manages a local `msedgedriver` cache itself. When autodownload is enabled, it resolves the latest released Edge driver for the detected browser major version and uses that executable automatically.
 
 ## Scripts
 

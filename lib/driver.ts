@@ -10,6 +10,7 @@ import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
 import {getBrowserVersion} from './browser';
+import {isMsEdge, resolveMsEdgeDriverExecutable} from './msedge';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
@@ -104,16 +105,23 @@ export class ChromiumDriver
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
     const browserVersionInfo = await this.getBrowserInfo();
+    const msEdgeExecutable = await resolveMsEdgeDriverExecutable(
+      this.opts,
+      browserVersionInfo,
+      isAutodownloadEnabled,
+    );
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
-      executable: this.opts.executable,
-      executableDir: this.opts.executableDir || this.getDefaultChromeDriverDir(),
+      executable: msEdgeExecutable ?? this.opts.executable,
+      executableDir: msEdgeExecutable
+        ? undefined
+        : this.opts.executableDir || this.getDefaultChromeDriverDir(),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
       details: browserVersionInfo,
-      isAutodownloadEnabled,
+      isAutodownloadEnabled: isMsEdge(this.opts.browserName) ? false : isAutodownloadEnabled,
     };
     if (this.basePath) {
       cdOpts.reqBasePath = this.basePath;
