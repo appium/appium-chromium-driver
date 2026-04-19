@@ -1,11 +1,15 @@
 import {fs, net, tempDir, zip} from '@appium/support';
 import path from 'node:path';
 import type {BrowserInfo} from './types';
-// import { BaseItem, strongbox } from '@appium/strongbox';
+import {strongbox} from '@appium/strongbox';
+
+/**
+ * Name for the strongbox storage for this driver.
+ */
+const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
 const MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
-// const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
 type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
 
@@ -28,11 +32,15 @@ export function getMsEdgeDriverExecutableName(): string {
 }
 
 /**
- * TODO: Use strongbox? This is temporary to test out this logic.
+ * Get the default directory for MSEdgeDriver executables.
+ * This is a strongbox container named 'msedgedrivers' inside the package storage.
  * @returns
  */
 export function getDefaultMsEdgeDriverDir(): string {
-  return path.resolve(__dirname, '../../msedgedrivers');
+  const s = strongbox(LOCAL_PACKAGE_STORAGE_NAME, {
+    suffix: 'msedgedrivers',
+  });
+  return s.container;
 }
 
 /**
@@ -81,12 +89,13 @@ export async function findMsEdgeDriverExecutable(executableDir: string): Promise
 
 export async function ensureMsEdgeDriver(
   browserVersion: string,
-  executableDir = getDefaultMsEdgeDriverDir(),
+  executableDir: string,
 ): Promise<string> {
   const driverVersion = await getMsEdgeDriverVersion(browserVersion);
   const targetDir = path.join(executableDir, driverVersion);
   const targetExecutable = path.join(targetDir, getMsEdgeDriverExecutableName());
 
+  // TODO: change to check the version instead of file existence.
   if (await fs.isExecutable(targetExecutable)) {
     return targetExecutable;
   }
