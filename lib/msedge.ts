@@ -77,6 +77,11 @@ export function getMsEdgePlatformConfig(
   throw new Error(`Unsupported platform for MSEdgeDriver autodownload: ${platform}`);
 }
 
+/**
+ * Find the MSEdgeDriver executable in the given directory.
+ * @param executableDir
+ * @returns
+ */
 export async function findMsEdgeDriverExecutable(executableDir: string): Promise<string | null> {
   const candidates = await fs.glob(`**/${getMsEdgeDriverExecutableName()}`, {
     cwd: executableDir,
@@ -95,7 +100,8 @@ export async function ensureMsEdgeDriver(
   const targetDir = path.join(executableDir, driverVersion);
   const targetExecutable = path.join(targetDir, getMsEdgeDriverExecutableName());
 
-  // TODO: change to check the version instead of file existence.
+  // TODO: change to check the version instead of file existence as a followup.
+  // https://github.com/appium/appium-chromium-driver/issues/423
   if (await fs.isExecutable(targetExecutable)) {
     return targetExecutable;
   }
@@ -111,6 +117,7 @@ export async function ensureMsEdgeDriver(
       throw new Error(`Cannot find '${getMsEdgeDriverExecutableName()}' in '${targetDir}'`);
     }
     if (process.platform !== 'win32') {
+      // This might not be necessary, but to be safe.
       await fs.chmod(extractedExecutable, 0o755);
     }
     if (extractedExecutable !== targetExecutable) {
