@@ -10,7 +10,7 @@ import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
 import {getBrowserVersion} from './browser';
-import {isMsEdge, resolveMsEdgeDriverExecutable} from './msedge';
+import {getDefaultMsEdgeDriverDir, isMsEdge, resolveMsEdgeDriverExecutable} from './msedge';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
@@ -102,26 +102,38 @@ export class ChromiumDriver
     return path.join(packageDir, 'chromedriver');
   }
 
-  async startChromedriverSession(): Promise<ChromiumDriverCaps> {
-    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersionInfo = await this.getBrowserInfo();
+  private async getExecutable(
+    browserVersionInfo?: BrowserInfo | undefined,
+    isAutodownloadEnabled: boolean = true,
+  ): Promise<string | undefined> {
     const msEdgeExecutable = await resolveMsEdgeDriverExecutable(
       this.opts,
       browserVersionInfo,
       isAutodownloadEnabled,
     );
+    return msEdgeExecutable ?? this.opts.executable;
+  }
+
+  private getExecutableDir(): string | undefined {
+    if (isMsEdge(this.opts.browserName)) {
+      return this.opts.executableDir || getDefaultMsEdgeDriverDir();
+    }
+    return this.opts.executableDir || this.getDefaultChromeDriverDir();
+  }
+
+  async startChromedriverSession(): Promise<ChromiumDriverCaps> {
+    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const browserVersionInfo = await this.getBrowserInfo();
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
-      executable: msEdgeExecutable ?? this.opts.executable,
-      executableDir: msEdgeExecutable
-        ? undefined
-        : this.opts.executableDir || this.getDefaultChromeDriverDir(),
+      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
+      executableDir: this.getExecutableDir(),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,
       details: browserVersionInfo,
-      isAutodownloadEnabled: isMsEdge(this.opts.browserName) ? false : isAutodownloadEnabled,
+      isAutodownloadEnabled,
     };
     if (this.basePath) {
       cdOpts.reqBasePath = this.basePath;
