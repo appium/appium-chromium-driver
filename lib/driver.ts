@@ -115,10 +115,13 @@ export class ChromiumDriver
   }
 
   private getExecutableDir(): string | undefined {
-    if (isMsEdge(this.opts.browserName)) {
-      return this.opts.executableDir || getDefaultMsEdgeDriverDir();
+    if (this.opts.executableDir) {
+      return this.opts.executableDir;
     }
-    return this.opts.executableDir || this.getDefaultChromeDriverDir();
+
+    return isMsEdge(this.opts.browserName)
+      ? getDefaultMsEdgeDriverDir()
+      : this.getDefaultChromeDriverDir();
   }
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {

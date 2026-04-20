@@ -83,6 +83,9 @@ export function getMsEdgePlatformConfig(
  * @returns
  */
 export async function findMsEdgeDriverExecutable(executableDir: string): Promise<string | null> {
+  // TODO: change to check the version instead of file existence as a followup.
+  // https://github.com/appium/appium-chromium-driver/issues/423
+
   const candidates = await fs.glob(`**/${getMsEdgeDriverExecutableName()}`, {
     cwd: executableDir,
     absolute: true,
@@ -100,8 +103,6 @@ export async function ensureMsEdgeDriver(
   const targetDir = path.join(executableDir, driverVersion);
   const targetExecutable = path.join(targetDir, getMsEdgeDriverExecutableName());
 
-  // TODO: change to check the version instead of file existence as a followup.
-  // https://github.com/appium/appium-chromium-driver/issues/423
   if (await fs.isExecutable(targetExecutable)) {
     return targetExecutable;
   }
@@ -210,8 +211,6 @@ export async function resolveMsEdgeDriverExecutable(
     );
   }
 
-  return await ensureMsEdgeDriver(
-    browserVersion,
-    opts.executableDir || getDefaultMsEdgeDriverDir(),
-  );
+  const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
+  return await ensureMsEdgeDriver(browserVersion, executableDir);
 }
