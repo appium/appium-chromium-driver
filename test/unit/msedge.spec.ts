@@ -5,19 +5,7 @@ import path from 'node:path';
 import sinon from 'sinon';
 import * as strongboxModule from '@appium/strongbox';
 import type {BrowserInfo} from '../../lib/types';
-import {
-  BrowserVersion,
-  ensureMsEdgeDriver,
-  decodeMicrosoftVersionResponse,
-  findMsEdgeDriverExecutable,
-  getDefaultMsEdgeDriverDir,
-  getMsEdgeDriverDownloadUrl,
-  getMsEdgeDriverExecutableName,
-  getMsEdgeDriverVersion,
-  getMsEdgePlatformConfig,
-  isMsEdge,
-  resolveMsEdgeDriverExecutable,
-} from '../../lib/msedge';
+import {BrowserVersion, MsEdgeDriverHandler, msEdgeDriverHandler} from '../../lib/msedge';
 
 use(chaiAsPromised);
 
@@ -69,28 +57,53 @@ describe('msedge helpers', function () {
     });
   });
 
+  describe('MsEdgeDriverHandler', function () {
+    it('matches Edge aliases through class API', function () {
+      const handler = new MsEdgeDriverHandler();
+      expect(handler.isMsEdge('msedge')).to.be.true;
+      expect(handler.isMsEdge('MicrosoftEdge')).to.be.true;
+      expect(handler.isMsEdge('chrome')).to.be.false;
+    });
+
+    it('returns a release download URL through class API', function () {
+      const handler = new MsEdgeDriverHandler();
+      const url = handler.getDriverDownloadUrl('147.0.3179.98');
+      expect(url).to.match(/^https:\/\/msedgedriver\.microsoft\.com\/147\.0\.3179\.98\//);
+      expect(url).to.match(/edgedriver_.+\.zip$/);
+    });
+
+    it('returns an explicit executable path through class API', async function () {
+      const handler = new MsEdgeDriverHandler();
+      const executable = await handler.resolveDriverExecutable({
+        browserName: 'msedge',
+        executable: '/custom/msedgedriver',
+      });
+      expect(executable).to.equal('/custom/msedgedriver');
+    });
+  });
+
   describe('isMsEdge', function () {
     it('matches MSEdge aliases', function () {
-      expect(isMsEdge('msedge')).to.be.true;
-      expect(isMsEdge('MicrosoftEdge')).to.be.true;
-      expect(isMsEdge('MICROSOFTEDGE')).to.be.true;
+      expect(msEdgeDriverHandler.isMsEdge('msedge')).to.be.true;
+      expect(msEdgeDriverHandler.isMsEdge('MicrosoftEdge')).to.be.true;
+      expect(msEdgeDriverHandler.isMsEdge('MICROSOFTEDGE')).to.be.true;
     });
 
     it('rejects non-edge browser names', function () {
-      expect(isMsEdge('chrome')).to.be.false;
-      expect(isMsEdge('chromium')).to.be.false;
-      expect(isMsEdge(undefined)).to.be.false;
+      expect(msEdgeDriverHandler.isMsEdge('chrome')).to.be.false;
+      expect(msEdgeDriverHandler.isMsEdge('chromium')).to.be.false;
+      expect(msEdgeDriverHandler.isMsEdge(undefined)).to.be.false;
     });
   });
 
   describe('decodeMicrosoftVersionResponse', function () {
     it('decodes utf16le payloads with a BOM', function () {
       const payload = Buffer.from([0xff, 0xfe, 0x31, 0x00, 0x34, 0x00, 0x37, 0x00]);
-      expect(decodeMicrosoftVersionResponse(payload)).to.equal('147');
+      expect(msEdgeDriverHandler.decodeVersionResponse(payload)).to.equal('147');
     });
 
     it('decodes utf8 payloads', function () {
-      expect(decodeMicrosoftVersionResponse(Buffer.from('147.0.3179.98\n'))).to.equal(
+      expect(msEdgeDriverHandler.decodeVersionResponse(Buffer.from('147.0.3179.98\n'))).to.equal(
         '147.0.3179.98',
       );
     });
@@ -99,34 +112,34 @@ describe('msedge helpers', function () {
   describe('getMsEdgeDriverExecutableName', function () {
     it('returns the Windows executable name on win32', async function () {
       await withPlatform('win32', async () => {
-        expect(getMsEdgeDriverExecutableName()).to.equal('msedgedriver.exe');
+        expect(msEdgeDriverHandler.getDriverExecutableName()).to.equal('msedgedriver.exe');
       });
     });
 
     it('returns the unix executable name on non-Windows platforms', async function () {
       await withPlatform('linux', async () => {
-        expect(getMsEdgeDriverExecutableName()).to.equal('msedgedriver');
+        expect(msEdgeDriverHandler.getDriverExecutableName()).to.equal('msedgedriver');
       });
     });
   });
 
   describe('getMsEdgePlatformConfig', function () {
     it('returns the expected Windows config', function () {
-      expect(getMsEdgePlatformConfig('win32', 'x64')).to.deep.equal({
+      expect(msEdgeDriverHandler.getPlatformConfig('win32', 'x64')).to.deep.equal({
         archiveName: 'edgedriver_win64.zip',
         releaseChannel: 'WINDOWS',
       });
     });
 
     it('returns the expected macOS arm64 config', function () {
-      expect(getMsEdgePlatformConfig('darwin', 'arm64')).to.deep.equal({
+      expect(msEdgeDriverHandler.getPlatformConfig('darwin', 'arm64')).to.deep.equal({
         archiveName: 'edgedriver_mac64_m1.zip',
         releaseChannel: 'MACOS',
       });
     });
 
     it('returns the expected Linux config', function () {
-      expect(getMsEdgePlatformConfig('linux', 'x64')).to.deep.equal({
+      expect(msEdgeDriverHandler.getPlatformConfig('linux', 'x64')).to.deep.equal({
         archiveName: 'edgedriver_linux64.zip',
         releaseChannel: 'LINUX',
       });
@@ -148,7 +161,7 @@ describe('msedge helpers', function () {
           ),
         );
 
-      const version = await getMsEdgeDriverVersion('147.0.3179.73');
+      const version = await msEdgeDriverHandler.getDriverVersion('147.0.3179.73');
 
       expect(version).to.equal('147.0.3179.98');
       expect(fetchStub.firstCall.args[0]).to.include('LATEST_RELEASE_147_');
@@ -159,7 +172,7 @@ describe('msedge helpers', function () {
         .stub(globalThis, 'fetch')
         .resolves(new Response(Buffer.from('not-a-version'), {status: 200}));
 
-      await expect(getMsEdgeDriverVersion('147.0.3179.73')).to.be.rejectedWith(
+      await expect(msEdgeDriverHandler.getDriverVersion('147.0.3179.73')).to.be.rejectedWith(
         'unexpected MSEdgeDriver version response',
       );
     });
@@ -167,7 +180,7 @@ describe('msedge helpers', function () {
 
   describe('getMsEdgeDriverDownloadUrl', function () {
     it('includes the platform archive name', function () {
-      const url = getMsEdgeDriverDownloadUrl('147.0.3179.98');
+      const url = msEdgeDriverHandler.getDriverDownloadUrl('147.0.3179.98');
       expect(url).to.match(/^https:\/\/msedgedriver\.microsoft\.com\/147\.0\.3179\.98\//);
       expect(url).to.match(/edgedriver_.+\.zip$/);
     });
@@ -179,7 +192,7 @@ describe('msedge helpers', function () {
         .stub(strongboxModule, 'strongbox')
         .returns({container: '/tmp/msedgedrivers'} as ReturnType<typeof strongboxModule.strongbox>);
 
-      expect(getDefaultMsEdgeDriverDir()).to.equal('/tmp/msedgedrivers');
+      expect(msEdgeDriverHandler.getDefaultDriverDir()).to.equal('/tmp/msedgedrivers');
       expect(
         strongboxStub.calledOnceWithExactly('appium-chromium-driver', {suffix: 'msedgedrivers'}),
       ).to.be.true;
@@ -191,7 +204,7 @@ describe('msedge helpers', function () {
       const globStub = sinon.stub(fs, 'glob').resolves(['C:/drivers/msedgedriver.exe']);
 
       await withPlatform('win32', async () => {
-        const executable = await findMsEdgeDriverExecutable('C:/drivers');
+        const executable = await msEdgeDriverHandler.findDriverExecutable('C:/drivers');
         expect(executable).to.equal('C:/drivers/msedgedriver.exe');
       });
 
@@ -212,13 +225,13 @@ describe('msedge helpers', function () {
           '/tmp/msedgedrivers/135/msedgedriver',
         ]);
 
-      const executable = await findMsEdgeDriverExecutable('/tmp/msedgedrivers');
+      const executable = await msEdgeDriverHandler.findDriverExecutable('/tmp/msedgedrivers');
       expect(executable).to.equal('/tmp/msedgedrivers/135/msedgedriver');
     });
 
     it('returns null when no executable is found', async function () {
       sinon.stub(fs, 'glob').resolves([]);
-      expect(await findMsEdgeDriverExecutable('/tmp/msedgedrivers')).to.be.null;
+      expect(await msEdgeDriverHandler.findDriverExecutable('/tmp/msedgedrivers')).to.be.null;
     });
   });
 
@@ -232,8 +245,12 @@ describe('msedge helpers', function () {
       const downloadStub = sinon.stub(net, 'downloadFile').resolves();
       const executableDir = '/tmp/msedgedrivers';
 
-      const executable = await ensureMsEdgeDriver(browserVersion, executableDir);
-      const expectedPath = path.join(executableDir, driverVersion, getMsEdgeDriverExecutableName());
+      const executable = await msEdgeDriverHandler.ensureDriver(browserVersion, executableDir);
+      const expectedPath = path.join(
+        executableDir,
+        driverVersion,
+        msEdgeDriverHandler.getDriverExecutableName(),
+      );
 
       expect(executable).to.equal(expectedPath);
       expect(isExecutableStub.calledOnceWithExactly(expectedPath)).to.be.true;
@@ -252,17 +269,27 @@ describe('msedge helpers', function () {
       const rimrafStub = sinon.stub(fs, 'rimraf').resolves();
       const executableDir = '/tmp/msedgedrivers';
       const targetDir = path.join(executableDir, driverVersion);
-      const targetExecutable = path.join(targetDir, getMsEdgeDriverExecutableName());
-      const extractedExecutable = path.join(targetDir, 'Driver', getMsEdgeDriverExecutableName());
+      const targetExecutable = path.join(targetDir, msEdgeDriverHandler.getDriverExecutableName());
+      const extractedExecutable = path.join(
+        targetDir,
+        'Driver',
+        msEdgeDriverHandler.getDriverExecutableName(),
+      );
       sinon.stub(fs, 'glob').resolves([extractedExecutable]);
 
-      const executable = await ensureMsEdgeDriver(browserVersion, executableDir);
-      const archivePath = path.join('/tmp/extract-root', getMsEdgePlatformConfig().archiveName);
+      const executable = await msEdgeDriverHandler.ensureDriver(browserVersion, executableDir);
+      const archivePath = path.join(
+        '/tmp/extract-root',
+        msEdgeDriverHandler.getPlatformConfig().archiveName,
+      );
 
       expect(executable).to.equal(targetExecutable);
       expect(mkdirpStub.calledOnceWithExactly(targetDir)).to.be.true;
       expect(
-        downloadStub.calledOnceWithExactly(getMsEdgeDriverDownloadUrl(driverVersion), archivePath),
+        downloadStub.calledOnceWithExactly(
+          msEdgeDriverHandler.getDriverDownloadUrl(driverVersion),
+          archivePath,
+        ),
       ).to.be.true;
       expect(extractStub.calledOnceWithExactly(archivePath, targetDir)).to.be.true;
       expect(chmodStub.calledOnceWithExactly(extractedExecutable, 0o755)).to.be.true;
@@ -290,7 +317,7 @@ describe('msedge helpers', function () {
           .stub(fs, 'glob')
           .resolves(['C:/drivers/147.0.3179.98/Driver/msedgedriver.exe']);
 
-        const executable = await ensureMsEdgeDriver(browserVersion, 'C:/drivers');
+        const executable = await msEdgeDriverHandler.ensureDriver(browserVersion, 'C:/drivers');
 
         expect(executable).to.equal('C:/drivers/147.0.3179.98/msedgedriver.exe');
         expect(globStub.firstCall.args[0]).to.equal('**/msedgedriver.exe');
@@ -309,9 +336,9 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'glob').resolves([]);
       const rimrafStub = sinon.stub(fs, 'rimraf').resolves();
 
-      await expect(ensureMsEdgeDriver(browserVersion, '/tmp/msedgedrivers')).to.be.rejectedWith(
-        `Cannot find '${getMsEdgeDriverExecutableName()}'`,
-      );
+      await expect(
+        msEdgeDriverHandler.ensureDriver(browserVersion, '/tmp/msedgedrivers'),
+      ).to.be.rejectedWith(`Cannot find '${msEdgeDriverHandler.getDriverExecutableName()}'`);
       expect(rimrafStub.calledOnceWithExactly('/tmp/extract-root')).to.be.true;
     });
   });
@@ -322,12 +349,13 @@ describe('msedge helpers', function () {
     } as BrowserInfo;
 
     it('returns undefined for non-Edge browser names', async function () {
-      expect(await resolveMsEdgeDriverExecutable({browserName: 'chrome'})).to.be.undefined;
+      expect(await msEdgeDriverHandler.resolveDriverExecutable({browserName: 'chrome'})).to.be
+        .undefined;
     });
 
     it('returns the explicit executable path when provided', async function () {
       expect(
-        await resolveMsEdgeDriverExecutable({
+        await msEdgeDriverHandler.resolveDriverExecutable({
           browserName: 'msedge',
           executable: '/custom/msedgedriver',
         }),
@@ -337,7 +365,7 @@ describe('msedge helpers', function () {
     it('returns an executable found in the provided directory before autodownloading', async function () {
       sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/current/msedgedriver']);
 
-      const executable = await resolveMsEdgeDriverExecutable({
+      const executable = await msEdgeDriverHandler.resolveDriverExecutable({
         browserName: 'msedge',
         executableDir: '/tmp/msedgedrivers',
       });
@@ -348,7 +376,7 @@ describe('msedge helpers', function () {
     it('returns undefined when autodownload is disabled and no executable is found', async function () {
       sinon.stub(fs, 'glob').resolves([]);
 
-      const executable = await resolveMsEdgeDriverExecutable(
+      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -364,7 +392,7 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'glob').resolves([]);
 
       await expect(
-        resolveMsEdgeDriverExecutable({
+        msEdgeDriverHandler.resolveDriverExecutable({
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
         }),
@@ -388,7 +416,7 @@ describe('msedge helpers', function () {
         .onSecondCall()
         .resolves(['/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
-      const executable = await resolveMsEdgeDriverExecutable(
+      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -416,7 +444,7 @@ describe('msedge helpers', function () {
         .stub(fs, 'glob')
         .resolves(['/tmp/strongbox/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
-      const executable = await resolveMsEdgeDriverExecutable(
+      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
         {browserName: 'msedge'},
         browserVersionInfo,
       );
