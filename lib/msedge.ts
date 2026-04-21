@@ -5,8 +5,8 @@ import {strongbox} from '@appium/strongbox';
 
 /**
  * Name for the strongbox storage for this driver.
+ * Note: Changing this name will be a breaking change.
  */
-// Note: Changing this name will be a breaking change.
 const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
 type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
