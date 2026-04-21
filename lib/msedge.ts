@@ -6,11 +6,8 @@ import {strongbox} from '@appium/strongbox';
 /**
  * Name for the strongbox storage for this driver.
  */
+// Note: Changing this name will be a breaking change.
 const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
-
-const MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
-const MSEDGEDRIVER_REQUEST_TIMEOUT_MS = 10_000;
-const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 
 type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
 
@@ -64,6 +61,10 @@ export class BrowserVersion {
  * Handles MSEdgeDriver discovery and autodownload flows.
  */
 export class MsEdgeDriverHandler {
+  private MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
+  private MSEDGEDRIVER_REQUEST_TIMEOUT_MS = 10_000;
+  private UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
+
   isMsEdge(browserName?: string): boolean {
     return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
   }
@@ -175,7 +176,7 @@ export class MsEdgeDriverHandler {
 
   buildLatestReleaseUrl(browserVersion: string): string {
     const majorVersion = BrowserVersion.from(browserVersion).major;
-    return `${MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${this.getPlatformConfig().releaseChannel}`;
+    return `${this.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${this.getPlatformConfig().releaseChannel}`;
   }
 
   /**
@@ -187,7 +188,7 @@ export class MsEdgeDriverHandler {
     const releaseUrl = this.buildLatestReleaseUrl(browserVersion);
     const response = await fetch(releaseUrl, {
       method: 'GET',
-      signal: AbortSignal.timeout(MSEDGEDRIVER_REQUEST_TIMEOUT_MS),
+      signal: AbortSignal.timeout(this.MSEDGEDRIVER_REQUEST_TIMEOUT_MS),
     });
     if (!response.ok) {
       throw new Error(
@@ -205,12 +206,12 @@ export class MsEdgeDriverHandler {
   }
 
   getDriverDownloadUrl(driverVersion: string): string {
-    return `${MSEDGEDRIVER_BASE_URL}/${driverVersion}/${this.getPlatformConfig().archiveName}`;
+    return `${this.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${this.getPlatformConfig().archiveName}`;
   }
 
   decodeVersionResponse(payload: Buffer): string {
-    if (payload.subarray(0, UTF16LE_BOM.length).equals(UTF16LE_BOM)) {
-      return payload.subarray(UTF16LE_BOM.length).toString('utf16le').trim();
+    if (payload.subarray(0, this.UTF16LE_BOM.length).equals(this.UTF16LE_BOM)) {
+      return payload.subarray(this.UTF16LE_BOM.length).toString('utf16le').trim();
     }
     return payload.toString('utf8').trim();
   }
