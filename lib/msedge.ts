@@ -18,6 +18,41 @@ interface EdgePlatformConfig {
   releaseChannel: EdgeReleaseChannel;
 }
 
+/**
+ * A browser version parser for Microsoft Edge.
+ */
+export class BrowserVersion {
+  constructor(private readonly rawVersion: string) {}
+
+  /**
+   * Parse the major version from the full browser version string.
+   * @param version The full browser version string.
+   * @returns A BrowserVersion instance.
+   */
+  static from(version: string): BrowserVersion {
+    return new BrowserVersion(version);
+  }
+
+  /**
+   * Get the major version number.
+   */
+  get major(): string {
+    const match = /^(\d+)/.exec(this.rawVersion);
+    if (!match) {
+      throw new Error(`Cannot determine major version from '${this.rawVersion}'`);
+    }
+    return match[1];
+  }
+
+  /**
+   * Return the original version string.
+   * @returns The original version string.
+   */
+  toString(): string {
+    return this.rawVersion;
+  }
+}
+
 export function isMsEdge(browserName?: string): boolean {
   return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
 }
@@ -136,7 +171,7 @@ export async function ensureMsEdgeDriver(
  * @returns
  */
 export async function getMsEdgeDriverVersion(browserVersion: string): Promise<string> {
-  const majorVersion = getMajorVersion(browserVersion);
+  const majorVersion = BrowserVersion.from(browserVersion).major;
   const releaseUrl = `${MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${getMsEdgePlatformConfig().releaseChannel}`;
   const response = await fetch(releaseUrl);
   if (!response.ok) {
@@ -163,14 +198,6 @@ export function decodeMicrosoftVersionResponse(payload: Buffer): string {
     return payload.subarray(UTF16LE_BOM.length).toString('utf16le').trim();
   }
   return payload.toString('utf8').trim();
-}
-
-function getMajorVersion(browserVersion: string): string {
-  const match = /^(\d+)/.exec(browserVersion);
-  if (!match) {
-    throw new Error(`Cannot determine major version from '${browserVersion}'`);
-  }
-  return match[1];
 }
 
 interface MsEdgeDriverResolveOpts {

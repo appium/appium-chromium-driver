@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import * as strongboxModule from '@appium/strongbox';
 import type {BrowserInfo} from '../../lib/types';
 import {
+  BrowserVersion,
   ensureMsEdgeDriver,
   decodeMicrosoftVersionResponse,
   findMsEdgeDriverExecutable,
@@ -50,6 +51,22 @@ async function withPlatform<T>(platform: NodeJS.Platform, run: () => Promise<T>)
 describe('msedge helpers', function () {
   afterEach(function () {
     sinon.restore();
+  });
+
+  describe('BrowserVersion', function () {
+    it('returns the major version', function () {
+      expect(BrowserVersion.from('147.0.3179.73').major).to.equal('147');
+    });
+
+    it('keeps the original value in toString', function () {
+      expect(BrowserVersion.from('147.0.3179.73').toString()).to.equal('147.0.3179.73');
+    });
+
+    it('throws when major version cannot be parsed', function () {
+      expect(() => BrowserVersion.from('edge-canary').major).to.throw(
+        "Cannot determine major version from 'edge-canary'",
+      );
+    });
   });
 
   describe('isMsEdge', function () {
