@@ -23,12 +23,25 @@ interface MsEdgeDriverResolveOpts {
 }
 
 /**
+ * Determine if the given browser name corresponds to Microsoft Edge.
+ * @param browserName The name of the browser.
+ * @returns True if the browser is Microsoft Edge, false otherwise.
+ */
+export function isMsEdge(browserName?: string): boolean {
+  return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
+}
+
+/**
  * A version parser for Microsoft Edge browser and MSEdgeDriver.
  */
 class Version {
-  private static readonly VERSION_PATTERN = /^\d+\.\d+\.\d+\.\d+$/;
+  // The version format is expected to be like "147.0.3179.73" or "147.0.3179.98".
+  private static readonly VERSION_PATTERN = /^(\d+)\.\d+\.\d+\.\d+$/;
 
-  constructor(private readonly rawVersion: string) {}
+  constructor(
+    private readonly rawVersion: string,
+    readonly major: string,
+  ) {}
 
   /**
    * Parse a version string into a Version instance.
@@ -37,21 +50,11 @@ class Version {
    * @throws Error if the version string is invalid.
    */
   static from(version: string): Version {
-    if (!this.VERSION_PATTERN.test(version)) {
+    const match = this.VERSION_PATTERN.exec(version);
+    if (!match) {
       throw new Error(`Invalid version format: '${version}'`);
     }
-    return new Version(version);
-  }
-
-  /**
-   * Get the major version number.
-   */
-  get major(): string {
-    const match = /^(\d+)/.exec(this.rawVersion);
-    if (!match) {
-      throw new Error(`Cannot determine major version from '${this.rawVersion}'`);
-    }
-    return match[1];
+    return new Version(version, match[1]);
   }
 
   /**
@@ -70,10 +73,6 @@ export class MsEdgeDriverHandler {
   private MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
   private MSEDGEDRIVER_REQUEST_TIMEOUT_MS = 10_000;
   private UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
-
-  isMsEdge(browserName?: string): boolean {
-    return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
-  }
 
   /**
    * Get the default directory for storing MSEdgeDriver executables.
@@ -222,7 +221,7 @@ export class MsEdgeDriverHandler {
     browserVersionInfo?: BrowserInfo,
     isAutodownloadEnabled = true,
   ): Promise<string | undefined> {
-    if (!this.isMsEdge(opts.browserName)) {
+    if (!isMsEdge(opts.browserName)) {
       return undefined;
     }
 
@@ -251,7 +250,14 @@ export class MsEdgeDriverHandler {
 
     const browserVersion = Version.from(browserVersionStr);
     const executableDir = opts.executableDir || this.getDefaultDriverDir();
-    return await this.ensureDriver(browserVersion, executableDir);
+    try {
+      return await this.ensureDriver(browserVersion, executableDir);
+    } catch (err) {
+      throw new Error(
+        `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion}' ` +
+          `in '${executableDir}': ${(err as Error).message}`,
+      );
+    }
   }
 }
 

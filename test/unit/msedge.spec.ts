@@ -1,11 +1,10 @@
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {fs, net, tempDir, zip} from '@appium/support';
-import path from 'node:path';
 import sinon from 'sinon';
 import * as strongboxModule from '@appium/strongbox';
 import type {BrowserInfo} from '../../lib/types';
-import {MsEdgeDriverHandler, msEdgeDriverHandler} from '../../lib/msedge';
+import {isMsEdge, MsEdgeDriverHandler, msEdgeDriverHandler} from '../../lib/msedge';
 
 use(chaiAsPromised);
 
@@ -42,13 +41,6 @@ describe('msedge helpers', function () {
   });
 
   describe('MsEdgeDriverHandler', function () {
-    it('matches Edge aliases through class API', function () {
-      const handler = new MsEdgeDriverHandler();
-      expect(handler.isMsEdge('msedge')).to.be.true;
-      expect(handler.isMsEdge('MicrosoftEdge')).to.be.true;
-      expect(handler.isMsEdge('chrome')).to.be.false;
-    });
-
     it('returns an explicit executable path through class API', async function () {
       const handler = new MsEdgeDriverHandler();
       const executable = await handler.resolveDriverExecutable({
@@ -61,15 +53,15 @@ describe('msedge helpers', function () {
 
   describe('isMsEdge', function () {
     it('matches MSEdge aliases', function () {
-      expect(msEdgeDriverHandler.isMsEdge('msedge')).to.be.true;
-      expect(msEdgeDriverHandler.isMsEdge('MicrosoftEdge')).to.be.true;
-      expect(msEdgeDriverHandler.isMsEdge('MICROSOFTEDGE')).to.be.true;
+      expect(isMsEdge('msedge')).to.be.true;
+      expect(isMsEdge('MicrosoftEdge')).to.be.true;
+      expect(isMsEdge('MICROSOFTEDGE')).to.be.true;
     });
 
     it('rejects non-edge browser names', function () {
-      expect(msEdgeDriverHandler.isMsEdge('chrome')).to.be.false;
-      expect(msEdgeDriverHandler.isMsEdge('chromium')).to.be.false;
-      expect(msEdgeDriverHandler.isMsEdge(undefined)).to.be.false;
+      expect(isMsEdge('chrome')).to.be.false;
+      expect(isMsEdge('chromium')).to.be.false;
+      expect(isMsEdge(undefined)).to.be.false;
     });
   });
 

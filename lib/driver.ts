@@ -10,7 +10,7 @@ import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
 import {getBrowserVersion} from './browser';
-import {msEdgeDriverHandler} from './msedge';
+import {isMsEdge, msEdgeDriverHandler} from './msedge';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
@@ -119,7 +119,7 @@ export class ChromiumDriver
       return this.opts.executableDir;
     }
 
-    return msEdgeDriverHandler.isMsEdge(this.opts.browserName)
+    return isMsEdge(this.opts.browserName)
       ? msEdgeDriverHandler.getDefaultDriverDir()
       : this.getDefaultChromeDriverDir();
   }
