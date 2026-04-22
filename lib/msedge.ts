@@ -23,18 +23,24 @@ interface MsEdgeDriverResolveOpts {
 }
 
 /**
- * A browser version parser for Microsoft Edge.
+ * A version parser for Microsoft Edge browser and MSEdgeDriver.
  */
-export class BrowserVersion {
+class Version {
+  private static readonly VERSION_PATTERN = /^\d+\.\d+\.\d+\.\d+$/;
+
   constructor(private readonly rawVersion: string) {}
 
   /**
-   * Parse the major version from the full browser version string.
-   * @param version The full browser version string.
-   * @returns A BrowserVersion instance.
+   * Parse a version string into a Version instance.
+   * @param version The version string (e.g., "147.0.3179.73" or "147.0.3179.98").
+   * @returns A Version instance.
+   * @throws Error if the version string is invalid.
    */
-  static from(version: string): BrowserVersion {
-    return new BrowserVersion(version);
+  static from(version: string): Version {
+    if (!this.VERSION_PATTERN.test(version)) {
+      throw new Error(`Invalid version format: '${version}'`);
+    }
+    return new Version(version);
   }
 
   /**
@@ -70,14 +76,6 @@ export class MsEdgeDriverHandler {
   }
 
   /**
-   * Get driver executable name.
-   * @returns The name of the driver executable.
-   */
-  getDriverExecutableName(): string {
-    return process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver';
-  }
-
-  /**
    * Get the default directory for storing MSEdgeDriver executables.
    * @returns The default directory path.
    */
@@ -89,12 +87,20 @@ export class MsEdgeDriverHandler {
   }
 
   /**
+   * Get driver executable name.
+   * @returns The name of the driver executable.
+   */
+  private getDriverExecutableName(): string {
+    return process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver';
+  }
+
+  /**
    * Get the platform-specific configuration for MSEdgeDriver.
    * @param platform The platform name.
    * @param arch The architecture name.
    * @returns The platform configuration.
    */
-  getPlatformConfig(platform = process.platform, arch = process.arch): EdgePlatformConfig {
+  private getPlatformConfig(platform = process.platform, arch = process.arch): EdgePlatformConfig {
     if (platform === 'win32') {
       if (arch === 'arm64') {
         return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};
@@ -124,7 +130,7 @@ export class MsEdgeDriverHandler {
    * @param executableDir The directory to search for the driver executable.
    * @returns The path to the driver executable, or null if not found.
    */
-  async findDriverExecutable(executableDir: string): Promise<string | null> {
+  private async findDriverExecutable(executableDir: string): Promise<string | null> {
     // TODO: change to check the version instead of file existence as a followup.
     // https://github.com/appium/appium-chromium-driver/issues/423
     const candidates = await fs.glob(`**/${this.getDriverExecutableName()}`, {
@@ -142,9 +148,9 @@ export class MsEdgeDriverHandler {
    * @param executableDir The directory to store the driver executable.
    * @returns The path to the driver executable.
    */
-  async ensureDriver(browserVersion: string, executableDir: string): Promise<string> {
+  private async ensureDriver(browserVersion: Version, executableDir: string): Promise<string> {
     const driverVersion = await this.getDriverVersion(browserVersion);
-    const targetDir = path.join(executableDir, driverVersion);
+    const targetDir = path.join(executableDir, driverVersion.toString());
     const targetExecutable = path.join(targetDir, this.getDriverExecutableName());
 
     if (await fs.isExecutable(targetExecutable)) {
@@ -174,8 +180,8 @@ export class MsEdgeDriverHandler {
     }
   }
 
-  buildLatestReleaseUrl(browserVersion: string): string {
-    const majorVersion = BrowserVersion.from(browserVersion).major;
+  private buildLatestReleaseUrl(browserVersion: Version): string {
+    const majorVersion = browserVersion.major;
     return `${this.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${this.getPlatformConfig().releaseChannel}`;
   }
 
@@ -184,7 +190,7 @@ export class MsEdgeDriverHandler {
    * @param browserVersion The version of the browser.
    * @returns The version of the MSEdgeDriver.
    */
-  async getDriverVersion(browserVersion: string): Promise<string> {
+  private async getDriverVersion(browserVersion: Version): Promise<Version> {
     const releaseUrl = this.buildLatestReleaseUrl(browserVersion);
     const response = await fetch(releaseUrl, {
       method: 'GET',
@@ -197,19 +203,14 @@ export class MsEdgeDriverHandler {
       );
     }
     const text = this.decodeVersionResponse(Buffer.from(await response.arrayBuffer()));
-    if (!/^\d+\.\d+\.\d+\.\d+$/.test(text)) {
-      throw new Error(
-        `Received an unexpected MSEdgeDriver version response from '${releaseUrl}': ${text}`,
-      );
-    }
-    return text;
+    return Version.from(text);
   }
 
-  getDriverDownloadUrl(driverVersion: string): string {
+  private getDriverDownloadUrl(driverVersion: Version): string {
     return `${this.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${this.getPlatformConfig().archiveName}`;
   }
 
-  decodeVersionResponse(payload: Buffer): string {
+  private decodeVersionResponse(payload: Buffer): string {
     if (payload.subarray(0, this.UTF16LE_BOM.length).equals(this.UTF16LE_BOM)) {
       return payload.subarray(this.UTF16LE_BOM.length).toString('utf16le').trim();
     }
@@ -240,14 +241,15 @@ export class MsEdgeDriverHandler {
       return undefined;
     }
 
-    const browserVersion = browserVersionInfo?.info?.Browser;
-    if (!browserVersion) {
+    const browserVersionStr = browserVersionInfo?.info?.Browser;
+    if (!browserVersionStr) {
       throw new Error(
         'Could not determine the installed Microsoft Edge version required for autodownload. ' +
           'Provide ms:edgeOptions.binary or appium:executable.',
       );
     }
 
+    const browserVersion = Version.from(browserVersionStr);
     const executableDir = opts.executableDir || this.getDefaultDriverDir();
     return await this.ensureDriver(browserVersion, executableDir);
   }
