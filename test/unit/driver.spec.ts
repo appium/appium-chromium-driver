@@ -12,10 +12,10 @@ class TestDriver extends ChromiumDriver {
     Object.assign(this.opts, opts);
   }
   getExecutableExposed(browserVersionInfo?: BrowserInfo): Promise<string | undefined> {
-    return this.getExecutable(browserVersionInfo);
+    return (this as any).getExecutable(browserVersionInfo);
   }
   getExecutableDirExposed(): string | undefined {
-    return this.getExecutableDir();
+    return (this as any).getExecutableDir();
   }
 }
 
