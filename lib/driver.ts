@@ -102,7 +102,7 @@ export class ChromiumDriver
     return path.join(packageDir, 'chromedriver');
   }
 
-  private async getExecutable(
+  protected async getExecutable(
     browserVersionInfo?: BrowserInfo | undefined,
     isAutodownloadEnabled: boolean = true,
   ): Promise<string | undefined> {
@@ -122,7 +122,7 @@ export class ChromiumDriver
     );
   }
 
-  private getExecutableDir(): string | undefined {
+  protected getExecutableDir(): string | undefined {
     if (this.opts.executableDir) {
       return this.opts.executableDir;
     }
