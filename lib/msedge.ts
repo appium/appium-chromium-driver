@@ -40,6 +40,11 @@ class Version {
 
   constructor(
     private readonly rawVersion: string,
+    /**
+     * The major version number extracted from the raw version string.
+     * Most of cases the major version is sufficient to determine
+     * the compatible MSEdgeDriver version, so we extract it for convenience.
+     */
     readonly major: string,
   ) {}
 
@@ -89,7 +94,7 @@ export class MsEdgeDriverHandler {
    * Get driver executable name.
    * @returns The name of the driver executable.
    */
-  private getDriverExecutableName(): string {
+  private get driverExecutableName(): string {
     return process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver';
   }
 
@@ -132,7 +137,7 @@ export class MsEdgeDriverHandler {
   private async findDriverExecutable(executableDir: string): Promise<string | null> {
     // TODO: change to check the version instead of file existence as a followup.
     // https://github.com/appium/appium-chromium-driver/issues/423
-    const candidates = await fs.glob(`**/${this.getDriverExecutableName()}`, {
+    const candidates = await fs.glob(`**/${this.driverExecutableName}`, {
       cwd: executableDir,
       absolute: true,
       nodir: true,
@@ -146,11 +151,12 @@ export class MsEdgeDriverHandler {
    * @param browserVersion The version of the browser.
    * @param executableDir The directory to store the driver executable.
    * @returns The path to the driver executable.
+   * @throws Error if the driver cannot be ensured.
    */
   private async ensureDriver(browserVersion: Version, executableDir: string): Promise<string> {
     const driverVersion = await this.getDriverVersion(browserVersion);
     const targetDir = path.join(executableDir, driverVersion.toString());
-    const targetExecutable = path.join(targetDir, this.getDriverExecutableName());
+    const targetExecutable = path.join(targetDir, this.driverExecutableName);
 
     if (await fs.isExecutable(targetExecutable)) {
       return targetExecutable;
@@ -164,7 +170,7 @@ export class MsEdgeDriverHandler {
       await zip.extractAllTo(archivePath, targetDir);
       const extractedExecutable = await this.findDriverExecutable(targetDir);
       if (!extractedExecutable) {
-        throw new Error(`Cannot find '${this.getDriverExecutableName()}' in '${targetDir}'`);
+        throw new Error(`Cannot find '${this.driverExecutableName}' in '${targetDir}'`);
       }
       if (process.platform !== 'win32') {
         // This might not be necessary, but to be safe.
@@ -216,17 +222,30 @@ export class MsEdgeDriverHandler {
     return payload.toString('utf8').trim();
   }
 
+  /**
+   * Resolve the MSEdgeDriver executable path based on the given options and browser version info.
+   * It returns opts.executable if it is provided.
+   * If not, it checks if the browser is Microsoft Edge. If it is not, it returns undefined.
+   * If it is, it tries to find the executable in opts.executableDir if provided.
+   * If it cannot find it and autodownload is enabled, it tries to autodownload the driver based on the browser version.
+   * If any step fails for Microsoft Edge, it throws an error.
+   * @param opts The options for resolving the driver executable.
+   * @param browserVersionInfo The information about the browser version.
+   * @param isAutodownloadEnabled Whether autodownload is enabled (default: true).
+   * @returns The path to the driver executable, or undefined if it cannot be resolved.
+   * @throws Error if the browser is Microsoft Edge but the executable cannot be resolved.
+   */
   async resolveDriverExecutable(
     opts: MsEdgeDriverResolveOpts,
     browserVersionInfo?: BrowserInfo,
     isAutodownloadEnabled = true,
   ): Promise<string | undefined> {
-    if (!isMsEdge(opts.browserName)) {
-      return undefined;
-    }
-
     if (opts.executable) {
       return opts.executable;
+    }
+
+    if (!isMsEdge(opts.browserName)) {
+      return undefined;
     }
 
     if (opts.executableDir) {
