@@ -24,6 +24,7 @@ interface MsEdgeDriverResolveOpts {
 
 /**
  * Determine if the given browser name corresponds to Microsoft Edge.
+ * 'MicrosoftEdge' is old forma. Newer MSEdge accepts 'msedge' as the browser name.
  * @param browserName The name of the browser.
  * @returns True if the browser is Microsoft Edge, false otherwise.
  */
@@ -215,6 +216,7 @@ export class MsEdgeDriverHandler {
           `(status ${response.status})`,
       );
     }
+    // The response body is expected to be a small and simple text with the version string, e.g., "147.0.3179.98".
     const text = MsEdgeDriverHandler.decodeVersionResponse(
       Buffer.from(await response.arrayBuffer()),
     );
