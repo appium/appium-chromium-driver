@@ -32,6 +32,17 @@ export function isMsEdge(browserName?: string): boolean {
 }
 
 /**
+ * Get the default directory for storing MSEdgeDriver executables.
+ * @returns The default directory path.
+ */
+export function getDefaultMsEdgeDriverDir(): string {
+  const s = strongbox(LOCAL_PACKAGE_STORAGE_NAME, {
+    suffix: 'msedgedrivers',
+  });
+  return s.container;
+}
+
+/**
  * A version parser for Microsoft Edge browser and MSEdgeDriver.
  */
 class Version {
@@ -75,26 +86,15 @@ class Version {
  * Handles MSEdgeDriver discovery and autodownload flows.
  */
 export class MsEdgeDriverHandler {
-  private MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
-  private MSEDGEDRIVER_REQUEST_TIMEOUT_MS = 10_000;
-  private UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
-
-  /**
-   * Get the default directory for storing MSEdgeDriver executables.
-   * @returns The default directory path.
-   */
-  getDefaultDriverDir(): string {
-    const s = strongbox(LOCAL_PACKAGE_STORAGE_NAME, {
-      suffix: 'msedgedrivers',
-    });
-    return s.container;
-  }
+  private static readonly MSEDGEDRIVER_BASE_URL = 'https://msedgedriver.microsoft.com';
+  private static readonly MSEDGEDRIVER_REQUEST_TIMEOUT_MS = 10_000;
+  private static readonly UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 
   /**
    * Get driver executable name.
    * @returns The name of the driver executable.
    */
-  private get driverExecutableName(): string {
+  private static get driverExecutableName(): string {
     return process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver';
   }
 
@@ -104,7 +104,10 @@ export class MsEdgeDriverHandler {
    * @param arch The architecture name.
    * @returns The platform configuration.
    */
-  private getPlatformConfig(platform = process.platform, arch = process.arch): EdgePlatformConfig {
+  private static getPlatformConfig(
+    platform = process.platform,
+    arch = process.arch,
+  ): EdgePlatformConfig {
     if (platform === 'win32') {
       if (arch === 'arm64') {
         return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};
@@ -134,10 +137,10 @@ export class MsEdgeDriverHandler {
    * @param executableDir The directory to search for the driver executable.
    * @returns The path to the driver executable, or null if not found.
    */
-  private async findDriverExecutable(executableDir: string): Promise<string | null> {
+  private static async findDriverExecutable(executableDir: string): Promise<string | null> {
     // TODO: change to check the version instead of file existence as a followup.
     // https://github.com/appium/appium-chromium-driver/issues/423
-    const candidates = await fs.glob(`**/${this.driverExecutableName}`, {
+    const candidates = await fs.glob(`**/${MsEdgeDriverHandler.driverExecutableName}`, {
       cwd: executableDir,
       absolute: true,
       nodir: true,
@@ -153,10 +156,13 @@ export class MsEdgeDriverHandler {
    * @returns The path to the driver executable.
    * @throws Error if the driver cannot be ensured.
    */
-  private async ensureDriver(browserVersion: Version, executableDir: string): Promise<string> {
-    const driverVersion = await this.getDriverVersion(browserVersion);
+  private static async ensureDriver(
+    browserVersion: Version,
+    executableDir: string,
+  ): Promise<string> {
+    const driverVersion = await MsEdgeDriverHandler.getDriverVersion(browserVersion);
     const targetDir = path.join(executableDir, driverVersion.toString());
-    const targetExecutable = path.join(targetDir, this.driverExecutableName);
+    const targetExecutable = path.join(targetDir, MsEdgeDriverHandler.driverExecutableName);
 
     if (await fs.isExecutable(targetExecutable)) {
       return targetExecutable;
@@ -164,13 +170,15 @@ export class MsEdgeDriverHandler {
 
     await fs.mkdirp(targetDir);
     const tmpRoot = await tempDir.openDir();
-    const archivePath = path.join(tmpRoot, this.getPlatformConfig().archiveName);
+    const archivePath = path.join(tmpRoot, MsEdgeDriverHandler.getPlatformConfig().archiveName);
     try {
-      await net.downloadFile(this.getDriverDownloadUrl(driverVersion), archivePath);
+      await net.downloadFile(MsEdgeDriverHandler.getDriverDownloadUrl(driverVersion), archivePath);
       await zip.extractAllTo(archivePath, targetDir);
-      const extractedExecutable = await this.findDriverExecutable(targetDir);
+      const extractedExecutable = await MsEdgeDriverHandler.findDriverExecutable(targetDir);
       if (!extractedExecutable) {
-        throw new Error(`Cannot find '${this.driverExecutableName}' in '${targetDir}'`);
+        throw new Error(
+          `Cannot find '${MsEdgeDriverHandler.driverExecutableName}' in '${targetDir}'`,
+        );
       }
       if (process.platform !== 'win32') {
         // This might not be necessary, but to be safe.
@@ -185,9 +193,9 @@ export class MsEdgeDriverHandler {
     }
   }
 
-  private buildLatestReleaseUrl(browserVersion: Version): string {
+  private static buildLatestReleaseUrl(browserVersion: Version): string {
     const majorVersion = browserVersion.major;
-    return `${this.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${this.getPlatformConfig().releaseChannel}`;
+    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${MsEdgeDriverHandler.getPlatformConfig().releaseChannel}`;
   }
 
   /**
@@ -195,11 +203,11 @@ export class MsEdgeDriverHandler {
    * @param browserVersion The version of the browser.
    * @returns The version of the MSEdgeDriver.
    */
-  private async getDriverVersion(browserVersion: Version): Promise<Version> {
-    const releaseUrl = this.buildLatestReleaseUrl(browserVersion);
+  private static async getDriverVersion(browserVersion: Version): Promise<Version> {
+    const releaseUrl = MsEdgeDriverHandler.buildLatestReleaseUrl(browserVersion);
     const response = await fetch(releaseUrl, {
       method: 'GET',
-      signal: AbortSignal.timeout(this.MSEDGEDRIVER_REQUEST_TIMEOUT_MS),
+      signal: AbortSignal.timeout(MsEdgeDriverHandler.MSEDGEDRIVER_REQUEST_TIMEOUT_MS),
     });
     if (!response.ok) {
       throw new Error(
@@ -207,17 +215,23 @@ export class MsEdgeDriverHandler {
           `(status ${response.status})`,
       );
     }
-    const text = this.decodeVersionResponse(Buffer.from(await response.arrayBuffer()));
+    const text = MsEdgeDriverHandler.decodeVersionResponse(
+      Buffer.from(await response.arrayBuffer()),
+    );
     return Version.from(text);
   }
 
-  private getDriverDownloadUrl(driverVersion: Version): string {
-    return `${this.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${this.getPlatformConfig().archiveName}`;
+  private static getDriverDownloadUrl(driverVersion: Version): string {
+    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${MsEdgeDriverHandler.getPlatformConfig().archiveName}`;
   }
 
-  private decodeVersionResponse(payload: Buffer): string {
-    if (payload.subarray(0, this.UTF16LE_BOM.length).equals(this.UTF16LE_BOM)) {
-      return payload.subarray(this.UTF16LE_BOM.length).toString('utf16le').trim();
+  private static decodeVersionResponse(payload: Buffer): string {
+    if (
+      payload
+        .subarray(0, MsEdgeDriverHandler.UTF16LE_BOM.length)
+        .equals(MsEdgeDriverHandler.UTF16LE_BOM)
+    ) {
+      return payload.subarray(MsEdgeDriverHandler.UTF16LE_BOM.length).toString('utf16le').trim();
     }
     return payload.toString('utf8').trim();
   }
@@ -235,7 +249,7 @@ export class MsEdgeDriverHandler {
    * @returns The path to the driver executable, or undefined if it cannot be resolved.
    * @throws Error if the browser is Microsoft Edge but the executable cannot be resolved.
    */
-  async resolveDriverExecutable(
+  static async resolveDriverExecutable(
     opts: MsEdgeDriverResolveOpts,
     browserVersionInfo?: BrowserInfo,
     isAutodownloadEnabled = true,
@@ -249,7 +263,7 @@ export class MsEdgeDriverHandler {
     }
 
     if (opts.executableDir) {
-      const explicitExecutable = await this.findDriverExecutable(opts.executableDir);
+      const explicitExecutable = await MsEdgeDriverHandler.findDriverExecutable(opts.executableDir);
       if (explicitExecutable) {
         return explicitExecutable;
       }
@@ -268,9 +282,9 @@ export class MsEdgeDriverHandler {
     }
 
     const browserVersion = Version.from(browserVersionStr);
-    const executableDir = opts.executableDir || this.getDefaultDriverDir();
+    const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
     try {
-      return await this.ensureDriver(browserVersion, executableDir);
+      return await MsEdgeDriverHandler.ensureDriver(browserVersion, executableDir);
     } catch (err) {
       throw new Error(
         `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion}' ` +
@@ -279,5 +293,3 @@ export class MsEdgeDriverHandler {
     }
   }
 }
-
-export const msEdgeDriverHandler = new MsEdgeDriverHandler();

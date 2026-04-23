@@ -4,7 +4,7 @@ import {fs, net, tempDir, zip} from '@appium/support';
 import sinon from 'sinon';
 import * as strongboxModule from '@appium/strongbox';
 import type {BrowserInfo} from '../../lib/types';
-import {isMsEdge, MsEdgeDriverHandler, msEdgeDriverHandler} from '../../lib/msedge';
+import {getDefaultMsEdgeDriverDir, isMsEdge, MsEdgeDriverHandler} from '../../lib/msedge';
 
 use(chaiAsPromised);
 
@@ -42,8 +42,7 @@ describe('msedge helpers', function () {
 
   describe('MsEdgeDriverHandler', function () {
     it('returns an explicit executable path through class API', async function () {
-      const handler = new MsEdgeDriverHandler();
-      const executable = await handler.resolveDriverExecutable({
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable({
         browserName: 'msedge',
         executable: '/custom/msedgedriver',
       });
@@ -71,7 +70,7 @@ describe('msedge helpers', function () {
         .stub(strongboxModule, 'strongbox')
         .returns({container: '/tmp/msedgedrivers'} as ReturnType<typeof strongboxModule.strongbox>);
 
-      expect(msEdgeDriverHandler.getDefaultDriverDir()).to.equal('/tmp/msedgedrivers');
+      expect(getDefaultMsEdgeDriverDir()).to.equal('/tmp/msedgedrivers');
       expect(
         strongboxStub.calledOnceWithExactly('appium-chromium-driver', {suffix: 'msedgedrivers'}),
       ).to.be.true;
@@ -84,13 +83,13 @@ describe('msedge helpers', function () {
     } as BrowserInfo;
 
     it('returns undefined for non-Edge browser names', async function () {
-      expect(await msEdgeDriverHandler.resolveDriverExecutable({browserName: 'chrome'})).to.be
+      expect(await MsEdgeDriverHandler.resolveDriverExecutable({browserName: 'chrome'})).to.be
         .undefined;
     });
 
     it('returns the explicit executable path when provided', async function () {
       expect(
-        await msEdgeDriverHandler.resolveDriverExecutable({
+        await MsEdgeDriverHandler.resolveDriverExecutable({
           browserName: 'msedge',
           executable: '/custom/msedgedriver',
         }),
@@ -100,7 +99,7 @@ describe('msedge helpers', function () {
     it('returns an executable found in the provided directory before autodownloading', async function () {
       sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/current/msedgedriver']);
 
-      const executable = await msEdgeDriverHandler.resolveDriverExecutable({
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable({
         browserName: 'msedge',
         executableDir: '/tmp/msedgedrivers',
       });
@@ -111,7 +110,7 @@ describe('msedge helpers', function () {
     it('returns undefined when autodownload is disabled and no executable is found', async function () {
       sinon.stub(fs, 'glob').resolves([]);
 
-      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -127,7 +126,7 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'glob').resolves([]);
 
       await expect(
-        msEdgeDriverHandler.resolveDriverExecutable({
+        MsEdgeDriverHandler.resolveDriverExecutable({
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
         }),
@@ -151,7 +150,7 @@ describe('msedge helpers', function () {
         .onSecondCall()
         .resolves(['/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
-      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -179,7 +178,7 @@ describe('msedge helpers', function () {
         .stub(fs, 'glob')
         .resolves(['/tmp/strongbox/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
-      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
         {browserName: 'msedge'},
         browserVersionInfo,
       );
@@ -201,7 +200,7 @@ describe('msedge helpers', function () {
         sinon.stub(fs, 'mv').resolves();
         sinon.stub(fs, 'rimraf').resolves();
 
-        await msEdgeDriverHandler.resolveDriverExecutable(
+        await MsEdgeDriverHandler.resolveDriverExecutable(
           {
             browserName: 'msedge',
             executableDir: 'C:/drivers',
@@ -228,7 +227,7 @@ describe('msedge helpers', function () {
         sinon.stub(fs, 'mv').resolves();
         sinon.stub(fs, 'rimraf').resolves();
 
-        await msEdgeDriverHandler.resolveDriverExecutable(
+        await MsEdgeDriverHandler.resolveDriverExecutable(
           {
             browserName: 'msedge',
             executableDir: '/tmp/msedgedrivers',
@@ -252,7 +251,7 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'mv').resolves();
       sinon.stub(fs, 'rimraf').resolves();
 
-      const executable = await msEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -276,7 +275,7 @@ describe('msedge helpers', function () {
         sinon.stub(fs, 'mv').resolves();
         sinon.stub(fs, 'rimraf').resolves();
 
-        await msEdgeDriverHandler.resolveDriverExecutable(
+        await MsEdgeDriverHandler.resolveDriverExecutable(
           {
             browserName: 'msedge',
             executableDir: 'C:/drivers',
