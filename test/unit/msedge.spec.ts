@@ -2,9 +2,8 @@ import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import {fs, net, tempDir, zip} from '@appium/support';
 import sinon from 'sinon';
-import * as strongboxModule from '@appium/strongbox';
 import type {BrowserInfo} from '../../lib/types';
-import {getDefaultMsEdgeDriverDir, isMsEdge, MsEdgeDriverHandler} from '../../lib/msedge';
+import {MsEdgeDriverHandler} from '../../lib/msedge';
 
 use(chaiAsPromised);
 
