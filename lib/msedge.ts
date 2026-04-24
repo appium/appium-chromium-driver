@@ -9,11 +9,9 @@ import {strongbox} from '@appium/strongbox';
  */
 const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
-type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
-
 interface MsEdgeDriverPlatformConfig {
   archiveName: string;
-  releaseChannel: EdgeReleaseChannel;
+  releaseChannel: 'WINDOWS' | 'MACOS' | 'LINUX';
 }
 
 interface MsEdgeDriverResolveOpts {
