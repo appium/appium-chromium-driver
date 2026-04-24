@@ -114,7 +114,7 @@ export class ChromiumDriver
       return undefined;
     }
 
-    // medge
+    // medge case
     return await MsEdgeDriverHandler.resolveDriverExecutable(
       this.opts,
       browserVersionInfo,
