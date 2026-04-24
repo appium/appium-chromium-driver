@@ -11,7 +11,7 @@ const LOCAL_PACKAGE_STORAGE_NAME = 'appium-chromium-driver';
 
 type EdgeReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
 
-interface EdgePlatformConfig {
+interface MsEdgeDriverPlatformConfig {
   archiveName: string;
   releaseChannel: EdgeReleaseChannel;
 }
@@ -24,7 +24,7 @@ interface MsEdgeDriverResolveOpts {
 
 /**
  * Determine if the given browser name corresponds to Microsoft Edge.
- * 'MicrosoftEdge' is old forma. Newer MSEdge accepts 'msedge' as the browser name.
+ * 'MicrosoftEdge' is old format. Newer MSEdge accepts 'msedge' only as the browser name.
  * @param browserName The name of the browser.
  * @returns True if the browser is Microsoft Edge, false otherwise.
  */
@@ -108,7 +108,7 @@ export class MsEdgeDriverHandler {
   private static getPlatformConfig(
     platform = process.platform,
     arch = process.arch,
-  ): EdgePlatformConfig {
+  ): MsEdgeDriverPlatformConfig {
     if (platform === 'win32') {
       if (arch === 'arm64') {
         return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};
@@ -194,18 +194,24 @@ export class MsEdgeDriverHandler {
     }
   }
 
-  private static buildLatestReleaseUrl(browserVersion: Version): string {
+  private static getLatestReleaseUrl(browserVersion: Version): string {
     const majorVersion = browserVersion.major;
-    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${MsEdgeDriverHandler.getPlatformConfig().releaseChannel}`;
+    const {releaseChannel} = MsEdgeDriverHandler.getPlatformConfig();
+    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/LATEST_RELEASE_${majorVersion}_${releaseChannel}`;
+  }
+
+  private static getDriverDownloadUrl(driverVersion: Version): string {
+    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${MsEdgeDriverHandler.getPlatformConfig().archiveName}`;
   }
 
   /**
-   * Get the version of the MSEdgeDriver for the given browser version.
+   * Get the version of the MSEdgeDriver for the given browser version
+   * from the official Microsoft Edge Driver service.
    * @param browserVersion The version of the browser.
    * @returns The version of the MSEdgeDriver.
    */
   private static async getDriverVersion(browserVersion: Version): Promise<Version> {
-    const releaseUrl = MsEdgeDriverHandler.buildLatestReleaseUrl(browserVersion);
+    const releaseUrl = MsEdgeDriverHandler.getLatestReleaseUrl(browserVersion);
     const response = await fetch(releaseUrl, {
       method: 'GET',
       signal: AbortSignal.timeout(MsEdgeDriverHandler.MSEDGEDRIVER_REQUEST_TIMEOUT_MS),
@@ -221,10 +227,6 @@ export class MsEdgeDriverHandler {
       Buffer.from(await response.arrayBuffer()),
     );
     return Version.from(text);
-  }
-
-  private static getDriverDownloadUrl(driverVersion: Version): string {
-    return `${MsEdgeDriverHandler.MSEDGEDRIVER_BASE_URL}/${driverVersion}/${MsEdgeDriverHandler.getPlatformConfig().archiveName}`;
   }
 
   private static decodeVersionResponse(payload: Buffer): string {
