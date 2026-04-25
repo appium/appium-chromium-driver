@@ -67,7 +67,9 @@ class Version {
   static from(version: string): Version {
     const match = this.VERSION_PATTERN.exec(version);
     if (!match) {
-      throw new Error(`Invalid version format: '${version}'`);
+      throw new Error(
+        `Invalid version format: '${version}'. Please report it to the Appium team as it might be a new version format.`,
+      );
     }
     return new Version(version, match[1]);
   }
