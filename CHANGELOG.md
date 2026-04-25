@@ -1,3 +1,9 @@
+## [2.2.0](https://github.com/appium/appium-chromium-driver/compare/v2.1.8...v2.2.0) (2026-04-25)
+
+### Features
+
+* add msedge driver auto download ([#428](https://github.com/appium/appium-chromium-driver/issues/428)) ([a98c8c7](https://github.com/appium/appium-chromium-driver/commit/a98c8c70523b3c28b7f0099f9998f2fce41365aa))
+
 ## [2.1.8](https://github.com/appium/appium-chromium-driver/compare/v2.1.7...v2.1.8) (2026-04-11)
 
 ### Bug Fixes
