@@ -10,6 +10,7 @@ import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
 import {getBrowserVersion} from './browser';
+import {getDefaultMsEdgeDriverDir, isMsEdge, MsEdgeDriverHandler} from './msedge';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
@@ -101,14 +102,44 @@ export class ChromiumDriver
     return path.join(packageDir, 'chromedriver');
   }
 
+  private async getExecutable(
+    browserVersionInfo?: BrowserInfo | undefined,
+    isAutodownloadEnabled: boolean = true,
+  ): Promise<string | undefined> {
+    if (this.opts.executable) {
+      return this.opts.executable;
+    }
+
+    if (!isMsEdge(this.opts.browserName)) {
+      return undefined;
+    }
+
+    // medge case
+    return await MsEdgeDriverHandler.resolveDriverExecutable(
+      this.opts,
+      browserVersionInfo,
+      isAutodownloadEnabled,
+    );
+  }
+
+  private getExecutableDir(): string | undefined {
+    if (this.opts.executableDir) {
+      return this.opts.executableDir;
+    }
+
+    return isMsEdge(this.opts.browserName)
+      ? getDefaultMsEdgeDriverDir()
+      : this.getDefaultChromeDriverDir();
+  }
+
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
     const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
     const browserVersionInfo = await this.getBrowserInfo();
     const cdOpts: ChromedriverOpts = {
       port: this.opts.chromedriverPort?.toString(),
       useSystemExecutable: this.opts.useSystemExecutable,
-      executable: this.opts.executable,
-      executableDir: this.opts.executableDir || this.getDefaultChromeDriverDir(),
+      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
+      executableDir: this.getExecutableDir(),
       verbose: this.opts.verbose,
       logPath: this.opts.logPath,
       disableBuildCheck: this.opts.disableBuildCheck,

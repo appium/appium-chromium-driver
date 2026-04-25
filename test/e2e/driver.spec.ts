@@ -2,7 +2,6 @@
 import {waitForCondition} from 'asyncbox';
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import path from 'node:path';
 
 type AppiumServer = any;
 type Browser = any;
@@ -47,14 +46,6 @@ const chromeBin = process.env.CHROME_BIN;
 if (isMsEdge && msEdgeBin) {
   DEF_CAPS.browserName = 'msedge';
   setBrowserOptions('ms:edgeOptions', msEdgeBin);
-
-  // TODO: Remove after supporting auto downlaod.
-  if (process.env.EDGEWEBDRIVER) {
-    DEF_CAPS['appium:executable'] = path.join(
-      process.env.EDGEWEBDRIVER,
-      process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver',
-    );
-  }
 } else if (!isMsEdge && chromeBin) {
   setBrowserOptions('goog:chromeOptions', chromeBin);
 }
