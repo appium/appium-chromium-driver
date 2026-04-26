@@ -1,3 +1,9 @@
+## [2.2.1](https://github.com/appium/appium-chromium-driver/compare/v2.2.0...v2.2.1) (2026-04-26)
+
+### Miscellaneous Chores
+
+* **dev-deps:** Remove  @types/bluebird ([#429](https://github.com/appium/appium-chromium-driver/issues/429)) ([ccb0c58](https://github.com/appium/appium-chromium-driver/commit/ccb0c58134d0eca9da393856eece8ffa52859ddc))
+
 ## [2.2.0](https://github.com/appium/appium-chromium-driver/compare/v2.1.8...v2.2.0) (2026-04-25)
 
 ### Features
