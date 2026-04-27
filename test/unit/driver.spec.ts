@@ -20,9 +20,6 @@ class TestDriver extends ChromiumDriver {
   getSessionCapsExposed(): Record<string, any> {
     return (this as any).getSessionCaps();
   }
-  normalizeChromeOptionsAliasExposed(): void {
-    (this as any).normalizeChromeOptionsAlias();
-  }
 }
 
 describe('ChromeDriver', function () {
@@ -98,32 +95,6 @@ describe('ChromiumDriver session capabilities', function () {
 
     const sessionCaps = driver.getSessionCapsExposed();
     expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--no-first-run']});
-  });
-
-  it('normalizes chromeOptions alias to goog:chromeOptions', function () {
-    const driver = new TestDriver({} as any);
-    driver.setOpts({
-      browserName: 'chrome',
-      chromeOptions: {args: ['--disable-extensions']},
-    });
-
-    driver.normalizeChromeOptionsAliasExposed();
-    const sessionCaps = driver.getSessionCapsExposed();
-    expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--disable-extensions']});
-    expect(sessionCaps).to.not.have.property('chromeOptions');
-  });
-
-  it('keeps vendor capability precedence when both options are provided', function () {
-    const driver = new TestDriver({} as any);
-    driver.setOpts({
-      browserName: 'chrome',
-      chromeOptions: {args: ['--from-appium']},
-      'goog:chromeOptions': {args: ['--from-goog']},
-    });
-
-    driver.normalizeChromeOptionsAliasExposed();
-    const sessionCaps = driver.getSessionCapsExposed();
-    expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--from-goog']});
   });
 
   it('filters unknown non-standard capabilities', function () {

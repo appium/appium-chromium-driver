@@ -28,7 +28,7 @@ export const desiredCapConstraints = {
   browserName: {
     isString: true,
   },
-  chromeOptions: {
+  'goog:chromeOptions': {
     isObject: true,
   },
 } as const satisfies Constraints;

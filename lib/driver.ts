@@ -69,7 +69,6 @@ export class ChromiumDriver
       w3cCapabilities,
       driverData,
     );
-    this.normalizeChromeOptionsAlias();
     const returnedCaps = await this.startChromedriverSession();
     if (returnedCaps.webSocketUrl) {
       this._bidiProxyUrl = String(returnedCaps.webSocketUrl);
@@ -185,18 +184,7 @@ export class ChromiumDriver
   }
 
   private getChromeOptionsCap(): Record<string, any> | undefined {
-    return (this.opts['goog:chromeOptions'] as Record<string, any>) ??
-      (this.opts.chromeOptions as Record<string, any>) ??
-      undefined;
-  }
-
-  private normalizeChromeOptionsAlias(): void {
-    if (!this.opts['goog:chromeOptions']) {
-      const appiumChromeOptions = this.opts.chromeOptions;
-      if (appiumChromeOptions && typeof appiumChromeOptions === 'object') {
-        this.opts['goog:chromeOptions'] = appiumChromeOptions;
-      }
-    }
+    return (this.opts['goog:chromeOptions'] as Record<string, any>) ?? undefined;
   }
 }
 
