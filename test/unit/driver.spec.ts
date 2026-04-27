@@ -17,6 +17,12 @@ class TestDriver extends ChromiumDriver {
   getExecutableDirExposed(): string | undefined {
     return (this as any).getExecutableDir();
   }
+  getSessionCapsExposed(): Record<string, any> {
+    return (this as any).getSessionCaps();
+  }
+  normalizeChromeOptionsAliasExposed(): void {
+    (this as any).normalizeChromeOptionsAlias();
+  }
 }
 
 describe('ChromeDriver', function () {
@@ -79,5 +85,57 @@ describe('ChromiumDriver executable resolution', function () {
       driver.setOpts({browserName: 'msedge'});
       expect(driver.getExecutableDirExposed()).to.equal('/tmp/msedgedrivers');
     });
+  });
+});
+
+describe('ChromiumDriver session capabilities', function () {
+  it('forwards goog:chromeOptions unchanged', function () {
+    const driver = new TestDriver({} as any);
+    driver.setOpts({
+      browserName: 'chrome',
+      'goog:chromeOptions': {args: ['--no-first-run']},
+    });
+
+    const sessionCaps = driver.getSessionCapsExposed();
+    expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--no-first-run']});
+  });
+
+  it('normalizes chromeOptions alias to goog:chromeOptions', function () {
+    const driver = new TestDriver({} as any);
+    driver.setOpts({
+      browserName: 'chrome',
+      chromeOptions: {args: ['--disable-extensions']},
+    });
+
+    driver.normalizeChromeOptionsAliasExposed();
+    const sessionCaps = driver.getSessionCapsExposed();
+    expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--disable-extensions']});
+    expect(sessionCaps).to.not.have.property('chromeOptions');
+  });
+
+  it('keeps vendor capability precedence when both options are provided', function () {
+    const driver = new TestDriver({} as any);
+    driver.setOpts({
+      browserName: 'chrome',
+      chromeOptions: {args: ['--from-appium']},
+      'goog:chromeOptions': {args: ['--from-goog']},
+    });
+
+    driver.normalizeChromeOptionsAliasExposed();
+    const sessionCaps = driver.getSessionCapsExposed();
+    expect(sessionCaps['goog:chromeOptions']).to.deep.equal({args: ['--from-goog']});
+  });
+
+  it('filters unknown non-standard capabilities', function () {
+    const driver = new TestDriver({} as any);
+    driver.setOpts({
+      browserName: 'chrome',
+      'goog:chromeOptions': {args: ['--no-default-browser-check']},
+      someRandomCapability: 'ignored',
+    });
+
+    const sessionCaps = driver.getSessionCapsExposed();
+    expect(sessionCaps).to.not.have.property('someRandomCapability');
+    expect(sessionCaps.browserName).to.equal('chrome');
   });
 });

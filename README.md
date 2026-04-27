@@ -72,6 +72,10 @@ capabilities](https://chromedriver.chromium.org/capabilities) (nested underneath
 `goog:chromeOptions` for Chrome and Chromium or `ms:edgeOptions` for MSEdge),
 this driver supports the following:
 
+For Chrome/Chromium sessions, `goog:chromeOptions` is the preferred capability name.
+For compatibility with Appium extension capabilities, `appium:chromeOptions` is also
+accepted and is forwarded internally as `goog:chromeOptions`.
+
 > **Recommendation**
 > For reproducible automation, especially in CI, set `goog:chromeOptions.binary` or
 > `ms:edgeOptions.binary` to select the exact browser build/channel you want to run.
