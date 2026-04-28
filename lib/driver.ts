@@ -65,15 +65,17 @@ export class ChromiumDriver
    */
   private excludeBrowserPrefixCaps(caps: Record<string, any>): Record<string, any> {
     const browserCapKeys = Object.keys(caps).filter(
-      (key) =>
-        key.startsWith(CHROME_VENDOR_PREFIX) || key.startsWith(EDGE_VENDOR_PREFIX),
+      (key) => key.startsWith(CHROME_VENDOR_PREFIX) || key.startsWith(EDGE_VENDOR_PREFIX),
     );
-    return Object.keys(caps).reduce((acc, capName) => {
-      if (!browserCapKeys.includes(capName)) {
-        acc[capName] = caps[capName];
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    return Object.keys(caps).reduce(
+      (acc, capName) => {
+        if (!browserCapKeys.includes(capName)) {
+          acc[capName] = caps[capName];
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
   }
 
   override validateDesiredCaps(caps: any): caps is ChromiumDriverCaps {
