@@ -28,6 +28,12 @@ export const desiredCapConstraints = {
   browserName: {
     isString: true,
   },
+  chromeOptions: {
+    isObject: true,
+  },
+  edgeOptions: {
+    isObject: true,
+  },
 } as const satisfies Constraints;
 
 export type CDConstraints = typeof desiredCapConstraints;
