@@ -57,6 +57,29 @@ export class ChromiumDriver
     return this._cd;
   }
 
+  /**
+   * Exclude browser-specific capabilities (e.g. `goog:chromeOptions` and `ms:edgeOptions`)
+   * from the capabilities to skip validation error for unrecognized capabilities.
+   * @param caps
+   * @returns
+   */
+  private excludeBrowserPrefixCaps(caps: Record<string, any>): Record<string, any> {
+    const browserCapKeys = Object.keys(caps).filter(
+      (key) =>
+        key.startsWith(CHROME_VENDOR_PREFIX) || key.startsWith(EDGE_VENDOR_PREFIX),
+    );
+    return Object.keys(caps).reduce((acc, capName) => {
+      if (!browserCapKeys.includes(capName)) {
+        acc[capName] = caps[capName];
+      }
+      return acc;
+    }, {} as Record<string, any>);
+  }
+
+  override validateDesiredCaps(caps: any): caps is ChromiumDriverCaps {
+    return super.validateDesiredCaps(this.excludeBrowserPrefixCaps(caps));
+  }
+
   override async createSession(
     jsonwpDesiredCapabilities: W3CChromiumDriverCaps,
     jsonwpRequiredCaps?: W3CChromiumDriverCaps,
