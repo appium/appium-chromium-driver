@@ -1,3 +1,9 @@
+## [2.2.2](https://github.com/appium/appium-chromium-driver/compare/v2.2.1...v2.2.2) (2026-04-29)
+
+### Bug Fixes
+
+* prevent caps warning messages ([#432](https://github.com/appium/appium-chromium-driver/issues/432)) ([29fe75d](https://github.com/appium/appium-chromium-driver/commit/29fe75ddbf41de16571c1cfb14c8d040204819ee))
+
 ## [2.2.1](https://github.com/appium/appium-chromium-driver/compare/v2.2.0...v2.2.1) (2026-04-26)
 
 ### Miscellaneous Chores
