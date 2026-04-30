@@ -41,7 +41,10 @@ export async function resolveDriverExecutable(
 
   const executableName = getDriverExecutableName();
   if (opts.executableDir) {
-    const explicitExecutable = await locateDriverExecutableInDir(opts.executableDir, executableName);
+    const explicitExecutable = await locateDriverExecutableInDir(
+      opts.executableDir,
+      executableName,
+    );
     if (explicitExecutable) {
       return explicitExecutable;
     }

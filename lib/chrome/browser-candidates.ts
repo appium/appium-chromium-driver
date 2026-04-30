@@ -65,4 +65,3 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
   }
   throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
 }
-

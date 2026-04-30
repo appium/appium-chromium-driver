@@ -32,7 +32,11 @@ describe('chrome browser candidates domain', function () {
     const exec = async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === '/usr/bin/chrome') {
-        return {stdout: IS_WIN ? '135.0.7049.84' : 'Google Chrome/135.0.7049.84', stderr: '', code: 0};
+        return {
+          stdout: IS_WIN ? '135.0.7049.84' : 'Google Chrome/135.0.7049.84',
+          stderr: '',
+          code: 0,
+        };
       }
       return {stdout: '', stderr: 'not found', code: 1};
     };
@@ -58,7 +62,9 @@ describe('chrome browser candidates domain', function () {
   it('throws when no candidate succeeds', async function () {
     const exec = async () => ({stdout: '', stderr: 'not found', code: 1});
     await withMockExec(exec, async () => {
-      await expect(detectBrowserVersion()).to.be.rejectedWith('Could not determine browser version');
+      await expect(detectBrowserVersion()).to.be.rejectedWith(
+        'Could not determine browser version',
+      );
     });
   });
 });

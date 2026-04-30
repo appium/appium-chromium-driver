@@ -32,13 +32,17 @@ describe('msedge browser candidates domain', function () {
     const exec = async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === '/usr/bin/msedge') {
-        return {stdout: IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85', stderr: '', code: 0};
+        return {
+          stdout: IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85',
+          stderr: '',
+          code: 0,
+        };
       }
       return {stdout: '', stderr: 'not found', code: 1};
     };
-    expect(await withMockExec(exec, () => discoverMsEdgeBrowserVersion('/usr/bin/msedge'))).to.equal(
-      '135.0.3179.85',
-    );
+    expect(
+      await withMockExec(exec, () => discoverMsEdgeBrowserVersion('/usr/bin/msedge')),
+    ).to.equal('135.0.3179.85');
   });
 
   it('default discovery checks only Edge candidates', async function () {

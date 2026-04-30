@@ -8,7 +8,10 @@ import {resolveDriverExecutable} from '../../../lib/msedge';
 use(chaiAsPromised);
 
 function makeMsedgeVersionResponse(version: string): Response {
-  const payload = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(`${version}\n`, 'utf16le')]);
+  const payload = Buffer.concat([
+    Buffer.from([0xff, 0xfe]),
+    Buffer.from(`${version}\n`, 'utf16le'),
+  ]);
   return new Response(payload, {status: 200});
 }
 
@@ -24,9 +27,9 @@ describe('msedge index orchestrator domain', function () {
   });
 
   it('returns explicit executable when provided', async function () {
-    expect(await resolveDriverExecutable({browserName: 'msedge', executable: '/custom/msedgedriver'})).to.equal(
-      '/custom/msedgedriver',
-    );
+    expect(
+      await resolveDriverExecutable({browserName: 'msedge', executable: '/custom/msedgedriver'}),
+    ).to.equal('/custom/msedgedriver');
   });
 
   it('uses provided executableDir candidate before autodownload', async function () {
@@ -46,9 +49,12 @@ describe('msedge index orchestrator domain', function () {
     sinon.stub(fs, 'chmod').resolves();
     sinon.stub(fs, 'mv').resolves();
     sinon.stub(fs, 'rimraf').resolves();
-    sinon.stub(fs, 'glob').onFirstCall().resolves([]).onSecondCall().resolves([
-      '/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver',
-    ]);
+    sinon
+      .stub(fs, 'glob')
+      .onFirstCall()
+      .resolves([])
+      .onSecondCall()
+      .resolves(['/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
     const executable = await resolveDriverExecutable(
       {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},

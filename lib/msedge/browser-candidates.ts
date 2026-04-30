@@ -64,4 +64,3 @@ export {
   detectBrowserVersion as discoverBrowserVersion,
   listBrowserBinaryCandidates as getBrowserCandidates,
 };
-
