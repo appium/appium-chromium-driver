@@ -1,4 +1,4 @@
-export interface MsEdgeDriverPlatformConfig {
+export interface DriverPlatformConfig {
   archiveName: string;
   releaseChannel: 'WINDOWS' | 'MACOS' | 'LINUX';
 }
@@ -12,7 +12,7 @@ export interface MsEdgeDriverPlatformConfig {
 export function getPlatformConfig(
   platform = process.platform,
   arch = process.arch,
-): MsEdgeDriverPlatformConfig {
+): DriverPlatformConfig {
   if (platform === 'win32') {
     if (arch === 'arm64') {
       return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};

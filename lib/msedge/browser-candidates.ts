@@ -24,10 +24,10 @@ const DEFAULT_LINUX_CANDIDATES = [
 ];
 
 /**
- * List platform-specific Microsoft Edge browser binary candidates.
+ * Get platform-specific Microsoft Edge browser binary candidates.
  * @returns A list of executable paths or command names.
  */
-export function listBrowserBinaryCandidates(): string[] {
+export function getBrowserCandidates(): string[] {
   if (process.platform === 'win32') {
     return DEFAULT_WIN_CANDIDATES();
   } else if (process.platform === 'darwin') {
@@ -37,11 +37,11 @@ export function listBrowserBinaryCandidates(): string[] {
 }
 
 /**
- * Detect installed Microsoft Edge browser version from explicit binary or default candidates.
+ * Discover installed Microsoft Edge browser version from explicit binary or default candidates.
  * @param browserBinary Optional explicit browser binary path or command.
  * @returns Detected browser version.
  */
-export async function detectBrowserVersion(browserBinary?: string): Promise<string> {
+export async function discoverBrowserVersion(browserBinary?: string): Promise<string> {
   if (browserBinary) {
     const version = await readBrowserVersion(browserBinary);
     if (version) {
@@ -50,7 +50,7 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
   }
 
-  const candidates = listBrowserBinaryCandidates();
+  const candidates = getBrowserCandidates();
   for (const binary of candidates) {
     const version = await readBrowserVersion(binary);
     if (version) {
@@ -59,8 +59,3 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
   }
   throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
 }
-
-export {
-  detectBrowserVersion as discoverBrowserVersion,
-  listBrowserBinaryCandidates as getBrowserCandidates,
-};

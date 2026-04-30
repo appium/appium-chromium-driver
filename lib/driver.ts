@@ -8,7 +8,7 @@ import type {
 } from '@appium/types';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
-import {discoverChromeBrowserVersion} from './chrome';
+import {detectChromeBrowserVersion} from './chrome';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
 import * as msedge from './msedge/index';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
@@ -208,7 +208,7 @@ export class ChromiumDriver
         discoverBrowserVersion: async (browserBinary?: string) =>
           await msedge.discoverMsEdgeBrowserVersion(browserBinary),
         resolveExecutable: async (browserVersionInfo, isAutodownloadEnabled) =>
-          await msedge.resolveDriverExecutable(
+          await msedge.determineDriverExecutable(
             this.opts,
             browserVersionInfo,
             isAutodownloadEnabled,
@@ -219,7 +219,7 @@ export class ChromiumDriver
 
     return {
       discoverBrowserVersion: async (browserBinary?: string) =>
-        await discoverChromeBrowserVersion(browserBinary),
+        await detectChromeBrowserVersion(browserBinary),
       resolveExecutable: async () => undefined,
       getDefaultExecutableDir: () => this.getDefaultChromeDriverDir(),
     };

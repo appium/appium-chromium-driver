@@ -1,7 +1,7 @@
 import type {BrowserInfo} from '../types';
 import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment';
 import {isMsEdge} from './browser-identity';
-import {detectBrowserVersion, listBrowserBinaryCandidates} from './browser-candidates';
+import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates';
 import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download';
 import {getDriverExecutableName, getPlatformConfig} from './platform';
 import {getDefaultDriverDir} from './storage';
@@ -26,7 +26,7 @@ interface DriverResolveOpts {
  * @returns The path to the driver executable, or undefined if it cannot be resolved.
  * @throws Error if the browser is Microsoft Edge but the executable cannot be resolved.
  */
-export async function resolveDriverExecutable(
+export async function determineDriverExecutable(
   opts: DriverResolveOpts,
   browserVersionInfo?: BrowserInfo,
   isAutodownloadEnabled = true,
@@ -84,9 +84,8 @@ export async function resolveDriverExecutable(
 
 export {getDefaultDriverDir, isMsEdge};
 export {
-  detectBrowserVersion as discoverMsEdgeBrowserVersion,
-  listBrowserBinaryCandidates as getMsEdgeBrowserCandidates,
-  resolveDriverExecutable as determineDriverExecutable,
-  resolveDriverExecutable as resolveMsEdgeDriverExecutable,
+  discoverBrowserVersion as discoverMsEdgeBrowserVersion,
+  getBrowserCandidates as getMsEdgeBrowserCandidates,
+  determineDriverExecutable as determineMsEdgeDriverExecutable,
   getDefaultDriverDir as getDefaultMsEdgeDriverDir,
 };

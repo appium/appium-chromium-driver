@@ -29,7 +29,7 @@ describe('driver', function () {
   });
 
   it('delegates executable resolution to msedge orchestrator for Edge', async function () {
-    sinon.stub(msedgeModule, 'resolveDriverExecutable').resolves('/auto/msedgedriver');
+    sinon.stub(msedgeModule, 'determineDriverExecutable').resolves('/auto/msedgedriver');
     const driver = new TestDriver({} as any);
     driver.setOpts({browserName: 'msedge'});
     expect(await driver.getExecutableExposed()).to.equal('/auto/msedgedriver');

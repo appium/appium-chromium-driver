@@ -1,6 +1,6 @@
 export {detectBrowserVersion, listBrowserBinaryCandidates} from './browser-candidates';
 
 export {
-  detectBrowserVersion as discoverChromeBrowserVersion,
-  listBrowserBinaryCandidates as getChromeBrowserCandidates,
+  detectBrowserVersion as detectChromeBrowserVersion,
+  listBrowserBinaryCandidates as listChromeBrowserBinaryCandidates,
 } from './browser-candidates';

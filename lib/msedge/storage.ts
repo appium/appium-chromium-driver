@@ -16,5 +16,3 @@ export function getDefaultDriverDir(): string {
   });
   return s.container;
 }
-
-export {getDefaultDriverDir as getDefaultMsEdgeDriverDir};
