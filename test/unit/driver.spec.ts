@@ -1,7 +1,7 @@
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import * as msedgeModule from '../../lib/msedge';
+import * as msedgeModule from '../../lib/msedge/index';
 import {ChromiumDriver} from '../../lib/driver';
 import type {BrowserInfo} from '../../lib/types';
 
@@ -50,10 +50,8 @@ describe('ChromiumDriver executable resolution', function () {
       expect(await driver.getExecutableExposed()).to.be.undefined;
     });
 
-    it('delegates to MsEdgeDriverHandler for Edge with no explicit executable', async function () {
-      sinon
-        .stub(msedgeModule.MsEdgeDriverHandler, 'resolveDriverExecutable')
-        .resolves('/auto/msedgedriver');
+    it('delegates to resolveDriverExecutable for Edge with no explicit executable', async function () {
+      sinon.stub(msedgeModule, 'resolveDriverExecutable').resolves('/auto/msedgedriver');
       const driver = new TestDriver({} as any);
       driver.setOpts({browserName: 'msedge'});
       expect(await driver.getExecutableExposed()).to.equal('/auto/msedgedriver');
@@ -73,11 +71,10 @@ describe('ChromiumDriver executable resolution', function () {
       expect(driver.getExecutableDirExposed()).to.include('chromedriver');
     });
 
-    it('falls back to getDefaultMsEdgeDriverDir for Edge', function () {
-      sinon.stub(msedgeModule, 'getDefaultMsEdgeDriverDir').returns('/tmp/msedgedrivers');
+    it('falls back to the default local storage dir for Edge', function () {
       const driver = new TestDriver({} as any);
       driver.setOpts({browserName: 'msedge'});
-      expect(driver.getExecutableDirExposed()).to.equal('/tmp/msedgedrivers');
+      expect(driver.getExecutableDirExposed()).to.include('msedgedrivers');
     });
   });
 });

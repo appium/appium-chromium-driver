@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import {fs, net, tempDir, zip} from '@appium/support';
 import sinon from 'sinon';
 import type {BrowserInfo} from '../../lib/types';
-import {MsEdgeDriverHandler} from '../../lib/msedge';
+import {resolveDriverExecutable} from '../../lib/msedge/index';
 
 use(chaiAsPromised);
 
@@ -25,29 +25,18 @@ describe('msedge helpers', function () {
     sinon.restore();
   });
 
-  describe('MsEdgeDriverHandler', function () {
-    it('returns an explicit executable path through class API', async function () {
-      const executable = await MsEdgeDriverHandler.resolveDriverExecutable({
-        browserName: 'msedge',
-        executable: '/custom/msedgedriver',
-      });
-      expect(executable).to.equal('/custom/msedgedriver');
-    });
-  });
-
-  describe('resolveMsEdgeDriverExecutable', function () {
+  describe('resolveDriverExecutable', function () {
     const browserVersionInfo = {
       info: {Browser: '147.0.3179.85'},
     } as BrowserInfo;
 
     it('returns undefined for non-Edge browser names', async function () {
-      expect(await MsEdgeDriverHandler.resolveDriverExecutable({browserName: 'chrome'})).to.be
-        .undefined;
+      expect(await resolveDriverExecutable({browserName: 'chrome'})).to.be.undefined;
     });
 
     it('returns the explicit executable path when provided', async function () {
       expect(
-        await MsEdgeDriverHandler.resolveDriverExecutable({
+        await resolveDriverExecutable({
           browserName: 'msedge',
           executable: '/custom/msedgedriver',
         }),
@@ -57,7 +46,7 @@ describe('msedge helpers', function () {
     it('returns an executable found in the provided directory before autodownloading', async function () {
       sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/current/msedgedriver']);
 
-      const executable = await MsEdgeDriverHandler.resolveDriverExecutable({
+      const executable = await resolveDriverExecutable({
         browserName: 'msedge',
         executableDir: '/tmp/msedgedrivers',
       });
@@ -68,7 +57,7 @@ describe('msedge helpers', function () {
     it('returns undefined when autodownload is disabled and no executable is found', async function () {
       sinon.stub(fs, 'glob').resolves([]);
 
-      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -84,7 +73,7 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'glob').resolves([]);
 
       await expect(
-        MsEdgeDriverHandler.resolveDriverExecutable({
+        resolveDriverExecutable({
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
         }),
@@ -108,7 +97,7 @@ describe('msedge helpers', function () {
         .onSecondCall()
         .resolves(['/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
 
-      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',
@@ -131,7 +120,7 @@ describe('msedge helpers', function () {
       sinon.stub(fs, 'mv').resolves();
       sinon.stub(fs, 'rimraf').resolves();
 
-      const executable = await MsEdgeDriverHandler.resolveDriverExecutable(
+      const executable = await resolveDriverExecutable(
         {
           browserName: 'msedge',
           executableDir: '/tmp/msedgedrivers',

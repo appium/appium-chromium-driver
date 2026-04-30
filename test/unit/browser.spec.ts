@@ -1,7 +1,8 @@
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
-import {getBrowserVersion} from '../../lib/browser';
+import {discoverBrowserVersion as discoverChromeBrowserVersion} from '../../lib/chrome';
+import {discoverMsEdgeBrowserVersion} from '../../lib/msedge/index';
 
 use(chaiAsPromised);
 
@@ -38,13 +39,15 @@ async function withMockExec<T>(mockExec, run: () => Promise<T>): Promise<T> {
   }
 }
 
-describe('getBrowserVersion', function () {
-  describe('with a supplied chromeBinary', function () {
+describe('browser version discovery', function () {
+  describe('discoverChromeBrowserVersion', function () {
     it('parses Chrome/X.Y.Z.W format', async function () {
       const exec = makeExec({
         '/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome/135.0.7049.84',
       });
-      const version = await withMockExec(exec, () => getBrowserVersion('/usr/bin/chrome'));
+      const version = await withMockExec(exec, () =>
+        discoverChromeBrowserVersion('/usr/bin/chrome'),
+      );
       expect(version).to.equal('135.0.7049.84');
     });
 
@@ -52,7 +55,9 @@ describe('getBrowserVersion', function () {
       const exec = makeExec({
         '/usr/bin/chrome': IS_WIN ? '135.0.7049.84' : 'Google Chrome 135.0.7049.84',
       });
-      const version = await withMockExec(exec, () => getBrowserVersion('/usr/bin/chrome'));
+      const version = await withMockExec(exec, () =>
+        discoverChromeBrowserVersion('/usr/bin/chrome'),
+      );
       expect(version).to.equal('135.0.7049.84');
     });
 
@@ -60,30 +65,16 @@ describe('getBrowserVersion', function () {
       const exec = makeExec({
         '/usr/bin/chromium': IS_WIN ? '135.0.7049.84' : 'Chromium/135.0.7049.84',
       });
-      const version = await withMockExec(exec, () => getBrowserVersion('/usr/bin/chromium'));
+      const version = await withMockExec(exec, () =>
+        discoverChromeBrowserVersion('/usr/bin/chromium'),
+      );
       expect(version).to.equal('135.0.7049.84');
-    });
-
-    it('parses Edge/X.Y.Z.W format', async function () {
-      const exec = makeExec({
-        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85',
-      });
-      const version = await withMockExec(exec, () => getBrowserVersion('/usr/bin/msedge'));
-      expect(version).to.equal('135.0.3179.85');
-    });
-
-    it('parses "Microsoft Edge X.Y.Z.W" format (no slash)', async function () {
-      const exec = makeExec({
-        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge 135.0.3179.85',
-      });
-      const version = await withMockExec(exec, () => getBrowserVersion('/usr/bin/msedge'));
-      expect(version).to.equal('135.0.3179.85');
     });
 
     it('throws when the binary fails', async function () {
       const exec = makeExec({});
       await withMockExec(exec, async () => {
-        await expect(getBrowserVersion('/nonexistent/chrome')).to.be.rejectedWith(
+        await expect(discoverChromeBrowserVersion('/nonexistent/chrome')).to.be.rejectedWith(
           'Could not determine browser version',
         );
       });
@@ -92,14 +83,54 @@ describe('getBrowserVersion', function () {
     it('throws when stdout has no recognisable version string', async function () {
       const exec = makeExec({'/usr/bin/chrome': 'something unexpected'});
       await withMockExec(exec, async () => {
-        await expect(getBrowserVersion('/usr/bin/chrome')).to.be.rejectedWith(
+        await expect(discoverChromeBrowserVersion('/usr/bin/chrome')).to.be.rejectedWith(
           'Could not determine browser version',
         );
       });
     });
   });
 
-  describe('without a supplied chromeBinary (default candidates)', function () {
+  describe('discoverMsEdgeBrowserVersion', function () {
+    it('parses Edge/X.Y.Z.W format', async function () {
+      const exec = makeExec({
+        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge/135.0.3179.85',
+      });
+      const version = await withMockExec(exec, () =>
+        discoverMsEdgeBrowserVersion('/usr/bin/msedge'),
+      );
+      expect(version).to.equal('135.0.3179.85');
+    });
+
+    it('parses "Microsoft Edge X.Y.Z.W" format (no slash)', async function () {
+      const exec = makeExec({
+        '/usr/bin/msedge': IS_WIN ? '135.0.3179.85' : 'Microsoft Edge 135.0.3179.85',
+      });
+      const version = await withMockExec(exec, () =>
+        discoverMsEdgeBrowserVersion('/usr/bin/msedge'),
+      );
+      expect(version).to.equal('135.0.3179.85');
+    });
+
+    it('throws when the binary fails', async function () {
+      const exec = makeExec({});
+      await withMockExec(exec, async () => {
+        await expect(discoverMsEdgeBrowserVersion('/nonexistent/msedge')).to.be.rejectedWith(
+          'Could not determine browser version',
+        );
+      });
+    });
+
+    it('throws when stdout has no recognisable version string', async function () {
+      const exec = makeExec({'/usr/bin/chrome': 'something unexpected'});
+      await withMockExec(exec, async () => {
+        await expect(discoverMsEdgeBrowserVersion('/usr/bin/chrome')).to.be.rejectedWith(
+          'Could not determine browser version',
+        );
+      });
+    });
+  });
+
+  describe('discoverChromeBrowserVersion default candidates', function () {
     it('returns the version from the first working candidate', async function () {
       // Simulate only the candidate for Chromium succeeding
       const exec = async (binary: string, args: string[] = []) => {
@@ -116,7 +147,7 @@ describe('getBrowserVersion', function () {
         }
         return {stdout: '', stderr: 'not found', code: 1};
       };
-      const version = await withMockExec(exec, () => getBrowserVersion());
+      const version = await withMockExec(exec, () => discoverChromeBrowserVersion());
       expect(version).to.equal('135.0.7049.0');
     });
 
@@ -142,75 +173,29 @@ describe('getBrowserVersion', function () {
         return {stdout: '', stderr: 'not found', code: 1};
       };
 
-      const version = await withMockExec(exec, () => getBrowserVersion());
+      const version = await withMockExec(exec, () => discoverChromeBrowserVersion());
       expect(version).to.equal('136.0.7103.10');
     });
 
     it('throws when no candidate succeeds', async function () {
       const exec = async () => ({stdout: '', stderr: 'not found', code: 1});
       await withMockExec(exec, async () => {
-        await expect(getBrowserVersion()).to.be.rejectedWith('Could not determine browser version');
+        await expect(discoverChromeBrowserVersion()).to.be.rejectedWith(
+          'Could not determine browser version',
+        );
       });
     });
   });
 
-  describe('browserName filtering', function () {
-    it('only checks Chrome/Chromium candidates when browserName is "chrome"', async function () {
+  describe('discoverMsEdgeBrowserVersion default candidates', function () {
+    it('only checks Edge candidates', async function () {
       const visited: string[] = [];
       const exec = async (binary: string, args: string[] = []) => {
         visited.push(resolveEffectiveBinary(binary, args));
         throw new Error('not found');
       };
       await withMockExec(exec, async () => {
-        await getBrowserVersion(undefined, 'chrome').catch(() => {});
-      });
-      expect(visited.some((b) => /edge/i.test(b))).to.be.false;
-    });
-
-    it('only checks Chrome/Chromium candidates when browserName is "chromium"', async function () {
-      const visited: string[] = [];
-      const exec = async (binary: string, args: string[] = []) => {
-        visited.push(resolveEffectiveBinary(binary, args));
-        throw new Error('not found');
-      };
-      await withMockExec(exec, async () => {
-        await getBrowserVersion(undefined, 'chromium').catch(() => {});
-      });
-      expect(visited.some((b) => /edge/i.test(b))).to.be.false;
-    });
-
-    it('only checks Edge candidates when browserName is "msedge"', async function () {
-      const visited: string[] = [];
-      const exec = async (binary: string, args: string[] = []) => {
-        visited.push(resolveEffectiveBinary(binary, args));
-        throw new Error('not found');
-      };
-      await withMockExec(exec, async () => {
-        await getBrowserVersion(undefined, 'msedge').catch(() => {});
-      });
-      expect(visited.every((b) => /edge/i.test(b))).to.be.true;
-    });
-
-    it('only checks Edge candidates when browserName is "MicrosoftEdge"', async function () {
-      const visited: string[] = [];
-      const exec = async (binary: string, args: string[] = []) => {
-        visited.push(resolveEffectiveBinary(binary, args));
-        throw new Error('not found');
-      };
-      await withMockExec(exec, async () => {
-        await getBrowserVersion(undefined, 'MicrosoftEdge').catch(() => {});
-      });
-      expect(visited.every((b) => /edge/i.test(b))).to.be.true;
-    });
-
-    it('is case-insensitive for Edge browserName (e.g. "microsoftedge")', async function () {
-      const visited: string[] = [];
-      const exec = async (binary: string, args: string[] = []) => {
-        visited.push(resolveEffectiveBinary(binary, args));
-        throw new Error('not found');
-      };
-      await withMockExec(exec, async () => {
-        await getBrowserVersion(undefined, 'MICROSOFTEDGE').catch(() => {});
+        await discoverMsEdgeBrowserVersion().catch(() => {});
       });
       expect(visited.every((b) => /edge/i.test(b))).to.be.true;
     });
