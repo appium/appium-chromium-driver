@@ -23,8 +23,6 @@ export class ChromiumDriver
   implements ExternalDriver<CDConstraints, string, StringRecord>
 {
   desiredCapConstraints = desiredCapConstraints;
-  private _proxyActive = false;
-  private _cd: Chromedriver | null = null;
   proxyReqRes: ((...args: any[]) => any) | null = null;
   proxyCommand?: <TReq = any, TRes = unknown>(
     url: string,
@@ -32,18 +30,12 @@ export class ChromiumDriver
     body?: TReq,
   ) => Promise<TRes>;
   doesSupportBidi = true;
+  private _proxyActive = false;
+  private _cd: Chromedriver | null = null;
   private _bidiProxyUrl: string | null = null;
 
   constructor(opts: InitialOpts = {} as InitialOpts) {
     super(opts);
-  }
-
-  override proxyActive(): boolean {
-    return this._proxyActive;
-  }
-
-  override canProxy(): boolean {
-    return true;
   }
 
   get bidiProxyUrl(): string | null {
@@ -55,6 +47,14 @@ export class ChromiumDriver
       throw new Error('Chromedriver not started');
     }
     return this._cd;
+  }
+
+  override proxyActive(): boolean {
+    return this._proxyActive;
+  }
+
+  override canProxy(): boolean {
+    return true;
   }
 
   override validateDesiredCaps(caps: any): caps is ChromiumDriverCaps {
@@ -78,6 +78,43 @@ export class ChromiumDriver
       this._bidiProxyUrl = String(returnedCaps.webSocketUrl);
     }
     return [sessionId, returnedCaps];
+  }
+
+  async startChromedriverSession(): Promise<ChromiumDriverCaps> {
+    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const browserVersionInfo = await this.getBrowserInfo();
+    const cdOpts: ChromedriverOpts = {
+      port: this.opts.chromedriverPort?.toString(),
+      useSystemExecutable: this.opts.useSystemExecutable,
+      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
+      executableDir: this.getExecutableDir(),
+      verbose: this.opts.verbose,
+      logPath: this.opts.logPath,
+      disableBuildCheck: this.opts.disableBuildCheck,
+      details: browserVersionInfo,
+      isAutodownloadEnabled,
+    };
+    if (this.basePath) {
+      cdOpts.reqBasePath = this.basePath;
+    }
+    this._cd = new Chromedriver(cdOpts);
+    const cdStartRes = (await this._cd.start(this.getSessionCaps())) as ChromiumDriverCaps;
+    this._proxyActive = true;
+    this.proxyReqRes = this._cd.proxyReq.bind(this._cd);
+    this.proxyCommand = this._cd.sendCommand.bind(this._cd);
+    return cdStartRes;
+  }
+
+  override async deleteSession(sessionId?: string): Promise<void> {
+    await super.deleteSession(sessionId);
+    this._proxyActive = false;
+    this._bidiProxyUrl = null;
+    this.proxyReqRes = null;
+    this.proxyCommand = undefined;
+    if (this._cd) {
+      await this._cd.stop();
+      this._cd = null;
+    }
   }
 
   /**
@@ -155,43 +192,6 @@ export class ChromiumDriver
     return isMsEdge(this.opts.browserName)
       ? getDefaultMsEdgeDriverDir()
       : this.getDefaultChromeDriverDir();
-  }
-
-  async startChromedriverSession(): Promise<ChromiumDriverCaps> {
-    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersionInfo = await this.getBrowserInfo();
-    const cdOpts: ChromedriverOpts = {
-      port: this.opts.chromedriverPort?.toString(),
-      useSystemExecutable: this.opts.useSystemExecutable,
-      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
-      executableDir: this.getExecutableDir(),
-      verbose: this.opts.verbose,
-      logPath: this.opts.logPath,
-      disableBuildCheck: this.opts.disableBuildCheck,
-      details: browserVersionInfo,
-      isAutodownloadEnabled,
-    };
-    if (this.basePath) {
-      cdOpts.reqBasePath = this.basePath;
-    }
-    this._cd = new Chromedriver(cdOpts);
-    const cdStartRes = (await this._cd.start(this.getSessionCaps())) as ChromiumDriverCaps;
-    this._proxyActive = true;
-    this.proxyReqRes = this._cd.proxyReq.bind(this._cd);
-    this.proxyCommand = this._cd.sendCommand.bind(this._cd);
-    return cdStartRes;
-  }
-
-  override async deleteSession(sessionId?: string): Promise<void> {
-    await super.deleteSession(sessionId);
-    this._proxyActive = false;
-    this._bidiProxyUrl = null;
-    this.proxyReqRes = null;
-    this.proxyCommand = undefined;
-    if (this._cd) {
-      await this._cd.stop();
-      this._cd = null;
-    }
   }
 
   private getSessionCaps(): StringRecord {

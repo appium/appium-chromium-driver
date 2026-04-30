@@ -59,6 +59,46 @@ const DEFAULT_LINUX_EDGE_CANDIDATES = [
 ];
 
 /**
+ * Get the version of the Chrome/Chromium/Edge browser by executing the binary with `--version` and parsing the output.
+ * @param browserBinary
+ * @param browserName
+ * @param execFn
+ * @returns
+ */
+export async function getBrowserVersion(
+  browserBinary?: string,
+  browserName?: string,
+): Promise<string> {
+  if (browserBinary) {
+    const version =
+      process.platform === 'win32'
+        ? await getBrowserVersionWin(browserBinary)
+        : await getBrowserVersionUnix(browserBinary);
+    if (version) {
+      return version;
+    }
+    // Do not go to the followup since this means the user provides
+    // unexpected browser binary which might not work.
+    throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
+
+  // TODO: Refactor later
+  // Default candidates.
+  const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
+  const candidates = getCandidates(isEdge);
+  for (const binary of candidates) {
+    const version =
+      process.platform === 'win32'
+        ? await getBrowserVersionWin(binary)
+        : await getBrowserVersionUnix(binary);
+    if (version) {
+      return version;
+    }
+  }
+  throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
+}
+
+/**
  * On Windows, retrieve the browser version via PowerShell's VersionInfo instead of --version,
  * because Chrome/Edge do not reliably write to stdout when spawned via exec.
  */
@@ -111,44 +151,4 @@ function getCandidates(isEdge: boolean): string[] {
     return isEdge ? DEFAULT_MAC_EDGE_CANDIDATES : DEFAULT_MAC_CHROME_CANDIDATES;
   }
   return isEdge ? DEFAULT_LINUX_EDGE_CANDIDATES : DEFAULT_LINUX_CHROME_CANDIDATES;
-}
-
-/**
- * Get the version of the Chrome/Chromium/Edge browser by executing the binary with `--version` and parsing the output.
- * @param browserBinary
- * @param browserName
- * @param execFn
- * @returns
- */
-export async function getBrowserVersion(
-  browserBinary?: string,
-  browserName?: string,
-): Promise<string> {
-  if (browserBinary) {
-    const version =
-      process.platform === 'win32'
-        ? await getBrowserVersionWin(browserBinary)
-        : await getBrowserVersionUnix(browserBinary);
-    if (version) {
-      return version;
-    }
-    // Do not go to the followup since this means the user provides
-    // unexpected browser binary which might not work.
-    throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
-  }
-
-  // TODO: Refactor later
-  // Default candidates.
-  const isEdge = /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
-  const candidates = getCandidates(isEdge);
-  for (const binary of candidates) {
-    const version =
-      process.platform === 'win32'
-        ? await getBrowserVersionWin(binary)
-        : await getBrowserVersionUnix(binary);
-    if (version) {
-      return version;
-    }
-  }
-  throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
 }

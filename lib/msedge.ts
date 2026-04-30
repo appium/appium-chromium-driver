@@ -21,27 +21,6 @@ interface MsEdgeDriverResolveOpts {
 }
 
 /**
- * Determine if the given browser name corresponds to Microsoft Edge.
- * 'MicrosoftEdge' is old format. Newer MSEdge accepts 'msedge' only as the browser name.
- * @param browserName The name of the browser.
- * @returns True if the browser is Microsoft Edge, false otherwise.
- */
-export function isMsEdge(browserName?: string): boolean {
-  return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
-}
-
-/**
- * Get the default directory for storing MSEdgeDriver executables.
- * @returns The default directory path.
- */
-export function getDefaultMsEdgeDriverDir(): string {
-  const s = strongbox(LOCAL_PACKAGE_STORAGE_NAME, {
-    suffix: 'msedgedrivers',
-  });
-  return s.container;
-}
-
-/**
  * A version parser for Microsoft Edge browser and MSEdgeDriver.
  */
 class Version {
@@ -97,6 +76,63 @@ export class MsEdgeDriverHandler {
    */
   private static get driverExecutableName(): string {
     return process.platform === 'win32' ? 'msedgedriver.exe' : 'msedgedriver';
+  }
+
+  /**
+   * Resolve the MSEdgeDriver executable path based on the given options and browser version info.
+   * It returns opts.executable if it is provided.
+   * If not, it checks if the browser is Microsoft Edge. If it is not, it returns undefined.
+   * If it is, it tries to find the executable in opts.executableDir if provided.
+   * If it cannot find it and autodownload is enabled, it tries to autodownload the driver based on the browser version.
+   * If any step fails for Microsoft Edge, it throws an error.
+   * @param opts The options for resolving the driver executable.
+   * @param browserVersionInfo The information about the browser version.
+   * @param isAutodownloadEnabled Whether autodownload is enabled (default: true).
+   * @returns The path to the driver executable, or undefined if it cannot be resolved.
+   * @throws Error if the browser is Microsoft Edge but the executable cannot be resolved.
+   */
+  static async resolveDriverExecutable(
+    opts: MsEdgeDriverResolveOpts,
+    browserVersionInfo?: BrowserInfo,
+    isAutodownloadEnabled = true,
+  ): Promise<string | undefined> {
+    if (opts.executable) {
+      return opts.executable;
+    }
+
+    if (!isMsEdge(opts.browserName)) {
+      return undefined;
+    }
+
+    if (opts.executableDir) {
+      const explicitExecutable = await MsEdgeDriverHandler.findDriverExecutable(opts.executableDir);
+      if (explicitExecutable) {
+        return explicitExecutable;
+      }
+    }
+
+    if (!isAutodownloadEnabled) {
+      return undefined;
+    }
+
+    const browserVersionStr = browserVersionInfo?.info?.Browser;
+    if (!browserVersionStr) {
+      throw new Error(
+        'Could not determine the installed Microsoft Edge version required for autodownload. ' +
+          'Provide ms:edgeOptions.binary or appium:executable.',
+      );
+    }
+
+    const browserVersion = Version.from(browserVersionStr);
+    const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
+    try {
+      return await MsEdgeDriverHandler.ensureDriver(browserVersion, executableDir);
+    } catch (err) {
+      throw new Error(
+        `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion}' ` +
+          `in '${executableDir}': ${(err as Error).message}`,
+      );
+    }
   }
 
   /**
@@ -239,61 +275,25 @@ export class MsEdgeDriverHandler {
     }
     return payload.toString('utf8').trim();
   }
+}
 
-  /**
-   * Resolve the MSEdgeDriver executable path based on the given options and browser version info.
-   * It returns opts.executable if it is provided.
-   * If not, it checks if the browser is Microsoft Edge. If it is not, it returns undefined.
-   * If it is, it tries to find the executable in opts.executableDir if provided.
-   * If it cannot find it and autodownload is enabled, it tries to autodownload the driver based on the browser version.
-   * If any step fails for Microsoft Edge, it throws an error.
-   * @param opts The options for resolving the driver executable.
-   * @param browserVersionInfo The information about the browser version.
-   * @param isAutodownloadEnabled Whether autodownload is enabled (default: true).
-   * @returns The path to the driver executable, or undefined if it cannot be resolved.
-   * @throws Error if the browser is Microsoft Edge but the executable cannot be resolved.
-   */
-  static async resolveDriverExecutable(
-    opts: MsEdgeDriverResolveOpts,
-    browserVersionInfo?: BrowserInfo,
-    isAutodownloadEnabled = true,
-  ): Promise<string | undefined> {
-    if (opts.executable) {
-      return opts.executable;
-    }
+/**
+ * Determine if the given browser name corresponds to Microsoft Edge.
+ * 'MicrosoftEdge' is old format. Newer MSEdge accepts 'msedge' only as the browser name.
+ * @param browserName The name of the browser.
+ * @returns True if the browser is Microsoft Edge, false otherwise.
+ */
+export function isMsEdge(browserName?: string): boolean {
+  return /^(MicrosoftEdge|msedge)$/i.test(browserName ?? '');
+}
 
-    if (!isMsEdge(opts.browserName)) {
-      return undefined;
-    }
-
-    if (opts.executableDir) {
-      const explicitExecutable = await MsEdgeDriverHandler.findDriverExecutable(opts.executableDir);
-      if (explicitExecutable) {
-        return explicitExecutable;
-      }
-    }
-
-    if (!isAutodownloadEnabled) {
-      return undefined;
-    }
-
-    const browserVersionStr = browserVersionInfo?.info?.Browser;
-    if (!browserVersionStr) {
-      throw new Error(
-        'Could not determine the installed Microsoft Edge version required for autodownload. ' +
-          'Provide ms:edgeOptions.binary or appium:executable.',
-      );
-    }
-
-    const browserVersion = Version.from(browserVersionStr);
-    const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
-    try {
-      return await MsEdgeDriverHandler.ensureDriver(browserVersion, executableDir);
-    } catch (err) {
-      throw new Error(
-        `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion}' ` +
-          `in '${executableDir}': ${(err as Error).message}`,
-      );
-    }
-  }
+/**
+ * Get the default directory for storing MSEdgeDriver executables.
+ * @returns The default directory path.
+ */
+export function getDefaultMsEdgeDriverDir(): string {
+  const s = strongbox(LOCAL_PACKAGE_STORAGE_NAME, {
+    suffix: 'msedgedrivers',
+  });
+  return s.container;
 }
