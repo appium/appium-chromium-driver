@@ -30,10 +30,10 @@ const DEFAULT_LINUX_CANDIDATES = [
 ];
 
 /**
- * Get platform-specific Chrome/Chromium browser binary candidates.
+ * List platform-specific Chrome/Chromium browser binary candidates.
  * @returns A list of executable paths or command names.
  */
-export function getBrowserCandidates(): string[] {
+export function listBrowserBinaryCandidates(): string[] {
   if (process.platform === 'win32') {
     return DEFAULT_WIN_CANDIDATES();
   } else if (process.platform === 'darwin') {
@@ -43,11 +43,11 @@ export function getBrowserCandidates(): string[] {
 }
 
 /**
- * Discover installed Chrome/Chromium browser version from explicit binary or default candidates.
+ * Detect installed Chrome/Chromium browser version from explicit binary or default candidates.
  * @param browserBinary Optional explicit browser binary path or command.
  * @returns Detected browser version.
  */
-export async function discoverBrowserVersion(browserBinary?: string): Promise<string> {
+export async function detectBrowserVersion(browserBinary?: string): Promise<string> {
   if (browserBinary) {
     const version = await readBrowserVersion(browserBinary);
     if (version) {
@@ -56,7 +56,7 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
   }
 
-  const candidates = getBrowserCandidates();
+  const candidates = listBrowserBinaryCandidates();
   for (const binary of candidates) {
     const version = await readBrowserVersion(binary);
     if (version) {
@@ -65,3 +65,4 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
   }
   throw new Error(`Could not determine browser version from candidates: ${candidates.join(', ')}`);
 }
+

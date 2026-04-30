@@ -1,8 +1,8 @@
 import type {BrowserInfo} from '../types';
-import {ensureDriver, findDriverExecutable} from './deployment';
+import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment';
 import {isMsEdge} from './browser-identity';
-import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates';
-import {downloadDriverArchive, getDriverVersion} from './download';
+import {detectBrowserVersion, listBrowserBinaryCandidates} from './browser-candidates';
+import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download';
 import {getDriverExecutableName, getPlatformConfig} from './platform';
 import {getDefaultDriverDir} from './storage';
 import {Version} from './version';
@@ -14,12 +14,12 @@ interface DriverResolveOpts {
 }
 
 /**
- * Resolve the MSEdgeDriver executable path.
+ * Determine the MSEdgeDriver executable path for the current session request.
  * It returns opts.executable if it is provided.
- * If not, it checks if the browser is Microsoft Edge. If it is not, it returns undefined.
- * If it is, it tries to find the executable in opts.executableDir if provided.
- * If it cannot find it and autodownload is enabled, it tries to autodownload the driver based on the browser version.
- * If any step fails for Microsoft Edge, it throws an error.
+ * If not, it checks whether the browser is Microsoft Edge and returns undefined for non-Edge sessions.
+ * For Edge sessions it prefers an existing executable from opts.executableDir, then falls back to
+ * resolving, downloading, and deploying a compatible driver artifact when autodownload is enabled.
+ * If any step fails for a Microsoft Edge session, it throws an error.
  * @param opts The options for resolving the driver executable.
  * @param browserVersionInfo The information about the browser version.
  * @param isAutodownloadEnabled Whether autodownload is enabled (default: true).
@@ -41,7 +41,7 @@ export async function resolveDriverExecutable(
 
   const executableName = getDriverExecutableName();
   if (opts.executableDir) {
-    const explicitExecutable = await findDriverExecutable(opts.executableDir, executableName);
+    const explicitExecutable = await locateDriverExecutableInDir(opts.executableDir, executableName);
     if (explicitExecutable) {
       return explicitExecutable;
     }
@@ -62,14 +62,14 @@ export async function resolveDriverExecutable(
   const browserVersion = Version.from(browserVersionStr);
   const executableDir = opts.executableDir || getDefaultDriverDir();
   try {
-    const driverVersion = await getDriverVersion(browserVersion);
+    const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
     const artifact = {
       archiveName: getPlatformConfig().archiveName,
       executableName,
       version: driverVersion.toString(),
     };
-    return await ensureDriver(artifact, executableDir, async (archivePath) => {
-      await downloadDriverArchive(driverVersion, archivePath);
+    return await deployDriverArtifact(artifact, executableDir, async (archivePath) => {
+      await fetchDriverArchive(driverVersion, archivePath);
     });
   } catch (err) {
     throw new Error(
@@ -81,8 +81,9 @@ export async function resolveDriverExecutable(
 
 export {getDefaultDriverDir, isMsEdge};
 export {
-  discoverBrowserVersion as discoverMsEdgeBrowserVersion,
-  getBrowserCandidates as getMsEdgeBrowserCandidates,
+  detectBrowserVersion as discoverMsEdgeBrowserVersion,
+  listBrowserBinaryCandidates as getMsEdgeBrowserCandidates,
+  resolveDriverExecutable as determineDriverExecutable,
   resolveDriverExecutable as resolveMsEdgeDriverExecutable,
   getDefaultDriverDir as getDefaultMsEdgeDriverDir,
 };

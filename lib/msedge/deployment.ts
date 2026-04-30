@@ -8,13 +8,14 @@ interface DriverDeploymentArtifact {
 }
 
 /**
- * Ensure the driver executable is available.
+ * Deploy a downloaded driver artifact into the target executable directory.
  * @param artifact Driver artifact metadata needed for deployment.
- * @param executableDir The directory to store the driver executable.
- * @returns The path to the driver executable.
- * @throws Error if the driver cannot be ensured.
+ * @param executableDir The base directory where versioned driver folders are stored.
+ * @param downloadArchive Callback responsible for obtaining the archive file at the provided path.
+ * @returns The deployed driver executable path.
+ * @throws Error if deployment fails.
  */
-export async function ensureDriver(
+export async function deployDriverArtifact(
   artifact: DriverDeploymentArtifact,
   executableDir: string,
   downloadArchive: (archivePath: string) => Promise<void>,
@@ -32,7 +33,7 @@ export async function ensureDriver(
   try {
     await downloadArchive(archivePath);
     await zip.extractAllTo(archivePath, targetDir);
-    const extractedExecutable = await findDriverExecutable(targetDir, artifact.executableName);
+    const extractedExecutable = await locateDriverExecutableInDir(targetDir, artifact.executableName);
     if (!extractedExecutable) {
       throw new Error(`Cannot find '${artifact.executableName}' in '${targetDir}'`);
     }
@@ -50,12 +51,12 @@ export async function ensureDriver(
 }
 
 /**
- * Find the driver executable in the given directory.
+ * Locate the driver executable in the given directory tree.
  * @param executableDir The directory to search for the driver executable.
  * @param executableName The driver executable file name.
  * @returns The path to the driver executable, or null if not found.
  */
-export async function findDriverExecutable(
+export async function locateDriverExecutableInDir(
   executableDir: string,
   executableName: string,
 ): Promise<string | null> {

@@ -7,12 +7,12 @@ const STORAGE_REQUEST_TIMEOUT_MS = 10_000;
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 
 /**
- * Get the version of the MSEdgeDriver for the given browser version
- * from the official Microsoft Edge Driver service.
+ * Resolve the compatible MSEdgeDriver version for a given browser version
+ * via the official Microsoft Edge Driver service.
  * @param browserVersion The version of the browser.
  * @returns The version of the MSEdgeDriver.
  */
-export async function getDriverVersion(browserVersion: Version): Promise<Version> {
+export async function resolveDriverVersionForBrowser(browserVersion: Version): Promise<Version> {
   const releaseUrl = getLatestReleaseUrl(browserVersion);
   const response = await fetch(releaseUrl, {
     method: 'GET',
@@ -31,11 +31,11 @@ export async function getDriverVersion(browserVersion: Version): Promise<Version
 }
 
 /**
- * Download MSEdgeDriver archive for the given driver version.
+ * Fetch the MSEdgeDriver archive for the given driver version.
  * @param driverVersion The MSEdgeDriver version to download.
  * @param archivePath The local path where the archive should be written.
  */
-export async function downloadDriverArchive(
+export async function fetchDriverArchive(
   driverVersion: Version,
   archivePath: string,
 ): Promise<void> {
