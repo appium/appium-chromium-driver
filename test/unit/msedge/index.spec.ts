@@ -1,6 +1,6 @@
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import {fs, net, tempDir, zip} from '@appium/support';
+import {fs, net, tempDir, zip} from 'appium/support';
 import sinon from 'sinon';
 import type {BrowserInfo} from '../../../lib/types';
 import {determineDriverExecutable} from '../../../lib/msedge';
@@ -37,6 +37,26 @@ describe('msedge index orchestrator domain', function () {
     expect(
       await determineDriverExecutable({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'}),
     ).to.equal('/tmp/msedgedrivers/current/msedgedriver');
+  });
+
+  it('returns undefined when autodownload is disabled and no driver exists in executableDir', async function () {
+    sinon.stub(fs, 'glob').resolves([]);
+    expect(
+      await determineDriverExecutable(
+        {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},
+        browserVersionInfo,
+        false,
+      ),
+    ).to.be.undefined;
+  });
+
+  it('throws when autodownload is enabled but browser version is unknown', async function () {
+    sinon.stub(fs, 'glob').resolves([]);
+    await expect(
+      determineDriverExecutable({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'}),
+    ).to.be.rejectedWith(
+      'Could not determine the installed Microsoft Edge version required for autodownload',
+    );
   });
 
   it('autodownloads when candidate is absent', async function () {

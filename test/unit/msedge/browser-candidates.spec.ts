@@ -1,11 +1,11 @@
 import {expect, use} from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import sinon from 'sinon';
+import * as teenProcess from 'teen_process';
 import {discoverMsEdgeBrowserVersion} from '../../../lib/msedge';
 
 use(chaiAsPromised);
 
-const teenProcess = require('teen_process') as {exec};
 const IS_WIN = process.platform === 'win32';
 
 function resolveEffectiveBinary(binary: string, args: string[]): string {
