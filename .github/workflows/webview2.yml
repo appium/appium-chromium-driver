@@ -36,7 +36,7 @@ jobs:
 
       - name: Install repo deps
         shell: powershell
-        run: npm ci
+        run: npm install
 
       - name: Checkout WebView2Samples
         uses: actions/checkout@v4
