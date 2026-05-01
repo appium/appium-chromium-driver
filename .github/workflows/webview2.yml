@@ -91,4 +91,4 @@ jobs:
         env:
           WEBVIEW2_EXE: ${{ env.WEBVIEW2_EXE }}
         run: |
-          node .\test\ci\webview2-smoke.mjs
+          node build/test/webview2/test.js
