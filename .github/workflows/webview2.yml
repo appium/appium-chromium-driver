@@ -21,13 +21,12 @@ jobs:
 
     steps:
       - name: Checkout appium-chromium-driver
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          node-version: lts/*
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -39,7 +38,7 @@ jobs:
         run: npm install
 
       - name: Checkout WebView2Samples
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: MicrosoftEdge/WebView2Samples
           path: ${{ env.WEBVIEW2_REPO_DIR }}
