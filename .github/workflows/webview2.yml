@@ -1,0 +1,94 @@
+name: webview2-sample-smoke
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  webview2-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    env:
+      NODE_VERSION: '20'
+      DOTNET_VERSION: '8.0.x'
+      WEBVIEW2_REPO_DIR: WebView2Samples
+      WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2WpfBrowser
+      WEBVIEW2_SOLUTION: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser.sln
+      WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser/bin/Release/net8.0-windows/WebView2WpfBrowser.exe
+      EDGE_DRIVER_VERSION: '136.0.3240.64'
+
+    steps:
+      - name: Checkout appium-chromium-driver
+        uses: actions/checkout@v6
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install repo deps
+        shell: powershell
+        run: npm install
+
+      - name: Checkout WebView2Samples
+        uses: actions/checkout@v6
+        with:
+          repository: MicrosoftEdge/WebView2Samples
+          path: ${{ env.WEBVIEW2_REPO_DIR }}
+
+      - name: Install WebView2 Runtime
+        shell: powershell
+        run: |
+          Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile "$env:TEMP\wv2setup.exe"
+          Start-Process "$env:TEMP\wv2setup.exe" -ArgumentList '/silent','/install' -Wait
+
+      - name: Build WebView2 WPF sample
+        shell: powershell
+        run: |
+          dotnet restore "${env:WEBVIEW2_SOLUTION}"
+          dotnet build "${env:WEBVIEW2_SOLUTION}" -c Release
+
+      - name: Download EdgeDriver
+        shell: powershell
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          $zip = "$env:RUNNER_TEMP\edgedriver_win64.zip"
+          $outDir = "$env:RUNNER_TEMP\msedgedriver"
+          $url = "https://msedgedriver.azureedge.net/$env:EDGE_DRIVER_VERSION/edgedriver_win64.zip"
+          Invoke-WebRequest $url -OutFile $zip
+          Expand-Archive $zip -DestinationPath $outDir -Force
+          "EDGEWEBDRIVER=$outDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Verify built app exists
+        shell: powershell
+        run: |
+          if (!(Test-Path "${env:WEBVIEW2_EXE}")) {
+            Write-Error "Built executable not found at ${env:WEBVIEW2_EXE}"
+          }
+          Get-Item "${env:WEBVIEW2_EXE}" | Format-List FullName,Length
+
+      - name: Configure Appium Server
+        shell: bash
+        run: |
+          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
+          npm install -g "appium@$appium_ver"
+          cwd=$(pwd)
+          pushd "$cwd"
+          cd ~
+          appium driver install --source=local "$cwd"
+          popd
+
+
+      - name: Run WebView2 smoke test via appium-chromium-driver
+        shell: powershell
+        env:
+          WEBVIEW2_EXE: ${{ env.WEBVIEW2_EXE }}
+        run: |
+          node build/test/webview2/test.js
