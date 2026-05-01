@@ -8,15 +8,24 @@ import type {
 } from '@appium/types';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
+import {detectChromeBrowserVersion} from './chrome';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import {getBrowserVersion} from './browser';
-import {getDefaultMsEdgeDriverDir, isMsEdge, MsEdgeDriverHandler} from './msedge';
+import * as msedge from './msedge/index';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
 import path from 'node:path';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
 const EDGE_VENDOR_PREFIX = 'ms:';
+
+interface BrowserDriverStrategy {
+  discoverBrowserVersion(browserBinary?: string): Promise<string>;
+  resolveExecutable(
+    browserVersionInfo: BrowserInfo | undefined,
+    isAutodownloadEnabled: boolean,
+  ): Promise<string | undefined>;
+  getDefaultExecutableDir(): string;
+}
 
 export class ChromiumDriver
   extends BaseDriver<CDConstraints, StringRecord>
@@ -106,14 +115,21 @@ export class ChromiumDriver
   }
 
   override async deleteSession(sessionId?: string): Promise<void> {
-    await super.deleteSession(sessionId);
-    this._proxyActive = false;
-    this._bidiProxyUrl = null;
-    this.proxyReqRes = null;
-    this.proxyCommand = undefined;
-    if (this._cd) {
-      await this._cd.stop();
-      this._cd = null;
+    try {
+      await super.deleteSession(sessionId);
+    } finally {
+      this._proxyActive = false;
+      this._bidiProxyUrl = null;
+      this.proxyReqRes = null;
+      this.proxyCommand = undefined;
+      if (this._cd) {
+        try {
+          await this._cd.stop();
+        } catch (err) {
+          this.log.warn(`Failed to stop Chromedriver: ${(err as Error).message}`);
+        }
+        this._cd = null;
+      }
     }
   }
 
@@ -143,7 +159,7 @@ export class ChromiumDriver
       (this.opts['goog:chromeOptions'] as Record<string, any>)?.binary ??
       (this.opts['ms:edgeOptions'] as Record<string, any>)?.binary;
     try {
-      const bv = await getBrowserVersion(browserBinary, this.opts.browserName);
+      const bv = await this.getBrowserDriverStrategy().discoverBrowserVersion(browserBinary);
       this.log.info(`Detected browser version: ${bv}`);
       return {info: {Browser: bv}};
     } catch (err) {
@@ -172,13 +188,7 @@ export class ChromiumDriver
       return this.opts.executable;
     }
 
-    if (!isMsEdge(this.opts.browserName)) {
-      return undefined;
-    }
-
-    // medge case
-    return await MsEdgeDriverHandler.resolveDriverExecutable(
-      this.opts,
+    return await this.getBrowserDriverStrategy().resolveExecutable(
       browserVersionInfo,
       isAutodownloadEnabled,
     );
@@ -189,9 +199,30 @@ export class ChromiumDriver
       return this.opts.executableDir;
     }
 
-    return isMsEdge(this.opts.browserName)
-      ? getDefaultMsEdgeDriverDir()
-      : this.getDefaultChromeDriverDir();
+    return this.getBrowserDriverStrategy().getDefaultExecutableDir();
+  }
+
+  private getBrowserDriverStrategy(): BrowserDriverStrategy {
+    if (msedge.isMsEdge(this.opts.browserName)) {
+      return {
+        discoverBrowserVersion: async (browserBinary?: string) =>
+          await msedge.discoverMsEdgeBrowserVersion(browserBinary),
+        resolveExecutable: async (browserVersionInfo, isAutodownloadEnabled) =>
+          await msedge.determineDriverExecutable(
+            this.opts,
+            browserVersionInfo,
+            isAutodownloadEnabled,
+          ),
+        getDefaultExecutableDir: () => msedge.getDefaultDriverDir(),
+      };
+    }
+
+    return {
+      discoverBrowserVersion: async (browserBinary?: string) =>
+        await detectChromeBrowserVersion(browserBinary),
+      resolveExecutable: async () => undefined,
+      getDefaultExecutableDir: () => this.getDefaultChromeDriverDir(),
+    };
   }
 
   private getSessionCaps(): StringRecord {
