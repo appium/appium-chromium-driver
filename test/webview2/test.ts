@@ -42,18 +42,18 @@ async function main(): Promise<void> {
 
   // Start the WebView2 app with remote debugging port
   // eslint-disable-next-line no-console
-  console.log(`Launching WebView2 app: ${appBinary}`);
-  const appProc = spawn(appBinary, [], {
-    windowsHide: true,
-    env: {
-      ...process.env,
-      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
-    },
-  });
+  // console.log(`Launching WebView2 app: ${appBinary}`);
+  // const appProc = spawn(appBinary, [], {
+  //   windowsHide: true,
+  //   env: {
+  //     ...process.env,
+  //     WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
+  //   },
+  // });
 
   try {
     // Wait for the debugger endpoint to be ready
-    await waitForDebuggerEndpoint(debugPort);
+    // await waitForDebuggerEndpoint(debugPort);
 
     const appiumPkg = await import('appium');
     const appium = await appiumPkg.default.main({port: 4780});
@@ -142,9 +142,9 @@ async function main(): Promise<void> {
       await appium.close();
     }
   } finally {
-    if (!appProc.killed) {
-      appProc.kill();
-    }
+    // if (!appProc.killed) {
+    //   appProc.kill();
+    // }
   }
 }
 
