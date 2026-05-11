@@ -151,12 +151,12 @@ async function main(): Promise<void> {
 
     // eslint-disable-next-line no-console
     console.log('WebView2 session created successfully');
-    
+
     // Take a screenshot
     const screenshotData = await driver.takeScreenshot();
     // eslint-disable-next-line no-console
     console.log(`Screenshot taken: ${screenshotData.length} bytes`);
-    
+
     // Get page source
     const pageSource = await driver.getPageSource();
     // eslint-disable-next-line no-console
