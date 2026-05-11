@@ -134,7 +134,7 @@ describe('ChromeDriver', function () {
       };
       // eslint-disable-next-line no-console
       console.log(
-        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'} (details: ${sessionTypePath})`,
+        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'}`,
       );
       expect(sessionType.hasWebView2Bridge).to.be.false;
     });
