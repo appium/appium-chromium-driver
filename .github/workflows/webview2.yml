@@ -14,9 +14,10 @@ jobs:
       NODE_VERSION: '20'
       DOTNET_VERSION: '8.0.x'
       WEBVIEW2_REPO_DIR: WebView2Samples
-      WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2WpfBrowser
-      WEBVIEW2_SOLUTION: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser.sln
-      WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser/bin/Release/net8.0-windows/WebView2WpfBrowser.exe
+      WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2WpfCompositionControl
+      WEBVIEW2_PROJECT: WebView2Samples/SampleApps/WebView2WpfCompositionControl/WebView2WpfCompositionControl/WebView2WpfCompositionControl.csproj
+      WEBVIEW2_TARGET_FRAMEWORK: net8.0-windows10.0.22000.0
+      WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2WpfCompositionControl/WebView2WpfCompositionControl/bin/Debug/net8.0-windows10.0.22000.0/WebView2WpfCompositionControl.exe
 
     steps:
       - name: Checkout appium-chromium-driver
@@ -48,11 +49,11 @@ jobs:
           Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile "$env:TEMP\wv2setup.exe"
           Start-Process "$env:TEMP\wv2setup.exe" -ArgumentList '/silent','/install' -Wait
 
-      - name: Build WebView2 WPF sample
+      - name: Build WebView2 .NET 8 sample
         shell: powershell
         run: |
-          dotnet restore "${env:WEBVIEW2_SOLUTION}"
-          dotnet build "${env:WEBVIEW2_SOLUTION}" -c Release
+          dotnet restore "${env:WEBVIEW2_PROJECT}" -p:TargetFramework="${env:WEBVIEW2_TARGET_FRAMEWORK}"
+          dotnet build "${env:WEBVIEW2_PROJECT}" -c Debug -f "${env:WEBVIEW2_TARGET_FRAMEWORK}"
 
       - name: Verify built app exists
         shell: powershell
