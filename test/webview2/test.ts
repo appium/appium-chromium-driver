@@ -2,9 +2,11 @@ import path from 'node:path';
 import process from 'node:process';
 import {spawn} from 'node:child_process';
 import {setTimeout as sleep} from 'node:timers/promises';
+import {writeFile, mkdir} from 'node:fs/promises';
 
 const webview2Exe = process.env.WEBVIEW2_EXE;
 const debugPort = Number(process.env.WEBVIEW2_DEBUG_PORT ?? 9222);
+const artifactDir = process.env.WEBVIEW2_ARTIFACT_DIR ?? './webview2-artifacts';
 
 if (!webview2Exe) {
   throw new Error('WEBVIEW2_EXE environment variable is required');
@@ -35,6 +37,9 @@ async function waitForDebuggerEndpoint(port: number, timeoutMs: number = 30000):
 }
 
 async function main(): Promise<void> {
+  // Ensure artifact directory exists
+  await mkdir(artifactDir, {recursive: true});
+
   // Start the WebView2 app with remote debugging port
   // eslint-disable-next-line no-console
   console.log(`Launching WebView2 app: ${appBinary}`);
@@ -79,17 +84,21 @@ async function main(): Promise<void> {
       // eslint-disable-next-line no-console
       console.log('WebView2 session created successfully');
 
-      // Take a screenshot
+      // Take a screenshot and save it
       const screenshotData = await driver.takeScreenshot();
+      const screenshotPath = path.join(artifactDir, 'screenshot.png');
+      await writeFile(screenshotPath, Buffer.from(screenshotData, 'base64'));
       // eslint-disable-next-line no-console
-      console.log(`Screenshot taken: ${screenshotData.length} bytes`);
+      console.log(`Screenshot saved to ${screenshotPath}`);
 
-      // Get page source
+      // Get page source and save it
       const pageSource = await driver.getPageSource();
+      const pageSourcPath = path.join(artifactDir, 'page-source.html');
+      await writeFile(pageSourcPath, pageSource);
       // eslint-disable-next-line no-console
-      console.log(`Page source retrieved: ${pageSource.length} characters`);
+      console.log(`Page source saved to ${pageSourcPath}`);
       // eslint-disable-next-line no-console
-      console.log('First 200 chars of page source:', pageSource.substring(0, 200));
+      console.log('First 200 chars:', pageSource.substring(0, 200));
 
       await driver.deleteSession();
     } finally {

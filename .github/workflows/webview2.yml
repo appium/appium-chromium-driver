@@ -21,6 +21,7 @@ jobs:
       WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2APISample/Debug/x64/WebView2APISample.exe
       WEBVIEW2_DEBUG_PORT: '9222'
       WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: --remote-debugging-port=9222
+      WEBVIEW2_ARTIFACT_DIR: ${{ github.workspace }}/webview2-test-results
 
     steps:
       - name: Checkout appium-chromium-driver
@@ -98,5 +99,14 @@ jobs:
           WEBVIEW2_EXE: ${{ env.WEBVIEW2_EXE }}
           WEBVIEW2_DEBUG_PORT: ${{ env.WEBVIEW2_DEBUG_PORT }}
           WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: ${{ env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS }}
+          WEBVIEW2_ARTIFACT_DIR: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
         run: |
           node build/test/webview2/test.js
+
+      - name: Upload WebView2 test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webview2-test-results
+          path: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
+          if-no-files-found: ignore
