@@ -155,9 +155,10 @@ export class ChromiumDriver
   }
 
   private async getBrowserInfo(): Promise<BrowserInfo | undefined> {
+    const opts = this.opts as StringRecord;
     const browserBinary: string | undefined =
-      (this.opts['goog:chromeOptions'] as Record<string, any>)?.binary ??
-      (this.opts['ms:edgeOptions'] as Record<string, any>)?.binary;
+      (opts['goog:chromeOptions'] as Record<string, any>)?.binary ??
+      (opts['ms:edgeOptions'] as Record<string, any>)?.binary;
     try {
       const bv = await this.getBrowserDriverStrategy().discoverBrowserVersion(browserBinary);
       this.log.info(`Detected browser version: ${bv}`);
@@ -226,13 +227,14 @@ export class ChromiumDriver
   }
 
   private getSessionCaps(): StringRecord {
-    return Object.keys(this.opts).reduce((acc, capName) => {
+    const opts = this.opts as StringRecord;
+    return Object.keys(opts).reduce((acc, capName) => {
       if (
         STANDARD_CAPS_LOWER.has(capName.toLowerCase()) ||
         capName.startsWith(CHROME_VENDOR_PREFIX) ||
         capName.startsWith(EDGE_VENDOR_PREFIX)
       ) {
-        acc[capName] = this.opts[capName];
+        acc[capName] = opts[capName];
       }
       return acc;
     }, {} as StringRecord);

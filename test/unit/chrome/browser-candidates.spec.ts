@@ -18,7 +18,7 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
   return binary;
 }
 
-async function withMockExec<T>(mockExec, run: () => Promise<T>): Promise<T> {
+async function withMockExec<T>(mockExec: (...args: any[]) => any, run: () => Promise<T>): Promise<T> {
   const execStub = sinon.stub(teenProcess, 'exec').get(() => mockExec);
   try {
     return await run();
