@@ -16,6 +16,8 @@ jobs:
       WEBVIEW2_REPO_DIR: WebView2Samples
       WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2APISample
       WEBVIEW2_PROJECT: WebView2Samples/SampleApps/WebView2APISample/WebView2APISample.vcxproj
+      WEBVIEW2_PACKAGES_CONFIG: WebView2Samples/SampleApps/WebView2APISample/packages.config
+      WEBVIEW2_PACKAGES_DIR: WebView2Samples/SampleApps/packages
       WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2APISample/Debug/x64/WebView2APISample.exe
       WEBVIEW2_DEBUG_PORT: '9222'
       WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: --remote-debugging-port=9222
@@ -52,6 +54,14 @@ jobs:
 
       - name: Build WebView2 API sample
         uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore WebView2 API sample packages
+        shell: pwsh
+        run: |
+          nuget restore "${env:WEBVIEW2_PACKAGES_CONFIG}" -PackagesDirectory "${env:WEBVIEW2_PACKAGES_DIR}"
       
       - name: Run MSBuild
         shell: pwsh
