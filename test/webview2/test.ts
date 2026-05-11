@@ -42,18 +42,18 @@ async function main(): Promise<void> {
 
   // Start the WebView2 app with remote debugging port
   // eslint-disable-next-line no-console
-  // console.log(`Launching WebView2 app: ${appBinary}`);
-  // const appProc = spawn(appBinary, [], {
-  //   windowsHide: true,
-  //   env: {
-  //     ...process.env,
-  //     WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
-  //   },
-  // });
+  console.log(`Launching WebView2 app: ${appBinary}`);
+  const appProc = spawn(appBinary, [], {
+    windowsHide: true,
+    env: {
+      ...process.env,
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
+    },
+  });
 
   try {
     // Wait for the debugger endpoint to be ready
-    // await waitForDebuggerEndpoint(debugPort);
+    await waitForDebuggerEndpoint(debugPort);
 
     const appiumPkg = await import('appium');
     const appium = await appiumPkg.default.main({port: 4780});
@@ -64,12 +64,12 @@ async function main(): Promise<void> {
       platformName: 'windows',
       browserName: 'msedge',
       'appium:automationName': 'Chromium',
-      // 'appium:autodownloadEnabled': false,
+      'appium:autodownloadEnabled': false,
       'appium:newCommandTimeout': 300,
-      // 'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
-      // 'ms:edgeOptions': {
-      //   debuggerAddress: `127.0.0.1:${debugPort}`,
-      // },
+      'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
+      'ms:edgeOptions': {
+        debuggerAddress: `127.0.0.1:${debugPort}`,
+      },
     };
 
     try {
@@ -99,7 +99,7 @@ async function main(): Promise<void> {
         };
 
         const hasWebView2Bridge = Boolean(
-          win.chrome?.webview && typeof win.chrome.webview.postMessage === 'function'
+          win.chrome?.webview && typeof win.chrome.webview.postMessage === 'function',
         );
         const brands = win.navigator.userAgentData?.brands ?? [];
 
@@ -118,7 +118,7 @@ async function main(): Promise<void> {
       await writeFile(sessionTypePath, JSON.stringify(sessionType, null, 2));
       // eslint-disable-next-line no-console
       console.log(
-        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'} (details: ${sessionTypePath})`
+        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'} (details: ${sessionTypePath})`,
       );
 
       // Take a screenshot and save it
@@ -142,9 +142,9 @@ async function main(): Promise<void> {
       await appium.close();
     }
   } finally {
-    // if (!appProc.killed) {
-    //   appProc.kill();
-    // }
+    if (!appProc.killed) {
+      appProc.kill();
+    }
   }
 }
 

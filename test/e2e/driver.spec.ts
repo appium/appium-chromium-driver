@@ -101,6 +101,43 @@ describe('ChromeDriver', function () {
       const pageSource = await ctx.driver!.getPageSource();
       expect(pageSource).to.match(/value.+build.+version/);
     });
+
+    it('should be chrome/edge session type', async function () {
+      const sessionType = (await ctx.driver.execute(() => {
+        const win = globalThis as unknown as {
+          chrome?: {
+            webview?: {
+              postMessage?: (...args: unknown[]) => void;
+            };
+          };
+          navigator: Navigator & {
+            userAgentData?: {
+              brands?: Array<{brand: string; version: string}>;
+            };
+          };
+        };
+
+        const hasWebView2Bridge = Boolean(
+          win.chrome?.webview && typeof win.chrome.webview.postMessage === 'function',
+        );
+        const brands = win.navigator.userAgentData?.brands ?? [];
+
+        return {
+          hasWebView2Bridge,
+          userAgent: win.navigator.userAgent,
+          brands,
+        };
+      })) as unknown as {
+        hasWebView2Bridge: boolean;
+        userAgent: string;
+        brands: Array<{brand: string; version: string}>;
+      };
+      // eslint-disable-next-line no-console
+      console.log(
+        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'} (details: ${sessionTypePath})`,
+      );
+      expect(sessionType.hasWebView2Bridge).to.be.false;
+    });
   });
 
   describe('bidi commands', function () {
