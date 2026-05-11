@@ -64,9 +64,9 @@ async function main(): Promise<void> {
       platformName: 'windows',
       browserName: 'msedge',
       'appium:automationName': 'Chromium',
-      'appium:autodownloadEnabled': false,
+      // 'appium:autodownloadEnabled': false,
       'appium:newCommandTimeout': 300,
-      'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
+      // 'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
       // 'ms:edgeOptions': {
       //   debuggerAddress: `127.0.0.1:${debugPort}`,
       // },
