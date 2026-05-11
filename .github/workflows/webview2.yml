@@ -87,10 +87,16 @@ jobs:
           appium driver install --source=local "$cwd"
           popd
 
+      - name: Build TypeScript
+        shell: powershell
+        run: |
+          npm run build
 
       - name: Run WebView2 smoke test via appium-chromium-driver
         shell: powershell
         env:
           WEBVIEW2_EXE: ${{ env.WEBVIEW2_EXE }}
+          WEBVIEW2_DEBUG_PORT: ${{ env.WEBVIEW2_DEBUG_PORT }}
+          WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: ${{ env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS }}
         run: |
           node build/test/webview2/test.js
