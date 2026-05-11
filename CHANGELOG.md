@@ -1,3 +1,13 @@
+## [2.2.4](https://github.com/appium/appium-chromium-driver/compare/v2.2.3...v2.2.4) (2026-05-06)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump sinon from 21.1.2 to 22.0.0 ([#436](https://github.com/appium/appium-chromium-driver/issues/436)) ([61213df](https://github.com/appium/appium-chromium-driver/commit/61213dfa154fdac45a538321ef5f11c0f47b2c80))
+
+### Code Refactoring
+
+* Split edge-related entities into logical domains ([#434](https://github.com/appium/appium-chromium-driver/issues/434)) ([38c6c8e](https://github.com/appium/appium-chromium-driver/commit/38c6c8ead4987287741aad7e61f7062874f4e13a))
+
 ## [2.2.3](https://github.com/appium/appium-chromium-driver/compare/v2.2.2...v2.2.3) (2026-04-30)
 
 ### Bug Fixes
