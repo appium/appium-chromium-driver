@@ -12,12 +12,12 @@ const appBinary = path.resolve(webview2Exe);
 async function main(): Promise<void> {
   const appiumPkg = await import('appium');
   const appium = await appiumPkg.default.main({port: 4780});
+  // Use the CI local MS Edge default driver
   const capabilities: Record<string, unknown> = {
     platformName: 'windows',
     browserName: 'msedge',
     'appium:automationName': 'Chromium',
     'appium:newCommandTimeout': 300,
-    'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
     'ms:edgeOptions': {
       binary: appBinary,
     },

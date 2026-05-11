@@ -17,7 +17,6 @@ jobs:
       WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2WpfBrowser
       WEBVIEW2_SOLUTION: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser.sln
       WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2WpfBrowser/WebView2WpfBrowser/bin/Release/net8.0-windows/WebView2WpfBrowser.exe
-      EDGE_DRIVER_VERSION: '136.0.3240.64'
 
     steps:
       - name: Checkout appium-chromium-driver
@@ -54,17 +53,6 @@ jobs:
         run: |
           dotnet restore "${env:WEBVIEW2_SOLUTION}"
           dotnet build "${env:WEBVIEW2_SOLUTION}" -c Release
-
-      - name: Download EdgeDriver
-        shell: powershell
-        run: |
-          $ProgressPreference = 'SilentlyContinue'
-          $zip = "$env:RUNNER_TEMP\edgedriver_win64.zip"
-          $outDir = "$env:RUNNER_TEMP\msedgedriver"
-          $url = "https://msedgedriver.azureedge.net/$env:EDGE_DRIVER_VERSION/edgedriver_win64.zip"
-          Invoke-WebRequest $url -OutFile $zip
-          Expand-Archive $zip -DestinationPath $outDir -Force
-          "EDGEWEBDRIVER=$outDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Verify built app exists
         shell: powershell
