@@ -84,6 +84,43 @@ async function main(): Promise<void> {
       // eslint-disable-next-line no-console
       console.log('WebView2 session created successfully');
 
+      const sessionType = (await driver.execute(() => {
+        const win = globalThis as unknown as {
+          chrome?: {
+            webview?: {
+              postMessage?: (...args: unknown[]) => void;
+            };
+          };
+          navigator: Navigator & {
+            userAgentData?: {
+              brands?: Array<{brand: string; version: string}>;
+            };
+          };
+        };
+
+        const hasWebView2Bridge = Boolean(
+          win.chrome?.webview && typeof win.chrome.webview.postMessage === 'function'
+        );
+        const brands = win.navigator.userAgentData?.brands ?? [];
+
+        return {
+          hasWebView2Bridge,
+          userAgent: win.navigator.userAgent,
+          brands,
+        };
+      })) as unknown as {
+        hasWebView2Bridge: boolean;
+        userAgent: string;
+        brands: Array<{brand: string; version: string}>;
+      };
+
+      const sessionTypePath = path.join(artifactDir, 'session-type.json');
+      await writeFile(sessionTypePath, JSON.stringify(sessionType, null, 2));
+      // eslint-disable-next-line no-console
+      console.log(
+        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'} (details: ${sessionTypePath})`
+      );
+
       // Take a screenshot and save it
       const screenshotData = await driver.takeScreenshot();
       const screenshotPath = path.join(artifactDir, 'screenshot.png');
