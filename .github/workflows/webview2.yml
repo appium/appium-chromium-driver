@@ -51,14 +51,12 @@ jobs:
           Start-Process "$env:TEMP\wv2setup.exe" -ArgumentList '/silent','/install' -Wait
 
       - name: Build WebView2 API sample
-        shell: powershell
+        uses: microsoft/setup-msbuild@v2
+      
+      - name: Run MSBuild
+        shell: pwsh
         run: |
-          $msbuild = & "$env:ProgramFiles(x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe | Select-Object -First 1
-          if (-not $msbuild) {
-            throw 'MSBuild was not found'
-          }
-
-          & $msbuild "${env:WEBVIEW2_PROJECT}" /p:Configuration=Debug /p:Platform=x64 /m
+          msbuild "${env:WEBVIEW2_PROJECT}" /p:Configuration=Debug /p:Platform=x64 /m
 
       - name: Verify built app exists
         shell: powershell
