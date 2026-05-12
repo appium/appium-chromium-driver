@@ -137,7 +137,7 @@ describe('ChromeDriver', function () {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const networkResponses: any[] = [];
-      d.on('network.responseCompleted', (response) => networkResponses.push(response));
+      d.on('network.responseCompleted', (response: any) => networkResponses.push(response));
       await d.sessionSubscribe({
         events: ['network.responseCompleted'],
         contexts: [contexts[0].context],
