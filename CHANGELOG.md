@@ -1,3 +1,9 @@
+## [2.2.5](https://github.com/appium/appium-chromium-driver/compare/v2.2.4...v2.2.5) (2026-05-12)
+
+### Miscellaneous Chores
+
+* Enable strict TS mode ([#437](https://github.com/appium/appium-chromium-driver/issues/437)) ([09da304](https://github.com/appium/appium-chromium-driver/commit/09da304913cf23c36ebd3ede4738f9eaf1fcb7bf))
+
 ## [2.2.4](https://github.com/appium/appium-chromium-driver/compare/v2.2.3...v2.2.4) (2026-05-06)
 
 ### Miscellaneous Chores
