@@ -63,7 +63,7 @@ jobs:
         shell: pwsh
         run: |
           nuget restore "${env:WEBVIEW2_PACKAGES_CONFIG}" -PackagesDirectory "${env:WEBVIEW2_PACKAGES_DIR}"
-      
+
       - name: Run MSBuild
         shell: pwsh
         run: |
@@ -101,7 +101,7 @@ jobs:
           WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: ${{ env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS }}
           WEBVIEW2_ARTIFACT_DIR: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
         run: |
-          node build/test/webview2/test.js
+          node test/e2e/webview2/test.ts
 
       - name: Upload WebView2 test artifacts
         if: always()

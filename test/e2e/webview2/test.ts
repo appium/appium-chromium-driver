@@ -43,23 +43,23 @@ async function main(): Promise<void> {
   // Start the WebView2 app with remote debugging port
   // eslint-disable-next-line no-console
   console.log(`Launching WebView2 app: ${appBinary}`);
-  const appProc = spawn(appBinary, [], {
-    windowsHide: true,
-    env: {
-      ...process.env,
-      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
-    },
-  });
+  // const appProc = spawn(appBinary, [], {
+  //   windowsHide: true,
+  //   env: {
+  //     ...process.env,
+  //     WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
+  //   },
+  // });
 
   try {
     // Wait for the debugger endpoint to be ready
-    await waitForDebuggerEndpoint(debugPort);
+    // await waitForDebuggerEndpoint(debugPort);
 
     const appiumPkg = await import('appium');
     const appium = await appiumPkg.default.main({port: 4780});
 
     // WebView2 sample app that will be automated
-    // Note: do NOT set 'binary' here since we're launching the app ourselves
+    // Note: do NOT set 'binary' here since we're launching the app by ourselves
     const capabilities: Record<string, unknown> = {
       platformName: 'windows',
       browserName: 'msedge',
@@ -68,7 +68,9 @@ async function main(): Promise<void> {
       'appium:newCommandTimeout': 300,
       'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
       'ms:edgeOptions': {
+        binary: appBinary,
         debuggerAddress: `127.0.0.1:${debugPort}`,
+        args: [`--remote-debugging-port=${debugPort}`],
       },
     };
 
@@ -142,9 +144,9 @@ async function main(): Promise<void> {
       await appium.close();
     }
   } finally {
-    if (!appProc.killed) {
-      appProc.kill();
-    }
+    // if (!appProc.killed) {
+    //   appProc.kill();
+    // }
   }
 }
 

@@ -132,10 +132,8 @@ describe('ChromeDriver', function () {
         userAgent: string;
         brands: Array<{brand: string; version: string}>;
       };
-      // eslint-disable-next-line no-console
-      console.log(
-        `Session type: ${sessionType.hasWebView2Bridge ? 'WebView2' : 'MSEdge/Chromium tab'}`,
-      );
+      // this session should be a regular Chrome/Edge tab,
+      // not a WebView2 session, so the bridge should not be present
       expect(sessionType.hasWebView2Bridge).to.be.false;
     });
   });
