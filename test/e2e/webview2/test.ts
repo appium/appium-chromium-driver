@@ -67,6 +67,7 @@ async function main(): Promise<void> {
       'appium:autodownloadEnabled': false,
       'appium:newCommandTimeout': 300,
       'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
+      'appium:showChromedriverLog': true,
       'ms:edgeOptions': {
         binary: appBinary,
         // debuggerAddress: `127.0.0.1:${debugPort}`,
