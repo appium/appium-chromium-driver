@@ -3,7 +3,9 @@
  */
 export class Version {
   // The version format is expected to be like "147.0.3179.73" or "147.0.3179.98".
-  // Also supports formats like "1.0.0+a25c52962012dec3d5fc1980d1071862f52103fd" (WebView2)
+  // WebView 2 on MSEdge could have "1.0.0+a25c52962012dec3d5fc1980d1071862f52103fd" format,
+  // then this version detection doesn't work. It cannot find proper browser version
+  // also, so the case can be treated as unknown version and the latest MSEdgeDriver can be used.
   private static readonly VERSION_PATTERN = /^(\d+)\.\d+\.\d+\.\d+$/;
 
   constructor(

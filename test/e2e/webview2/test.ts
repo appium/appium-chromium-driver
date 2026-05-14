@@ -69,7 +69,7 @@ async function main(): Promise<void> {
       'appium:executable': 'C:\\SeleniumWebDrivers\\EdgeDriver\\msedgedriver.exe',
       'ms:edgeOptions': {
         binary: appBinary,
-        debuggerAddress: `127.0.0.1:${debugPort}`,
+        // debuggerAddress: `127.0.0.1:${debugPort}`,
         args: [`--remote-debugging-port=${debugPort}`],
       },
     };
