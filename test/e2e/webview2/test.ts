@@ -43,13 +43,13 @@ async function main(): Promise<void> {
   // Start the WebView2 app with remote debugging port
   // eslint-disable-next-line no-console
   console.log(`Launching WebView2 app: ${appBinary}`);
-    const appProc = spawn(appBinary, [], {
-      windowsHide: true,
-      env: {
-        ...process.env,
-        WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
-      },
-    });
+  const appProc = spawn(appBinary, [], {
+    windowsHide: true,
+    env: {
+      ...process.env,
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${debugPort}`,
+    },
+  });
 
   try {
     // Wait for the debugger endpoint to be ready
