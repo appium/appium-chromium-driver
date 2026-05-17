@@ -77,9 +77,10 @@ async function main(): Promise<void> {
       },
     };
 
+    let driver;
     try {
       const {remote} = await import('webdriverio');
-      const driver = await remote({
+      driver = await remote({
         hostname: '127.0.0.1',
         port: 4780,
         connectionRetryCount: 0,
@@ -141,9 +142,12 @@ async function main(): Promise<void> {
       console.log(`Page source saved to ${pageSourcPath}`);
       // eslint-disable-next-line no-console
       console.log('First 200 chars:', pageSource.substring(0, 200));
-
-      await driver.deleteSession();
     } finally {
+      if (driver) {
+        try {
+          await driver.deleteSession();
+        } catch {}
+      }
       await appium.close();
     }
   } finally {
