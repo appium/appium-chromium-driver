@@ -53,7 +53,7 @@ async function main(): Promise<void> {
 
   try {
     // Wait for the debugger endpoint to be ready
-    // It may take longer time, so launchign app though caps
+    // It may take longer time, so launching app though caps
     // is not used here.
     await waitForDebuggerEndpoint(debugPort);
 
