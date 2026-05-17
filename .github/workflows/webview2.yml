@@ -101,7 +101,7 @@ jobs:
           WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: ${{ env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS }}
           WEBVIEW2_ARTIFACT_DIR: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
         run: |
-          node test/e2e/webview2/test.ts
+          node test/webview2/test.ts
 
       - name: Upload WebView2 test artifacts
         if: always()
