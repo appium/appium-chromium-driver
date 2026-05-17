@@ -1,9 +1,12 @@
 name: webview2-sample-smoke
 
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
 
 jobs:
   webview2-smoke:
@@ -11,10 +14,8 @@ jobs:
     timeout-minutes: 30
 
     env:
-      NODE_VERSION: '20'
       DOTNET_VERSION: '8.0.x'
       WEBVIEW2_REPO_DIR: WebView2Samples
-      WEBVIEW2_SAMPLE_DIR: WebView2Samples/SampleApps/WebView2APISample
       WEBVIEW2_PROJECT: WebView2Samples/SampleApps/WebView2APISample/WebView2APISample.vcxproj
       WEBVIEW2_PACKAGES_CONFIG: WebView2Samples/SampleApps/WebView2APISample/packages.config
       WEBVIEW2_PACKAGES_DIR: WebView2Samples/SampleApps/packages
@@ -33,7 +34,7 @@ jobs:
           node-version: lts/*
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
@@ -54,7 +55,7 @@ jobs:
           Start-Process "$env:TEMP\wv2setup.exe" -ArgumentList '/silent','/install' -Wait
 
       - name: Build WebView2 API sample
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
