@@ -2,6 +2,11 @@ name: webview2-sample-smoke
 
 on:
   workflow_dispatch:
+  schedule:
+    # Runs weekly at 12:00 AM UTC on Sundays
+    - cron: '0 0 * * 0'
+
+  # todo: remove
   pull_request:
     branches:
       - main
