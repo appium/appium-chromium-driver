@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/appium/appium-chromium-driver/compare/v2.2.5...v3.0.0) (2026-06-13)
+
+### ⚠ BREAKING CHANGES
+
+* Migrate the package to native ESM ("type": "module", exports map, NodeNext TypeScript output, .js import extensions, appium/driver.js / appium/support.js subpath imports). Consumers using require() against deep or internal paths must switch to ESM import or use the published exports entry point.
+* Chromedriver binaries are no longer stored under node_modules/appium-chromedriver/chromedriver. The default storage location is now the Appium strongbox cache (chromedrivers suffix), consistent with how MSEdge drivers are stored (msedgedrivers). Users who pre-installed Chromedriver into the old path must run appium driver run chromium install-chromedriver again or set appium:executableDir / CHROMEDRIVER_EXECUTABLE_DIR explicitly.
+
+### Features
+
+* Migrate package to ESM ([#438](https://github.com/appium/appium-chromium-driver/issues/438)) ([329ad8d](https://github.com/appium/appium-chromium-driver/commit/329ad8df4746c71312a1d1d280e51ae3c95ab366))
+
 ## [2.2.5](https://github.com/appium/appium-chromium-driver/compare/v2.2.4...v2.2.5) (2026-05-12)
 
 ### Miscellaneous Chores
