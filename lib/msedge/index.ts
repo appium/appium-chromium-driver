@@ -1,11 +1,11 @@
-import type {BrowserInfo} from '../types';
-import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment';
-import {isMsEdge} from './browser-identity';
-import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates';
-import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download';
-import {getDriverExecutableName, getPlatformConfig} from './platform';
-import {getDefaultDriverDir} from './storage';
-import {Version} from './version';
+import type {BrowserInfo} from '../types.js';
+import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment.js';
+import {isMsEdge} from './browser-identity.js';
+import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
+import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
+import {getDriverExecutableName, getPlatformConfig} from './platform.js';
+import {getDefaultDriverDir} from './storage.js';
+import {Version} from './version.js';
 
 interface DriverResolveOpts {
   browserName?: string;

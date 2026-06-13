@@ -1,11 +1,9 @@
-import {expect, use} from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import {fs, net, tempDir, zip} from 'appium/support';
+import {describe, it, afterEach} from 'node:test';
+import assert from 'node:assert/strict';
+import {fs, net, tempDir, zip} from 'appium/support.js';
 import sinon from 'sinon';
-import type {BrowserInfo} from '../../../lib/types';
-import {determineDriverExecutable} from '../../../lib/msedge';
-
-use(chaiAsPromised);
+import type {BrowserInfo} from '../../../lib/types.js';
+import {determineDriverExecutable} from '../../../lib/msedge/index.js';
 
 function makeMsedgeVersionResponse(version: string): Response {
   const payload = Buffer.concat([
@@ -15,51 +13,53 @@ function makeMsedgeVersionResponse(version: string): Response {
   return new Response(payload, {status: 200});
 }
 
-describe('msedge index orchestrator domain', function () {
-  afterEach(function () {
+describe('msedge index orchestrator domain', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
   const browserVersionInfo = {info: {Browser: '147.0.3179.85'}} as BrowserInfo;
 
-  it('returns undefined for non-Edge browsers', async function () {
-    expect(await determineDriverExecutable({browserName: 'chrome'})).to.be.undefined;
+  it('returns undefined for non-Edge browsers', async () => {
+    assert.equal(await determineDriverExecutable({browserName: 'chrome'}), undefined);
   });
 
-  it('returns explicit executable when provided', async function () {
-    expect(
+  it('returns explicit executable when provided', async () => {
+    assert.equal(
       await determineDriverExecutable({browserName: 'msedge', executable: '/custom/msedgedriver'}),
-    ).to.equal('/custom/msedgedriver');
+      '/custom/msedgedriver',
+    );
   });
 
-  it('uses provided executableDir candidate before autodownload', async function () {
+  it('uses provided executableDir candidate before autodownload', async () => {
     sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/current/msedgedriver']);
-    expect(
+    assert.equal(
       await determineDriverExecutable({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'}),
-    ).to.equal('/tmp/msedgedrivers/current/msedgedriver');
+      '/tmp/msedgedrivers/current/msedgedriver',
+    );
   });
 
-  it('returns undefined when autodownload is disabled and no driver exists in executableDir', async function () {
+  it('returns undefined when autodownload is disabled and no driver exists in executableDir', async () => {
     sinon.stub(fs, 'glob').resolves([]);
-    expect(
+    assert.equal(
       await determineDriverExecutable(
         {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},
         browserVersionInfo,
         false,
       ),
-    ).to.be.undefined;
-  });
-
-  it('throws when autodownload is enabled but browser version is unknown', async function () {
-    sinon.stub(fs, 'glob').resolves([]);
-    await expect(
-      determineDriverExecutable({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'}),
-    ).to.be.rejectedWith(
-      'Could not determine the installed Microsoft Edge version required for autodownload',
+      undefined,
     );
   });
 
-  it('autodownloads when candidate is absent', async function () {
+  it('throws when autodownload is enabled but browser version is unknown', async () => {
+    sinon.stub(fs, 'glob').resolves([]);
+    await assert.rejects(
+      () => determineDriverExecutable({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'}),
+      /Could not determine the installed Microsoft Edge version required for autodownload/,
+    );
+  });
+
+  it('autodownloads when candidate is absent', async () => {
     sinon.stub(globalThis, 'fetch').resolves(makeMsedgeVersionResponse('147.0.3179.98'));
     sinon.stub(fs, 'isExecutable').resolves(false);
     sinon.stub(fs, 'mkdirp').resolves();
@@ -80,6 +80,6 @@ describe('msedge index orchestrator domain', function () {
       {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},
       browserVersionInfo,
     );
-    expect(executable).to.equal('/tmp/msedgedrivers/147.0.3179.98/msedgedriver');
+    assert.equal(executable, '/tmp/msedgedrivers/147.0.3179.98/msedgedriver');
   });
 });

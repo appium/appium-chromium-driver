@@ -22,10 +22,17 @@
   },
   "license": "Apache-2.0",
   "author": "https://github.com/appium",
+  "type": "module",
   "directories": {
     "lib": "lib"
   },
-  "main": "build/lib/index.js",
+  "main": "./build/lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./build/lib/index.d.ts",
+      "import": "./build/lib/index.js"
+    }
+  },
   "files": [
     "lib",
     "build/lib",
@@ -46,9 +53,10 @@
     "format": "prettier -w ./lib ./test",
     "format:check": "prettier --check ./lib ./test",
     "prepare": "npm run build",
-    "test": "npm run test:unit",
-    "test:unit": "mocha \"./test/unit/**/*.spec.ts\"",
-    "test:e2e": "mocha \"./test/e2e/**/*.spec.ts\"",
+    "pretest": "npm run build",
+    "test": "node --test --test-timeout=60000 \"build/test/unit/**/*.test.js\"",
+    "test:unit": "npm run test",
+    "test:e2e": "npm run build && node --test --test-timeout=300000 \"build/test/e2e/**/*.test.js\"",
     "test:smoke": "node ./build/lib/index.js",
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
@@ -97,20 +105,13 @@
     "@appium/types": "^1.0.0-rc.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@types/chai": "^5.2.3",
-    "@types/chai-as-promised": "^8.0.2",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.1",
     "@types/sinon": "^21.0.1",
     "asyncbox": "^6.1.0",
-    "chai": "^6.0.0",
-    "chai-as-promised": "^8.0.0",
     "conventional-changelog-conventionalcommits": "^9.0.0",
-    "mocha": "^11.0.0",
     "prettier": "^3.0.3",
     "semantic-release": "^25.0.2",
     "sinon": "^22.0.0",
-    "ts-node": "^10.9.2",
     "typescript": "^6.0.2",
     "webdriverio": "^9.0.9"
   }

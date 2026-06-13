@@ -1,15 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "@appium/tsconfig/tsconfig.json",
-  "ts-node": {
-    "transpileOnly": true,
-    "compilerOptions": {
-      "rootDir": "."
-    }
-  },
   "compilerOptions": {
-    "types": ["node", "mocha"],
     "outDir": "build",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": ".",
+    "types": ["node"],
     "checkJs": true,
     "strict": true
   },

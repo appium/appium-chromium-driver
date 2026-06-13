@@ -6,13 +6,16 @@ import type {
   InitialOpts,
   StringRecord,
 } from '@appium/types';
-import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
+import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
-import {detectChromeBrowserVersion} from './chrome';
-import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import * as msedge from './msedge/index';
-import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
+import {detectChromeBrowserVersion} from './chrome/index.js';
+import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
+import * as msedge from './msedge/index.js';
+import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
+import {createRequire} from 'node:module';
 import path from 'node:path';
+
+const require = createRequire(import.meta.url);
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';

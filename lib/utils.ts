@@ -1,5 +1,18 @@
 import path from 'node:path';
-import {exec} from 'teen_process';
+import {exec as defaultExec} from 'teen_process';
+
+type ExecFn = typeof defaultExec;
+let execImpl: ExecFn = defaultExec;
+
+/** @internal */
+export function __setExecForTests(fn: ExecFn): void {
+  execImpl = fn;
+}
+
+/** @internal */
+export function __resetExecForTests(): void {
+  execImpl = defaultExec;
+}
 
 /**
  * Build Windows executable candidate paths from common installation base folders.
@@ -37,7 +50,7 @@ async function readBrowserVersionWin(binaryPath: string): Promise<string | null>
   // Escape single quotes for PowerShell single-quoted strings
   const safePath = binaryPath.replace(/'/g, "''");
   try {
-    const {stdout} = await exec('powershell', [
+    const {stdout} = await execImpl('powershell', [
       '-NoProfile',
       '-Command',
       [
@@ -64,7 +77,7 @@ async function readBrowserVersionWin(binaryPath: string): Promise<string | null>
  */
 async function readBrowserVersionUnix(binary: string): Promise<string | null> {
   try {
-    const {stdout} = await exec(binary, ['--version']);
+    const {stdout} = await execImpl(binary, ['--version']);
     const match = /(\d+\.\d+\.\d+\.\d+)/.exec(stdout);
     if (match) {
       return match[1];
