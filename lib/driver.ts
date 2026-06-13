@@ -8,11 +8,10 @@ import type {
 } from '@appium/types';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
-import {detectChromeBrowserVersion} from './chrome/index.js';
+import * as chrome from './chrome/index.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
-import {getDefaultChromeDriverDir} from './utils/index.js';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
@@ -207,9 +206,9 @@ export class ChromiumDriver
 
     return {
       discoverBrowserVersion: async (browserBinary?: string) =>
-        await detectChromeBrowserVersion(browserBinary),
+        await chrome.detectChromeBrowserVersion(browserBinary),
       resolveExecutable: async () => undefined,
-      getDefaultExecutableDir: () => getDefaultChromeDriverDir(),
+      getDefaultExecutableDir: () => chrome.getDefaultDriverDir(),
     };
   }
 
