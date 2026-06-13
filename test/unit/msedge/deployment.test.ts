@@ -1,29 +1,27 @@
-import {expect, use} from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-import {fs, tempDir, zip} from 'appium/support';
+import {describe, it, afterEach} from 'node:test';
+import assert from 'node:assert/strict';
+import {fs, tempDir, zip} from 'appium/support.js';
 import sinon from 'sinon';
-import {deployDriverArtifact, locateDriverExecutableInDir} from '../../../lib/msedge/deployment';
+import {deployDriverArtifact, locateDriverExecutableInDir} from '../../../lib/msedge/deployment.js';
 
-use(chaiAsPromised);
-
-describe('msedge deployment domain', function () {
-  afterEach(function () {
+describe('msedge deployment domain', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('findDriverExecutable', function () {
-    it('uses the provided executable name to search candidates', async function () {
+  describe('findDriverExecutable', () => {
+    it('uses the provided executable name to search candidates', async () => {
       const globStub = sinon.stub(fs, 'glob').resolves(['/tmp/a/custom-driver-bin']);
 
       const executable = await locateDriverExecutableInDir('/tmp/a', 'custom-driver-bin');
 
-      expect(executable).to.equal('/tmp/a/custom-driver-bin');
-      expect(globStub.firstCall.args[0]).to.equal('**/custom-driver-bin');
+      assert.equal(executable, '/tmp/a/custom-driver-bin');
+      assert.equal(globStub.firstCall.args[0], '**/custom-driver-bin');
     });
   });
 
-  describe('ensureDriver', function () {
-    it('deploys using artifact metadata without platform helpers', async function () {
+  describe('ensureDriver', () => {
+    it('deploys using artifact metadata without platform helpers', async () => {
       sinon.stub(fs, 'isExecutable').resolves(false);
       sinon.stub(fs, 'mkdirp').resolves();
       sinon.stub(tempDir, 'openDir').resolves('/tmp/extract-root');
@@ -45,11 +43,11 @@ describe('msedge deployment domain', function () {
         downloadArchive,
       );
 
-      expect(downloadArchive.firstCall.args[0]).to.equal('/tmp/extract-root/custom-archive.zip');
-      expect(executable).to.equal('/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
+      assert.equal(downloadArchive.firstCall.args[0], '/tmp/extract-root/custom-archive.zip');
+      assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
     });
 
-    it('returns existing executable when already present', async function () {
+    it('returns existing executable when already present', async () => {
       sinon.stub(fs, 'isExecutable').resolves(true);
       const downloadArchive = sinon.stub().resolves();
 
@@ -63,8 +61,8 @@ describe('msedge deployment domain', function () {
         downloadArchive,
       );
 
-      expect(executable).to.equal('/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
-      expect(downloadArchive.called).to.equal(false);
+      assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
+      assert.equal(downloadArchive.called, false);
     });
   });
 });

@@ -6,13 +6,12 @@ import type {
   InitialOpts,
   StringRecord,
 } from '@appium/types';
-import {BaseDriver, STANDARD_CAPS} from 'appium/driver';
+import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
-import {detectChromeBrowserVersion} from './chrome';
-import {desiredCapConstraints, type CDConstraints} from './desired-caps';
-import * as msedge from './msedge/index';
-import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types';
-import path from 'node:path';
+import * as chrome from './chrome/index.js';
+import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
+import * as msedge from './msedge/index.js';
+import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
@@ -168,19 +167,6 @@ export class ChromiumDriver
     }
   }
 
-  /**
-   * FIXME: Please use this driver's local storage instead of the node_modules path
-   * to avoid potential read-only issue.
-   * Please update the `appium driver run chromium install-chromedriver` command behavior
-   * also to reflect the change.
-   * This change is a breaking change.
-   */
-  private getDefaultChromeDriverDir(): string {
-    const pkgJson = require.resolve('appium-chromedriver/package.json');
-    const packageDir = path.dirname(pkgJson);
-    return path.join(packageDir, 'chromedriver');
-  }
-
   private async getExecutable(
     browserVersionInfo?: BrowserInfo | undefined,
     isAutodownloadEnabled: boolean = true,
@@ -220,9 +206,9 @@ export class ChromiumDriver
 
     return {
       discoverBrowserVersion: async (browserBinary?: string) =>
-        await detectChromeBrowserVersion(browserBinary),
+        await chrome.detectChromeBrowserVersion(browserBinary),
       resolveExecutable: async () => undefined,
-      getDefaultExecutableDir: () => this.getDefaultChromeDriverDir(),
+      getDefaultExecutableDir: () => chrome.getDefaultDriverDir(),
     };
   }
 

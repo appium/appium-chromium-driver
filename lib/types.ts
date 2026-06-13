@@ -1,5 +1,5 @@
 import type {DriverCaps, W3CDriverCaps} from '@appium/types';
-import type {CDConstraints} from './desired-caps';
+import type {CDConstraints} from './desired-caps.js';
 import type {ChromedriverOpts} from 'appium-chromedriver';
 
 /**

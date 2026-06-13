@@ -1,12 +1,9 @@
-/* eslint-disable mocha/no-top-level-hooks */
+import {describe, it, before, after} from 'node:test';
+import assert from 'node:assert/strict';
 import {waitForCondition} from 'asyncbox';
-import {expect, use} from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 
 type AppiumServer = any;
 type Browser = any;
-
-use(chaiAsPromised);
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
@@ -61,12 +58,12 @@ function setupDriver() {
   /** @type {{driver: Browser | null}} */
   const ctx: {driver: Browser | null} = {driver: null};
 
-  before(async function () {
+  before(async () => {
     const {remote} = await import('webdriverio');
     ctx.driver = await remote(WDIO_OPTS);
   });
 
-  after(async function () {
+  after(async () => {
     if (ctx.driver) {
       await ctx.driver.deleteSession();
       ctx.driver = null;
@@ -76,37 +73,37 @@ function setupDriver() {
   return ctx;
 }
 
-describe('ChromeDriver', function () {
+describe('ChromeDriver', {timeout: 300_000}, () => {
   let appium: AppiumServer | null = null;
 
-  before(async function () {
+  before(async () => {
     const appiumPkg = await import('appium');
     appium = await appiumPkg.default.main({port: Number(PORT)});
   });
 
-  after(async function () {
+  after(async () => {
     if (appium) {
       await appium.close();
     }
   });
 
-  describe('basic session handling', function () {
+  describe('basic session handling', () => {
     const ctx = setupDriver();
 
-    it('should navigate to a url', async function () {
+    it('should navigate to a url', async () => {
       await ctx.driver!.navigateTo(`${SERVER_URL}/status`);
     });
 
-    it('should get page soruce', async function () {
+    it('should get page soruce', async () => {
       const pageSource = await ctx.driver!.getPageSource();
-      expect(pageSource).to.match(/value.+build.+version/);
+      assert.match(pageSource, /value.+build.+version/);
     });
   });
 
-  describe('bidi commands', function () {
+  describe('bidi commands', () => {
     const ctx = setupDriver();
 
-    it('should navigate to a url', async function () {
+    it('should navigate to a url', async () => {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
@@ -115,10 +112,10 @@ describe('ChromeDriver', function () {
         wait: 'complete',
       });
       const url = await d.getUrl();
-      expect(url).to.include('guinea-pig');
+      assert.ok(url.includes('guinea-pig'));
     });
 
-    it('should execute javascript', async function () {
+    it('should execute javascript', async () => {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const res = await d.scriptEvaluate({
@@ -127,13 +124,13 @@ describe('ChromeDriver', function () {
         awaitPromise: false,
       });
       if ('result' in res && res.result && 'value' in res.result) {
-        expect(res.result.value).to.eql('I am a page title');
+        assert.deepEqual(res.result.value, 'I am a page title');
       } else {
         throw new Error('Unexpected scriptEvaluate result format');
       }
     });
 
-    it('should receive bidi events', async function () {
+    it('should receive bidi events', async () => {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
       const networkResponses: any[] = [];
@@ -142,25 +139,15 @@ describe('ChromeDriver', function () {
         events: ['network.responseCompleted'],
         contexts: [contexts[0].context],
       });
-      expect(networkResponses).to.be.empty;
+      assert.equal(networkResponses.length, 0);
       await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
       try {
-        await waitForCondition(
-          () => {
-            try {
-              expect(networkResponses).to.not.be.empty;
-              return true;
-            } catch {
-              return false;
-            }
-          },
-          {
-            waitMs: 5000,
-            intervalMs: 100,
-          },
-        );
+        await waitForCondition(() => networkResponses.length > 0, {
+          waitMs: 5000,
+          intervalMs: 100,
+        });
       } catch {
-        expect(networkResponses).to.not.be.empty;
+        assert.ok(networkResponses.length > 0);
       }
     });
   });

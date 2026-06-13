@@ -1,4 +1,4 @@
-import {fs, tempDir, zip} from 'appium/support';
+import {fs, tempDir, zip} from 'appium/support.js';
 import path from 'node:path';
 
 interface DriverDeploymentArtifact {

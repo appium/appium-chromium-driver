@@ -1,6 +1,6 @@
-import {net} from 'appium/support';
-import {getPlatformConfig} from './platform';
-import {Version} from './version';
+import {net} from 'appium/support.js';
+import {getPlatformConfig} from './platform.js';
+import {Version} from './version.js';
 
 const DRIVER_STORAGE_BASE_URL = 'https://msedgedriver.microsoft.com';
 const STORAGE_REQUEST_TIMEOUT_MS = 10_000;

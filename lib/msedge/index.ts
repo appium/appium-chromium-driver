@@ -1,11 +1,11 @@
-import type {BrowserInfo} from '../types';
-import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment';
-import {isMsEdge} from './browser-identity';
-import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates';
-import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download';
-import {getDriverExecutableName, getPlatformConfig} from './platform';
-import {getDefaultDriverDir} from './storage';
-import {Version} from './version';
+import type {BrowserInfo} from '../types.js';
+import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment.js';
+import {isMsEdge} from './browser-identity.js';
+import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
+import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
+import {getDriverExecutableName, getPlatformConfig} from './platform.js';
+import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
+import {Version} from './version.js';
 
 interface DriverResolveOpts {
   browserName?: string;
@@ -63,7 +63,7 @@ export async function determineDriverExecutable(
   }
 
   const browserVersion = Version.from(browserVersionStr);
-  const executableDir = opts.executableDir || getDefaultDriverDir();
+  const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
   try {
     const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
     const artifact = {
@@ -83,10 +83,10 @@ export async function determineDriverExecutable(
   }
 }
 
-export {getDefaultDriverDir, isMsEdge};
+export {getDefaultMsEdgeDriverDir as getDefaultDriverDir, isMsEdge};
 export {
   discoverBrowserVersion as discoverMsEdgeBrowserVersion,
   getBrowserCandidates as getMsEdgeBrowserCandidates,
   determineDriverExecutable as determineMsEdgeDriverExecutable,
-  getDefaultDriverDir as getDefaultMsEdgeDriverDir,
+  getDefaultMsEdgeDriverDir,
 };
