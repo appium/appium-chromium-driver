@@ -12,10 +12,7 @@ import {detectChromeBrowserVersion} from './chrome/index.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
-import {createRequire} from 'node:module';
-import path from 'node:path';
-
-const require = createRequire(import.meta.url);
+import {getDefaultChromeDriverDir} from './utils/index.js';
 
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
@@ -171,19 +168,6 @@ export class ChromiumDriver
     }
   }
 
-  /**
-   * FIXME: Please use this driver's local storage instead of the node_modules path
-   * to avoid potential read-only issue.
-   * Please update the `appium driver run chromium install-chromedriver` command behavior
-   * also to reflect the change.
-   * This change is a breaking change.
-   */
-  private getDefaultChromeDriverDir(): string {
-    const pkgJson = require.resolve('appium-chromedriver/package.json');
-    const packageDir = path.dirname(pkgJson);
-    return path.join(packageDir, 'chromedriver');
-  }
-
   private async getExecutable(
     browserVersionInfo?: BrowserInfo | undefined,
     isAutodownloadEnabled: boolean = true,
@@ -225,7 +209,7 @@ export class ChromiumDriver
       discoverBrowserVersion: async (browserBinary?: string) =>
         await detectChromeBrowserVersion(browserBinary),
       resolveExecutable: async () => undefined,
-      getDefaultExecutableDir: () => this.getDefaultChromeDriverDir(),
+      getDefaultExecutableDir: () => getDefaultChromeDriverDir(),
     };
   }
 

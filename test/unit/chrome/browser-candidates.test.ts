@@ -1,7 +1,7 @@
 import {describe, it, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {detectBrowserVersion} from '../../../lib/chrome/index.js';
-import {__resetExecForTests, __setExecForTests} from '../../../lib/utils.js';
+import {__resetExecForTests, __setExecForTests} from '../../../lib/utils/browser.js';
 
 const IS_WIN = process.platform === 'win32';
 

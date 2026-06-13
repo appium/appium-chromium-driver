@@ -1,4 +1,4 @@
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils.js';
+import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
 
 const DEFAULT_WIN_CANDIDATES = () =>
   getWindowsExecutableCandidates(

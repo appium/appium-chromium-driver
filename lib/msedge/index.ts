@@ -4,7 +4,7 @@ import {isMsEdge} from './browser-identity.js';
 import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
 import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
 import {getDriverExecutableName, getPlatformConfig} from './platform.js';
-import {getDefaultDriverDir} from './storage.js';
+import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {Version} from './version.js';
 
 interface DriverResolveOpts {
@@ -63,7 +63,7 @@ export async function determineDriverExecutable(
   }
 
   const browserVersion = Version.from(browserVersionStr);
-  const executableDir = opts.executableDir || getDefaultDriverDir();
+  const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
   try {
     const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
     const artifact = {
@@ -83,10 +83,10 @@ export async function determineDriverExecutable(
   }
 }
 
-export {getDefaultDriverDir, isMsEdge};
+export {getDefaultMsEdgeDriverDir as getDefaultDriverDir, isMsEdge};
 export {
   discoverBrowserVersion as discoverMsEdgeBrowserVersion,
   getBrowserCandidates as getMsEdgeBrowserCandidates,
   determineDriverExecutable as determineMsEdgeDriverExecutable,
-  getDefaultDriverDir as getDefaultMsEdgeDriverDir,
+  getDefaultMsEdgeDriverDir,
 };

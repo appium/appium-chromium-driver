@@ -1,21 +1,22 @@
-import { ChromedriverStorageClient } from 'appium-chromedriver';
+import {ChromedriverStorageClient} from 'appium-chromedriver';
+import {getDefaultChromeDriverDir} from '../build/lib/utils/index.js';
 
 function getChromedriverVersion() {
-    return process.env.CHROMEDRIVER_VERSION;
+  return process.env.CHROMEDRIVER_VERSION;
 }
 
 function getExecutableDir() {
-  return process.env.CHROMEDRIVER_EXECUTABLE_DIR;
+  return process.env.CHROMEDRIVER_EXECUTABLE_DIR || getDefaultChromeDriverDir();
 }
 
-async function install () {
+async function install() {
   const client = new ChromedriverStorageClient({
     chromedriverDir: getExecutableDir(),
   });
-  const chromeDriverVersion = getChromedriverVersion() || await client.getLatestKnownGoodVersion();
+  const chromeDriverVersion = getChromedriverVersion() || (await client.getLatestKnownGoodVersion());
   await client.syncDrivers({
     versions: [chromeDriverVersion],
   });
 }
 
-(async () => await install())();
+await install();

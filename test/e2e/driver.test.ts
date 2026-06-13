@@ -142,13 +142,10 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
       assert.equal(networkResponses.length, 0);
       await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
       try {
-        await waitForCondition(
-          () => networkResponses.length > 0,
-          {
-            waitMs: 5000,
-            intervalMs: 100,
-          },
-        );
+        await waitForCondition(() => networkResponses.length > 0, {
+          waitMs: 5000,
+          intervalMs: 100,
+        });
       } catch {
         assert.ok(networkResponses.length > 0);
       }
