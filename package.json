@@ -31,7 +31,8 @@
     ".": {
       "types": "./build/lib/index.d.ts",
       "import": "./build/lib/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "lib",
