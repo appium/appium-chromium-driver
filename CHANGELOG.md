@@ -1,3 +1,9 @@
+## [3.0.1](https://github.com/appium/appium-chromium-driver/compare/v3.0.0...v3.0.1) (2026-06-14)
+
+### Bug Fixes
+
+* ESM package manifest ([#439](https://github.com/appium/appium-chromium-driver/issues/439)) ([95349a2](https://github.com/appium/appium-chromium-driver/commit/95349a2a0a5713e7ad17deb865f3ab564127959f))
+
 ## [3.0.0](https://github.com/appium/appium-chromium-driver/compare/v2.2.5...v3.0.0) (2026-06-13)
 
 ### ⚠ BREAKING CHANGES
