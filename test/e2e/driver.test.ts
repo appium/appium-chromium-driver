@@ -135,21 +135,25 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
     it('should receive bidi events', async () => {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
+      const context = contexts[0].context;
       const networkResponses: any[] = [];
       d.on('network.responseCompleted', (response: any) => networkResponses.push(response));
       await d.sessionSubscribe({
         events: ['network.responseCompleted'],
-        contexts: [contexts[0].context],
+        contexts: [context],
       });
-      assert.equal(networkResponses.length, 0);
+
+      await d.navigateTo('about:blank');
+      const responsesBefore = networkResponses.length;
+
       await d.navigateTo(TEST_PAGE_URL);
       try {
-        await waitForCondition(() => networkResponses.length > 0, {
+        await waitForCondition(() => networkResponses.length > responsesBefore, {
           waitMs: 5000,
           intervalMs: 100,
         });
       } catch {
-        assert.ok(networkResponses.length > 0);
+        assert.ok(networkResponses.length > responsesBefore);
       }
     });
   });
