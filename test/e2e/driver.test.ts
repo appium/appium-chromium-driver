@@ -1,7 +1,6 @@
 import {describe, it, before, after} from 'node:test';
 import assert from 'node:assert/strict';
 import {waitForCondition} from 'asyncbox';
-import type {GuineaPigServer} from './guinea-pig-server.js';
 
 type AppiumServer = any;
 type Browser = any;
@@ -14,7 +13,8 @@ const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 
 const APPIUM_URL = `http://${HOST}:${PORT}`;
-let TEST_WEB_URL: string;
+const TEST_PAGE_URL = 'https://www.saucedemo.com/';
+const TEST_PAGE_TITLE = 'Swag Labs';
 
 const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
@@ -77,13 +77,8 @@ function setupDriver() {
 
 describe('ChromeDriver', {timeout: 300_000}, () => {
   let appium: AppiumServer | null = null;
-  let guineaPigServer: GuineaPigServer | null = null;
 
   before(async () => {
-    const {startGuineaPigServer} = await import('./guinea-pig-server.js');
-    guineaPigServer = await startGuineaPigServer({host: HOST});
-    TEST_WEB_URL = guineaPigServer.baseUrl;
-
     const appiumPkg = await import('appium');
     appium = await appiumPkg.default.main({port: Number(PORT)});
   });
@@ -91,9 +86,6 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
   after(async () => {
     if (appium) {
       await appium.close();
-    }
-    if (guineaPigServer) {
-      await guineaPigServer.close();
     }
   });
 
@@ -118,11 +110,11 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
         context: contexts[0].context,
-        url: `${TEST_WEB_URL}/test/guinea-pig`,
+        url: TEST_PAGE_URL,
         wait: 'complete',
       });
       const url = await d.getUrl();
-      assert.ok(url.includes('guinea-pig'));
+      assert.ok(url.includes('saucedemo.com'));
     });
 
     it('should execute javascript', async () => {
@@ -134,7 +126,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
         awaitPromise: false,
       });
       if ('result' in res && res.result && 'value' in res.result) {
-        assert.deepEqual(res.result.value, 'I am a page title');
+        assert.deepEqual(res.result.value, TEST_PAGE_TITLE);
       } else {
         throw new Error('Unexpected scriptEvaluate result format');
       }
@@ -150,7 +142,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
         contexts: [contexts[0].context],
       });
       assert.equal(networkResponses.length, 0);
-      await d.navigateTo(`${TEST_WEB_URL}/test/guinea-pig`);
+      await d.navigateTo(TEST_PAGE_URL);
       try {
         await waitForCondition(() => networkResponses.length > 0, {
           waitMs: 5000,
