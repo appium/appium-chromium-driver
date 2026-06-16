@@ -1,6 +1,7 @@
 import {describe, it, before, after} from 'node:test';
 import assert from 'node:assert/strict';
 import {waitForCondition} from 'asyncbox';
+import type {GuineaPigServer} from './guinea-pig-server.js';
 
 type AppiumServer = any;
 type Browser = any;
@@ -12,7 +13,8 @@ const PLATFORM =
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 
-const SERVER_URL = `http://${HOST}:${PORT}`;
+const APPIUM_URL = `http://${HOST}:${PORT}`;
+let TEST_WEB_URL: string;
 
 const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
@@ -75,8 +77,13 @@ function setupDriver() {
 
 describe('ChromeDriver', {timeout: 300_000}, () => {
   let appium: AppiumServer | null = null;
+  let guineaPigServer: GuineaPigServer | null = null;
 
   before(async () => {
+    const {startGuineaPigServer} = await import('./guinea-pig-server.js');
+    guineaPigServer = await startGuineaPigServer({host: HOST});
+    TEST_WEB_URL = guineaPigServer.baseUrl;
+
     const appiumPkg = await import('appium');
     appium = await appiumPkg.default.main({port: Number(PORT)});
   });
@@ -85,13 +92,16 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
     if (appium) {
       await appium.close();
     }
+    if (guineaPigServer) {
+      await guineaPigServer.close();
+    }
   });
 
   describe('basic session handling', () => {
     const ctx = setupDriver();
 
     it('should navigate to a url', async () => {
-      await ctx.driver!.navigateTo(`${SERVER_URL}/status`);
+      await ctx.driver!.navigateTo(`${APPIUM_URL}/status`);
     });
 
     it('should get page soruce', async () => {
@@ -108,7 +118,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
         context: contexts[0].context,
-        url: `${SERVER_URL}/test/guinea-pig`,
+        url: `${TEST_WEB_URL}/test/guinea-pig`,
         wait: 'complete',
       });
       const url = await d.getUrl();
@@ -140,7 +150,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
         contexts: [contexts[0].context],
       });
       assert.equal(networkResponses.length, 0);
-      await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
+      await d.navigateTo(`${TEST_WEB_URL}/test/guinea-pig`);
       try {
         await waitForCondition(() => networkResponses.length > 0, {
           waitMs: 5000,
