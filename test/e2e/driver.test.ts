@@ -12,7 +12,9 @@ const PLATFORM =
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 
-const SERVER_URL = `http://${HOST}:${PORT}`;
+const APPIUM_URL = `http://${HOST}:${PORT}`;
+const TEST_PAGE_URL = 'https://www.saucedemo.com/';
+const TEST_PAGE_TITLE = 'Swag Labs';
 
 const DEF_CAPS: Record<string, any> = {
   platformName: PLATFORM,
@@ -91,7 +93,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
     const ctx = setupDriver();
 
     it('should navigate to a url', async () => {
-      await ctx.driver!.navigateTo(`${SERVER_URL}/status`);
+      await ctx.driver!.navigateTo(`${APPIUM_URL}/status`);
     });
 
     it('should get page soruce', async () => {
@@ -108,11 +110,11 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
       const {contexts} = await d.browsingContextGetTree({});
       await d.browsingContextNavigate({
         context: contexts[0].context,
-        url: `${SERVER_URL}/test/guinea-pig`,
+        url: TEST_PAGE_URL,
         wait: 'complete',
       });
       const url = await d.getUrl();
-      assert.ok(url.includes('guinea-pig'));
+      assert.ok(url.includes('saucedemo.com'));
     });
 
     it('should execute javascript', async () => {
@@ -124,7 +126,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
         awaitPromise: false,
       });
       if ('result' in res && res.result && 'value' in res.result) {
-        assert.deepEqual(res.result.value, 'I am a page title');
+        assert.deepEqual(res.result.value, TEST_PAGE_TITLE);
       } else {
         throw new Error('Unexpected scriptEvaluate result format');
       }
@@ -133,21 +135,25 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
     it('should receive bidi events', async () => {
       const d = ctx.driver!;
       const {contexts} = await d.browsingContextGetTree({});
+      const context = contexts[0].context;
       const networkResponses: any[] = [];
       d.on('network.responseCompleted', (response: any) => networkResponses.push(response));
       await d.sessionSubscribe({
         events: ['network.responseCompleted'],
-        contexts: [contexts[0].context],
+        contexts: [context],
       });
-      assert.equal(networkResponses.length, 0);
-      await d.navigateTo(`${SERVER_URL}/test/guinea-pig`);
+
+      await d.navigateTo('about:blank');
+      const responsesBefore = networkResponses.length;
+
+      await d.navigateTo(TEST_PAGE_URL);
       try {
-        await waitForCondition(() => networkResponses.length > 0, {
+        await waitForCondition(() => networkResponses.length > responsesBefore, {
           waitMs: 5000,
           intervalMs: 100,
         });
       } catch {
-        assert.ok(networkResponses.length > 0);
+        assert.ok(networkResponses.length > responsesBefore);
       }
     });
   });
