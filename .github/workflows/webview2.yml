@@ -1,0 +1,118 @@
+name: webview2-sample-smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs weekly at 12:00 AM UTC on Sundays
+    - cron: '0 0 * * 0'
+
+  # todo: remove
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+
+jobs:
+  webview2-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    env:
+      DOTNET_VERSION: '8.0.x'
+      WEBVIEW2_REPO_DIR: WebView2Samples
+      WEBVIEW2_PROJECT: WebView2Samples/SampleApps/WebView2APISample/WebView2APISample.vcxproj
+      WEBVIEW2_PACKAGES_CONFIG: WebView2Samples/SampleApps/WebView2APISample/packages.config
+      WEBVIEW2_PACKAGES_DIR: WebView2Samples/SampleApps/packages
+      WEBVIEW2_EXE: WebView2Samples/SampleApps/WebView2APISample/Debug/x64/WebView2APISample.exe
+      WEBVIEW2_DEBUG_PORT: '9222'
+      WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: --remote-debugging-port=9222
+      WEBVIEW2_ARTIFACT_DIR: ${{ github.workspace }}/webview2-test-results
+
+    steps:
+      - name: Checkout appium-chromium-driver
+        uses: actions/checkout@v6
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install repo deps
+        shell: powershell
+        run: npm install
+
+      - name: Checkout WebView2Samples
+        uses: actions/checkout@v6
+        with:
+          repository: MicrosoftEdge/WebView2Samples
+          path: ${{ env.WEBVIEW2_REPO_DIR }}
+
+      - name: Install WebView2 Runtime
+        shell: powershell
+        run: |
+          Invoke-WebRequest 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile "$env:TEMP\wv2setup.exe"
+          Start-Process "$env:TEMP\wv2setup.exe" -ArgumentList '/silent','/install' -Wait
+
+      - name: Build WebView2 API sample
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore WebView2 API sample packages
+        shell: pwsh
+        run: |
+          nuget restore "${env:WEBVIEW2_PACKAGES_CONFIG}" -PackagesDirectory "${env:WEBVIEW2_PACKAGES_DIR}"
+
+      - name: Run MSBuild
+        shell: pwsh
+        run: |
+          msbuild "${env:WEBVIEW2_PROJECT}" /p:Configuration=Debug /p:Platform=x64 /m
+
+      - name: Verify built app exists
+        shell: powershell
+        run: |
+          if (!(Test-Path "${env:WEBVIEW2_EXE}")) {
+            Write-Error "Built executable not found at ${env:WEBVIEW2_EXE}"
+          }
+          Get-Item "${env:WEBVIEW2_EXE}" | Format-List FullName,Length
+
+      - name: Configure Appium Server
+        shell: bash
+        run: |
+          appium_ver=$(node -p "require('./package.json').peerDependencies?.appium")
+          npm install -g "appium@$appium_ver"
+          cwd=$(pwd)
+          pushd "$cwd"
+          cd ~
+          appium driver install --source=local "$cwd"
+          popd
+
+      - name: Build TypeScript
+        shell: powershell
+        run: |
+          npm run build
+
+      - name: Run WebView2 smoke test via appium-chromium-driver
+        shell: powershell
+        env:
+          WEBVIEW2_EXE: ${{ env.WEBVIEW2_EXE }}
+          WEBVIEW2_DEBUG_PORT: ${{ env.WEBVIEW2_DEBUG_PORT }}
+          WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: ${{ env.WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS }}
+          WEBVIEW2_ARTIFACT_DIR: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
+        run: |
+          node test/webview2/test.ts
+
+      - name: Upload WebView2 test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webview2-test-results
+          path: ${{ env.WEBVIEW2_ARTIFACT_DIR }}
+          if-no-files-found: ignore
