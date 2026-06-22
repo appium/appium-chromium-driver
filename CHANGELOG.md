@@ -1,3 +1,9 @@
+## [3.0.2](https://github.com/appium/appium-chromium-driver/compare/v3.0.1...v3.0.2) (2026-06-22)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @types/node from 25.9.4 to 26.0.0 ([#441](https://github.com/appium/appium-chromium-driver/issues/441)) ([b845c6c](https://github.com/appium/appium-chromium-driver/commit/b845c6c7783a15194b901a2c7634ba73c3e0bab3))
+
 ## [3.0.1](https://github.com/appium/appium-chromium-driver/compare/v3.0.0...v3.0.1) (2026-06-14)
 
 ### Bug Fixes
