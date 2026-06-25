@@ -15,9 +15,8 @@ title: Welcome
   <img src="assets/images/appium-plus-chromium.png" style="max-width: 500px;" />
 </div>
 
-Welcome to the Appium Chromium Driver documentation! The Chromium driver is a test automation
-framework for Chromium-based browsers (Chrome, Edge, etc.) and webviews, enabling automated
-black-box testing on both emulators and real devices. 
+Welcome to the Appium Chromium Driver documentation! The Chromium driver is a black-box test
+automation framework for desktop browsers based on Chromium (Google Chrome, Microsoft Edge, etc.). 
 
 The Chromium driver is part of the Appium test automation tool. For information on Appium itself,
 please visit [the Appium documentation](https://appium.io).
