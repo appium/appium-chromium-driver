@@ -11,6 +11,8 @@
     "edge",
     "edgedriver"
   ],
+  "author": "Appium Contributors",
+  "license": "Apache-2.0",
   "homepage": "https://appium.github.io/appium-chromium-driver",
   "repository": {
     "type": "git",
@@ -19,8 +21,6 @@
   "bugs": {
     "url": "https://github.com/appium/appium-chromium-driver/issues"
   },
-  "author": "Appium Contributors",
-  "license": "Apache-2.0",
   "type": "module",
   "main": "./build/lib/index.js",
   "types": "./build/lib/index.d.ts",
@@ -43,10 +43,24 @@
     "npm-shrinkwrap.json",
     "scripts"
   ],
-  "publishConfig": {
-    "access": "public"
+  "appium": {
+    "driverName": "chromium",
+    "automationName": "chromium",
+    "platformNames": [
+      "windows",
+      "mac",
+      "linux"
+    ],
+    "mainClass": "ChromiumDriver",
+    "scripts": {
+      "install-chromedriver": "./scripts/install-chromedriver.mjs"
+    }
   },
-  "access": "public",
+  "prettier": {
+    "bracketSpacing": false,
+    "printWidth": 100,
+    "singleQuote": true
+  },
   "scripts": {
     "build": "tsc -b",
     "dev": "npm run build -- --watch",
@@ -68,24 +82,6 @@
     "test:e2e": "npm run build && node --test --test-timeout=300000 \"build/test/e2e/**/*.test.js\"",
     "test:smoke": "node ./build/lib/index.js",
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
-  },
-  "prettier": {
-    "bracketSpacing": false,
-    "printWidth": 100,
-    "singleQuote": true
-  },
-  "appium": {
-    "driverName": "chromium",
-    "automationName": "chromium",
-    "platformNames": [
-      "windows",
-      "mac",
-      "linux"
-    ],
-    "mainClass": "ChromiumDriver",
-    "scripts": {
-      "install-chromedriver": "./scripts/install-chromedriver.mjs"
-    }
   },
   "dependencies": {
     "@appium/strongbox": "^1.0.0",
@@ -116,5 +112,9 @@
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0",
     "npm": ">=10"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "access": "public"
 }
