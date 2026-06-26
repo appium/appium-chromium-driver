@@ -76,5 +76,7 @@ a basic session:
 }
 ```
 
-See [the Capabilities reference page](../reference/capabilities.md) for more information on the
-capabilities supported by the driver.
+In controlled environments, to ensure that the correct browser is launched, it is recommended to
+also set the `goog:chromeOptions.binary` / `ms:edgeOptions.binary` capability. See
+[the Capabilities reference page](../reference/capabilities.md) for more information on these and
+other capabilities supported by the driver.
