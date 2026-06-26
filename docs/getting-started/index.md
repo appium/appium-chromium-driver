@@ -13,8 +13,9 @@ There are four primary requirements to use the Chromium driver:
 * Appium
 * Chromium-based desktop web browser
 * `chromedriver` or `msedgedriver` binary accessible from the host machine PATH
-    * For `chromedriver`, since Chromium driver version 1.4.0, you can use the [`install-chromedriver`](../reference/scripts.md) driver script to download and set up the binary. [Manual `chromedriver` downloads can also be found here](https://googlechromelabs.github.io/chrome-for-testing/).
-    * For `msedgedriver`, since Chromium driver version 2.2.0, when starting a new Edge session, the driver will automatically download a compatible `msedgedriver` binary. [Manual `msedgedriver` downloads can also be found here](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads).
+    * Since Chromium driver version 2.2.0, when starting a new session, a compatible binary will be automatically downloaded if required. This can be changed using the [`appium:autodownloadEnabled` capability](../reference/capabilities.md).
+    * For `chromedriver`, since Chromium driver version 1.4.0, you can also use the [`install-chromedriver`](../reference/scripts.md) driver script to download and set up the binary in advance. [Manual `chromedriver` downloads can also be found here](https://googlechromelabs.github.io/chrome-for-testing/).
+    * For `msedgedriver`, [manual downloads can also be found here](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/#downloads).
 
 ### Appium Server
 

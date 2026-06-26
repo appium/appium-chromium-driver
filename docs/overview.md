@@ -35,7 +35,7 @@ binaries. Learn more about their features here:
 
 * [ChromeDriver documentation](https://developer.chrome.com/docs/chromedriver)
 * [ChromeDriver release notes (older versions)](https://developer.chrome.com/docs/chromedriver/downloads)
-* [Microsoft Edge WebDriver documentation](https://learn.microsoft.com/en-us/microsoft-edge/webdriver)
+* [Microsoft Edge WebDriver documentation](https://learn.microsoft.com/en-us/microsoft-edge/webdriver/)
 
 [^chrome-android]: Supported by the [UiAutomator2 driver](https://github.com/appium/appium-uiautomator2-driver)
 [^chrome-ios]: Supported by the [Safari](https://github.com/appium/appium-safari-driver) and [XCUITest](https://appium.github.io/appium-xcuitest-driver/latest/) drivers
