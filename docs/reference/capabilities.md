@@ -19,7 +19,7 @@ For other capabilities recognized by the Appium server, see
 
 | <div style="width:14em">Capability</div> | Description | Default |
 | --- | --- | --- |
-| `appium:automationName` | Must be set to `Chromium`. | |
+| `appium:automationName` | Must be set to `Chromium` | |
 | `appium:chromedriverPort` | The port to use for starting `chromedriver`/`msedgedriver` | 9515 |
 | `appium:executable` | Custom absolute path to a `chromedriver`/`msedgedriver` binary | |
 | `appium:executableDir` | Custom absolute path to a directory containing `chromedriver`/`msedgedriver` binaries | |
