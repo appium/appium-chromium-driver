@@ -115,6 +115,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "access": "public"
+  }
 }
