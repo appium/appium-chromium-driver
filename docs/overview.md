@@ -31,14 +31,13 @@ Refer to the [Other Browsers guide](./guides/other-browsers.md) for more details
 The Chromium driver uses the [W3C WebDriver protocol](https://www.w3.org/TR/webdriver/) for session
 management. Under the hood, the driver relies on the [`appium-chromedriver`](https://github.com/appium/appium-chromedriver)
 package, which is a wrapper/proxy over Google's `chromedriver` and Microsoft's `msedgedriver`
-binaries. Learn more about their features here:
+binaries.
 
-* [ChromeDriver documentation](https://developer.chrome.com/docs/chromedriver)
-* [ChromeDriver release notes (older versions)](https://developer.chrome.com/docs/chromedriver/downloads)
-* [Microsoft Edge WebDriver documentation](https://learn.microsoft.com/en-us/microsoft-edge/webdriver/)
+* For more information about ChromeDriver, [refer to its documentation](https://developer.chrome.com/docs/chromedriver)
+* For more information about EdgeDriver, refer to [the Microsoft Edge guide](./guides/ms-edge.md)
 
 [^chrome-android]: Supported by the [UiAutomator2 driver](https://github.com/appium/appium-uiautomator2-driver)
 [^chrome-ios]: Supported by the [Safari](https://github.com/appium/appium-safari-driver) and [XCUITest](https://appium.github.io/appium-xcuitest-driver/latest/) drivers
-[^edge-desktop]: Supported since driver version 1.1.0. Refer to the [MS Edge guide](./guides/edge.md) for more details.
+[^edge-desktop]: Refer to the [Microsoft Edge guide](./guides/ms-edge.md) for more details
 [^edge-android]: [Refer to this feature request](https://github.com/MicrosoftEdge/DevTools/issues/435)
 [^edge-ios]: [Refer to this feature request](https://github.com/MicrosoftEdge/DevTools/issues/266)

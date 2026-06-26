@@ -42,6 +42,6 @@ nav:
           - reference/locator-strategies.md
   - Guides:
       - Session Configuration:
-          - guides/edge.md
+          - guides/ms-edge.md
           - guides/other-browsers.md
   - contributing.md

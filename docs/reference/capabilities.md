@@ -21,8 +21,8 @@ For other capabilities recognized by the Appium server, see
 | --- | --- | --- |
 | `appium:automationName` | Must be set to `Chromium` | |
 | `appium:chromedriverPort` | The port to use for starting `chromedriver`/`msedgedriver` | 9515 |
-| `appium:executable` | Custom absolute path to a `chromedriver`/`msedgedriver` binary | |
-| `appium:executableDir` | Custom absolute path to a directory containing `chromedriver`/`msedgedriver` binaries | |
+| `appium:executable` | Custom path to a `chromedriver`/`msedgedriver` binary | |
+| `appium:executableDir` | Custom path to a directory containing `chromedriver`/`msedgedriver` binaries | |
 | `appium:verbose` | Whether to add the `--verbose` flag when launching `chromedriver`/`msedgedriver` | false |
 | `appium:logPath` | Value of the `--log-path` parameter provided to `chromedriver`/`msedgedriver` | |
 | `appium:disableBuildCheck` | Whether to add the `--disable-build-check` flag when launching `chromedriver`/`msedgedriver` | false |

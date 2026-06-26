@@ -14,11 +14,6 @@ appium driver run chromium <script-name>
 
 For more information about the `appium driver run` command, refer to [the Appium docs](https://appium.io/docs/en/latest/reference/cli/extensions/#run).
 
-!!! note
-
-    Script arguments should be provided after an additional double dash (`--`), to ensure they are
-    passed to the script itself, instead of the `appium driver run` command.
-
 ### `install-chromedriver`
 
 Downloads and installs a `chromedriver` server binary. By default, [the last known good stable version](https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints)
