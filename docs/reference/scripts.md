@@ -16,8 +16,11 @@ For more information about the `appium driver run` command, refer to [the Appium
 
 ### `install-chromedriver`
 
-Downloads and installs a `chromedriver` server binary. By default, [the last known good stable version](https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints)
-for the current host platform is installed. This behavior can be adjusted with [environment variables listed below](#optional-environment-variables).
+Downloads and installs a `chromedriver` server binary. Available since Chromium driver version 1.4.0.
+
+By default, [the last known good stable version](https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints)
+for the current host platform is installed. This behavior can be adjusted with the environment
+variables listed below.
 
 #### Usage
 

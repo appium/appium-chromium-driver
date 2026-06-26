@@ -19,7 +19,7 @@ capabilities:
 * The `browserName` capability must be set to `MicrosoftEdge`
 * Edge-specific options can be provided under the `ms:edgeOptions` capability
 
-For more information on supported capabilities, refer to [the Capabilities documentation](../reference/capabilities.md).
+For more information on supported capabilities, see [the Capabilities reference page](../reference/capabilities.md).
 
 For example, to start a basic Microsoft Edge session on macOS, you could use the following
 capability set:
