@@ -1,13 +1,13 @@
 name: Lint and Unit Tests
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
     - 'docs/**'
     - '*.md'
     - 'mkdocs.yml'
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
     - 'docs/**'
     - '*.md'
