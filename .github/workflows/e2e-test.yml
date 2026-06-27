@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths-ignore:
+      - 'docs/**'
       - '*.md'
+      - 'mkdocs.yml'
 
 jobs:
   e2e:
