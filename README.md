@@ -1,148 +1,35 @@
-# appium-chromium-driver
+## Appium Chromium Driver
 
-[![npm version](http://img.shields.io/npm/v/appium-chromium-driver.svg)](https://npmjs.org/package/appium-chromium-driver)
+<p align="center">
+   <a href="https://appium.github.io/appium-chromium-driver/">
+      <img alt="Appium Chromium Driver" src="./docs/assets/images/appium-plus-chromium.png" width="400">
+   </a>
+</p>
+
+<div align="center">
+
+[![NPM version](http://img.shields.io/npm/v/appium-chromium-driver.svg)](https://npmjs.org/package/appium-chromium-driver)
 [![Downloads](http://img.shields.io/npm/dm/appium-chromium-driver.svg)](https://npmjs.org/package/appium-chromium-driver)
+[![Release](https://github.com/appium/appium-chromium-driver/actions/workflows/release.yml/badge.svg)](https://github.com/appium/appium-chromium-driver/actions/workflows/release.yml)
 
-This is an [Appium](https://github.com/appium/appium) driver for Chromium-based browsers (like
-Chrome).
+</div>
+
+---
+
+<p align="center"><b>
+   <a href="https://appium.github.io/appium-chromium-driver/">Documentation</a> |
+   <a href="https://appium.github.io/appium-chromium-driver/latest/getting-started/">Get Started</a> |
+   <a href="https://github.com/appium/appium-chromium-driver/blob/main/CHANGELOG.md">Changelog</a>
+</b></p>
+
+---
+
+This is an Appium driver for automating Chromium-based desktop browsers (such as Google Chrome and Microsoft Edge).
 
 > [!IMPORTANT]
 > Since major version *2.0.0*, this driver is only compatible with Appium 3.
 
-### Why does this project exist?
 
-It is already possible to automate Chromium browsers with
-[Chromedriver](https://chromedriver.chromium.org/). In fact, this Appium driver uses Chromedriver
-under the hood! It is not any kind of fundamentally new or different technology. The advantages of
-using this project are:
+## Documentation
 
-- Automate Chromium browsers using the Appium server you already have, simply by including this
-  Appium driver.
-- No need to download specific versions of Chromedriver manually. This driver takes care of
-  downloading a version of Chromedriver appropriate for the version of the browser under test.
-- Take advantage of the ecosystem of Appium plugins and features (e.g., [image
-  analysis](https://github.com/appium/appium/tree/master/packages/images-plugin)) not available via
-  Chromedriver on its own.
-
-## Installation
-
-It's assumed that you have an Appium server (version 2.x+) installed, and that you have a browser
-compatible with Chromedriver ready to automate on your system. The recommended installation method
-is to use the [Appium extension
-CLI](https://appium.github.io/appium/docs/en/latest/cli/extensions/) to install the driver:
-
-```bash
-appium driver install chromium
-```
-
-> **Note**
-> MSEdge browser support started since v1.1.0
-
-## Usage
-
-To start an automation session targeting this driver, construct a set of options/capabilities in
-any WebDriver client that (minimally) includes the following:
-
-|Capability|Value|
-|---|---|
-|`platformName`|One of `mac`, `linux`, or `windows` (depending on your system)|
-|`browserName`|`browserName` to the running WebDriver process. For example, `chrome` or `chromium` is for chromedriver, `MicrosoftEdge` or `msedge` is for msedge driver.|
-|`appium:automationName`|`Chromium`|
-
-Use these capabilities to start a new session. (Refer to the documentation for your WebDriver
-client for the particular syntax used to start a session in that client).
-
-For CI or other controlled automation environments, it is recommended to set the browser binary
-explicitly so the session uses the expected browser installation instead of relying on platform
-defaults or whichever browser happens to be first on the system path. In practice, set
-`goog:chromeOptions.binary` for Chrome/Chromium or `ms:edgeOptions.binary` for MSEdge to the full
-path of the browser executable you want to automate.
-
-At this point, all WebDriver commands are proxied directly to WebDriver. This driver does not
-implement any additional commands. Refer to the Chromedriver documentation or the [WebDriver
-specification](https://w3c.github.io/webdriver/) for a list of the available automation commands.
-
-> **Note**
-> Supported _WebDriver_ kinds are `chromedriver` for Chrome and Chromium browsers and `msedgedriver` for MSEdge.
-
-## Capabilities
-
-In addition to all of the [Chromedriver
-capabilities](https://chromedriver.chromium.org/capabilities) (nested underneath
-`goog:chromeOptions` for Chrome and Chromium or `ms:edgeOptions` for MSEdge),
-this driver supports the following:
-
-> **Recommendation**
-> For reproducible automation, especially in CI, set `goog:chromeOptions.binary` or
-> `ms:edgeOptions.binary` to select the exact browser build/channel you want to run.
-
-|Capability|Description|Default Value|
-|---|---|---|
-|`appium:chromedriverPort`|The port to start WebDriver process on|`9515`|
-|`appium:executable`|The absolute path to a WebDriver binary executable. If set, the driver will use that path instead of its own WebDriver||
-|`appium:executableDir`|A directory within which is found any number of WebDriver binaries. If set, the driver will search this directory for WebDrivers of the appropriate version to use for your browser||
-|`appium:verbose`|Set to `true` to add the `--verbose` flag when starting WebDriver|`false`|
-|`appium:logPath`|The path to use with the `--log-path` parameter directing WebDriver to write its log to that path, if set||
-|`appium:disableBuildCheck`|Set to `true` to add the `--disable-build-check` flag when starting WebDriver|`false`|
-|`appium:autodownloadEnabled`|Set to `false` to disable automatic downloading of compatible WebDriver binaries. |`true`|
-|`appium:useSystemExecutable`|Set to `true` to use the version of WebDriver bundled with this driver, rather than attempting to download a new one based on the version of the browser under test|`false`|
-
-> **Note**
-> For MSEdge sessions, this driver manages a local `msedgedriver` cache itself. When autodownload is enabled, it resolves the latest released Edge driver for the detected browser major version and uses that executable automatically.
-
-## Scripts
-
-### install-chromedriver
-
-This script is used to install the given or latest stable version of chromedriver (113+) from
-[Chrome for testing](https://github.com/GoogleChromeLabs/chrome-for-testing)
-with `appium driver run chromium install-chromedriver`.
-Please read [Version selection](https://developer.chrome.com/docs/chromedriver/downloads/version-selection) document
-to find a proper chromedriver manually that is good for your current browser.
-
-Below environment arguments are available:
-- `CHROMEDRIVER_EXECUTABLE_DIR`
-  - Let the command to download chromedrivers in the given directory. Defaults to `node_modules/appium-chromedriver/chromedriver` in `appium-chromium-driver` package.
-  - i.e.
-    - macOS/Linux: `CHROMEDRIVER_EXECUTABLE_DIR=/path/to/dir appium driver run chromium install-chromedriver`
-    - Windows: `$env:CHROMEDRIVER_EXECUTABLE_DIR='C:\path\to\folder'; appium driver run chromium install-chromedriver; Remove-Item Env:\CHROMEDRIVER_EXECUTABLE_DIR`
-- `CHROMEDRIVER_VERSION`
-  - Let the command download a specific version.
-  - i.e.
-    - macOS/Linux: `CHROMEDRIVER_VERSION=131.0.6778.3 appium driver run chromium install-chromedriver`
-    - Windows: `$env:CHROMEDRIVER_VERSION='131.0.6778.3'; appium driver run chromium install-chromedriver; Remove-Item Env:\CHROMEDRIVER_VERSION`
-- `CHROMELABS_URL`
-  - Let the command get the list of available chromedrivers from the given mirror instead of the default one.
-
-## Contributing
-
-Contributions to this project are welcome! Feel free to submit a PR on GitHub.
-
-To get set up with a working developer environment, clone the project then run:
-
-```bash
-npm install
-```
-
-To build the code once:
-
-```bash
-npm run build
-```
-
-To rebuild the code anytime a file is saved:
-
-```bash
-npm run dev
-```
-
-Before committing any code, please make sure to run:
-
-```bash
-npm run lint
-npm run test:ci
-```
-
-And make sure everything passes!
-
-More developer scripts can be found in `package.json`.
+You can access the documentation here: [**https://appium.github.io/appium-chromium-driver**](https://appium.github.io/appium-chromium-driver)
