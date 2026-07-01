@@ -1,3 +1,9 @@
+## [3.0.4](https://github.com/appium/appium-chromium-driver/compare/v3.0.3...v3.0.4) (2026-07-01)
+
+### Miscellaneous Chores
+
+* downgrade conventional-changelog-conventionalcommits to v9 ([#449](https://github.com/appium/appium-chromium-driver/issues/449)) ([3d61710](https://github.com/appium/appium-chromium-driver/commit/3d6171037c2f54561393e2a300aa561274658c05))
+
 ## [3.0.3](https://github.com/appium/appium-chromium-driver/compare/v3.0.2...v3.0.3) (2026-06-30)
 
 ## [3.0.2](https://github.com/appium/appium-chromium-driver/compare/v3.0.1...v3.0.2) (2026-06-22)
