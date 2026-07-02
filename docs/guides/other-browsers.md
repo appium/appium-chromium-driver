@@ -53,7 +53,6 @@ The following capabilities can be used to launch Opera on macOS:
     Opera also maintains its own [OperaChromiumDriver](https://github.com/operasoftware/operachromiumdriver),
     which may provide better compatibility than standard ChromeDriver.
 
-
 The Brave browser uses a custom approach and exposes both Chromium's and its own version (e.g.
 Brave 1.91.180 bundles Chromium 149, returning version 149.1.91.180). In practice this means that
 the `chromedriver` path can be omitted. The following capabilities can be used to launch Brave on
