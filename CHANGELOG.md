@@ -1,3 +1,9 @@
+## [3.0.6](https://github.com/appium/appium-chromium-driver/compare/v3.0.5...v3.0.6) (2026-07-28)
+
+### Miscellaneous Chores
+
+* Update .editorconfig for JavaScript and TypeScript files ([7a5327a](https://github.com/appium/appium-chromium-driver/commit/7a5327accc5e763ee3780395ea8953b543590e16))
+
 ## [3.0.5](https://github.com/appium/appium-chromium-driver/compare/v3.0.4...v3.0.5) (2026-07-02)
 
 ### Miscellaneous Chores
