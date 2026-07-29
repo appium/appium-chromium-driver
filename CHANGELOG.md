@@ -1,3 +1,9 @@
+## [3.0.7](https://github.com/appium/appium-chromium-driver/compare/v3.0.6...v3.0.7) (2026-07-29)
+
+### Miscellaneous Chores
+
+* **deps:** bump appium-chromedriver from 8.4.22 to 9.0.3 ([#460](https://github.com/appium/appium-chromium-driver/issues/460)) ([d2b4010](https://github.com/appium/appium-chromium-driver/commit/d2b4010ad7dc5e9adcbd94982268eacbf10ba80f))
+
 ## [3.0.6](https://github.com/appium/appium-chromium-driver/compare/v3.0.5...v3.0.6) (2026-07-28)
 
 ### Miscellaneous Chores
