@@ -1,4 +1,5 @@
 import {ChromedriverStorageClient} from 'appium-chromedriver';
+
 import {getDefaultChromeDriverDir} from '../build/lib/utils/index.js';
 
 function getChromedriverVersion() {

@@ -1,15 +1,14 @@
-import {describe, it, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, afterEach} from 'node:test';
+
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
+
 import {ChromiumDriver} from '../../lib/driver.js';
 import type {BrowserInfo, ChromiumDriverCaps} from '../../lib/types.js';
 
 type ExecutableTestAccess = {
-  getExecutable(
-    browserVersionInfo?: BrowserInfo,
-    isAutodownloadEnabled?: boolean,
-  ): Promise<string | undefined>;
+  getExecutable(browserVersionInfo?: BrowserInfo, isAutodownloadEnabled?: boolean): Promise<string | undefined>;
 };
 
 class TestDriver extends ChromiumDriver {

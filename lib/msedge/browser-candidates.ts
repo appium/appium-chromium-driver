@@ -2,11 +2,7 @@ import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index
 
 const DEFAULT_WIN_CANDIDATES = () =>
   getWindowsExecutableCandidates(
-    [
-      'Microsoft\\Edge\\Application',
-      'Microsoft\\Edge Beta\\Application',
-      'Microsoft\\Edge Dev\\Application',
-    ],
+    ['Microsoft\\Edge\\Application', 'Microsoft\\Edge Beta\\Application', 'Microsoft\\Edge Dev\\Application'],
     'msedge.exe',
   );
 
@@ -16,12 +12,7 @@ const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Microsoft Edge Dev.app/Contents/MacOS/Microsoft Edge Dev',
 ];
 
-const DEFAULT_LINUX_CANDIDATES = [
-  'microsoft-edge',
-  'microsoft-edge-beta',
-  'microsoft-edge-dev',
-  'msedge',
-];
+const DEFAULT_LINUX_CANDIDATES = ['microsoft-edge', 'microsoft-edge-beta', 'microsoft-edge-dev', 'msedge'];
 
 /**
  * Get platform-specific Microsoft Edge browser binary candidates.

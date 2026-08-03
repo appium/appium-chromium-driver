@@ -9,10 +9,7 @@ export interface DriverPlatformConfig {
  * @param arch The architecture name.
  * @returns The platform configuration.
  */
-export function getPlatformConfig(
-  platform = process.platform,
-  arch = process.arch,
-): DriverPlatformConfig {
+export function getPlatformConfig(platform = process.platform, arch = process.arch): DriverPlatformConfig {
   if (platform === 'win32') {
     if (arch === 'arm64') {
       return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};
