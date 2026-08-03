@@ -1,10 +1,10 @@
 import type {BrowserInfo} from '../types.js';
-import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment.js';
-import {isMsEdge} from './browser-identity.js';
+import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
+import {isMsEdge} from './browser-identity.js';
+import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment.js';
 import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
 import {getDriverExecutableName, getPlatformConfig} from './platform.js';
-import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {Version} from './version.js';
 
 interface DriverResolveOpts {
@@ -41,10 +41,7 @@ export async function determineDriverExecutable(
 
   const executableName = getDriverExecutableName();
   if (opts.executableDir) {
-    const explicitExecutable = await locateDriverExecutableInDir(
-      opts.executableDir,
-      executableName,
-    );
+    const explicitExecutable = await locateDriverExecutableInDir(opts.executableDir, executableName);
     if (explicitExecutable) {
       return explicitExecutable;
     }

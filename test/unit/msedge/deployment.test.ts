@@ -1,7 +1,9 @@
-import {describe, it, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, afterEach} from 'node:test';
+
 import {fs, tempDir, zip} from 'appium/support.js';
 import sinon from 'sinon';
+
 import {deployDriverArtifact, locateDriverExecutableInDir} from '../../../lib/msedge/deployment.js';
 
 describe('msedge deployment domain', () => {

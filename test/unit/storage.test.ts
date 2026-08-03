@@ -1,5 +1,6 @@
-import {describe, it} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it} from 'node:test';
+
 import {getDefaultChromeDriverDir, getDefaultMsEdgeDriverDir} from '../../lib/utils/index.js';
 import {LOCAL_PACKAGE_STORAGE_NAME} from '../../lib/utils/storage.js';
 

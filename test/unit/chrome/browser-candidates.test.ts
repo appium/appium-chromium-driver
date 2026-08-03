@@ -1,5 +1,6 @@
-import {describe, it, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, afterEach} from 'node:test';
+
 import {detectBrowserVersion} from '../../../lib/chrome/index.js';
 import {__resetExecForTests, __setExecForTests} from '../../../lib/utils/browser.js';
 

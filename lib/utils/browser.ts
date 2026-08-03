@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import {exec as defaultExec} from 'teen_process';
 
 type ExecFn = typeof defaultExec;
@@ -21,11 +22,7 @@ export function __resetExecForTests(): void {
  * @returns Absolute candidate executable paths.
  */
 export function getWindowsExecutableCandidates(subdirs: string[], exe: string): string[] {
-  const bases = [
-    process.env.PROGRAMFILES,
-    process.env['PROGRAMFILES(X86)'],
-    process.env.LOCALAPPDATA,
-  ];
+  const bases = [process.env.PROGRAMFILES, process.env['PROGRAMFILES(X86)'], process.env.LOCALAPPDATA];
   return bases
     .filter((base): base is string => Boolean(base))
     .flatMap((base) => subdirs.map((sub) => path.join(base, sub, exe)));
@@ -37,9 +34,7 @@ export function getWindowsExecutableCandidates(subdirs: string[], exe: string): 
  * @returns Browser version if detected, otherwise null.
  */
 export async function readBrowserVersion(binary: string): Promise<string | null> {
-  return process.platform === 'win32'
-    ? await readBrowserVersionWin(binary)
-    : await readBrowserVersionUnix(binary);
+  return process.platform === 'win32' ? await readBrowserVersionWin(binary) : await readBrowserVersionUnix(binary);
 }
 
 /**

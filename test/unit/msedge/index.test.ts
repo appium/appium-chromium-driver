@@ -1,15 +1,14 @@
-import {describe, it, afterEach} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, afterEach} from 'node:test';
+
 import {fs, net, tempDir, zip} from 'appium/support.js';
 import sinon from 'sinon';
-import type {BrowserInfo} from '../../../lib/types.js';
+
 import {determineDriverExecutable} from '../../../lib/msedge/index.js';
+import type {BrowserInfo} from '../../../lib/types.js';
 
 function makeMsedgeVersionResponse(version: string): Response {
-  const payload = Buffer.concat([
-    Buffer.from([0xff, 0xfe]),
-    Buffer.from(`${version}\n`, 'utf16le'),
-  ]);
+  const payload = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(`${version}\n`, 'utf16le')]);
   return new Response(payload, {status: 200});
 }
 

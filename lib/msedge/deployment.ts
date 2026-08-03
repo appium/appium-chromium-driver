@@ -1,5 +1,6 @@
-import {fs, tempDir, zip} from 'appium/support.js';
 import path from 'node:path';
+
+import {fs, tempDir, zip} from 'appium/support.js';
 
 interface DriverDeploymentArtifact {
   archiveName: string;
@@ -33,10 +34,7 @@ export async function deployDriverArtifact(
   try {
     await downloadArchive(archivePath);
     await zip.extractAllTo(archivePath, targetDir);
-    const extractedExecutable = await locateDriverExecutableInDir(
-      targetDir,
-      artifact.executableName,
-    );
+    const extractedExecutable = await locateDriverExecutableInDir(targetDir, artifact.executableName);
     if (!extractedExecutable) {
       throw new Error(`Cannot find '${artifact.executableName}' in '${targetDir}'`);
     }

@@ -1,5 +1,6 @@
-import {describe, it, before, after} from 'node:test';
 import assert from 'node:assert/strict';
+import {describe, it, before, after} from 'node:test';
+
 import {waitForCondition} from 'asyncbox';
 
 type AppiumServer = any;
@@ -7,8 +8,7 @@ type Browser = any;
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
-const PLATFORM =
-  PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
+const PLATFORM = PLATFORM_ENV.toLowerCase() === 'macos' ? 'mac' : PLATFORM_ENV.toLowerCase() || 'mac';
 const PORT = Number(process.env.TEST_PORT) || 4780;
 const HOST = '127.0.0.1';
 

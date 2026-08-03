@@ -6,8 +6,9 @@ import type {
   InitialOpts,
   StringRecord,
 } from '@appium/types';
-import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
+import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
+
 import * as chrome from './chrome/index.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
@@ -32,11 +33,7 @@ export class ChromiumDriver
 {
   desiredCapConstraints = desiredCapConstraints;
   proxyReqRes: ((...args: any[]) => any) | null = null;
-  proxyCommand?: <TReq = any, TRes = unknown>(
-    url: string,
-    method: HTTPMethod,
-    body?: TReq,
-  ) => Promise<TRes>;
+  proxyCommand?: <TReq = any, TRes = unknown>(url: string, method: HTTPMethod, body?: TReq) => Promise<TRes>;
   doesSupportBidi = true;
   private _proxyActive = false;
   private _cd: Chromedriver | null = null;
@@ -175,10 +172,7 @@ export class ChromiumDriver
       return this.opts.executable;
     }
 
-    return await this.getBrowserDriverStrategy().resolveExecutable(
-      browserVersionInfo,
-      isAutodownloadEnabled,
-    );
+    return await this.getBrowserDriverStrategy().resolveExecutable(browserVersionInfo, isAutodownloadEnabled);
   }
 
   private getExecutableDir(): string | undefined {
@@ -195,18 +189,13 @@ export class ChromiumDriver
         discoverBrowserVersion: async (browserBinary?: string) =>
           await msedge.discoverMsEdgeBrowserVersion(browserBinary),
         resolveExecutable: async (browserVersionInfo, isAutodownloadEnabled) =>
-          await msedge.determineDriverExecutable(
-            this.opts,
-            browserVersionInfo,
-            isAutodownloadEnabled,
-          ),
+          await msedge.determineDriverExecutable(this.opts, browserVersionInfo, isAutodownloadEnabled),
         getDefaultExecutableDir: () => msedge.getDefaultDriverDir(),
       };
     }
 
     return {
-      discoverBrowserVersion: async (browserBinary?: string) =>
-        await chrome.detectChromeBrowserVersion(browserBinary),
+      discoverBrowserVersion: async (browserBinary?: string) => await chrome.detectChromeBrowserVersion(browserBinary),
       resolveExecutable: async () => undefined,
       getDefaultExecutableDir: () => chrome.getDefaultDriverDir(),
     };
