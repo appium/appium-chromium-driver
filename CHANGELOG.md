@@ -1,3 +1,9 @@
+## [3.0.8](https://github.com/appium/appium-chromium-driver/compare/v3.0.7...v3.0.8) (2026-08-03)
+
+### Miscellaneous Chores
+
+* Integrate oxc and release configs ([#461](https://github.com/appium/appium-chromium-driver/issues/461)) ([379af68](https://github.com/appium/appium-chromium-driver/commit/379af68625f09ca5163c7db2f8386759b764dd84))
+
 ## [3.0.7](https://github.com/appium/appium-chromium-driver/compare/v3.0.6...v3.0.7) (2026-07-29)
 
 ### Miscellaneous Chores
