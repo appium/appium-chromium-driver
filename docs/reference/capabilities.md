@@ -19,7 +19,7 @@ for more information about these capabilities.
 | -- | -- | -- |
 | `platformName` | `string` | Not specified |
 
-This capability be set to `mac`, `linux` or `windows` (case-insensitive)
+This capability must be set to `mac`, `linux` or `windows` (case-insensitive)
 
 ### browserName
 
