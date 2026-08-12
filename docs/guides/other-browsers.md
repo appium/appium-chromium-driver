@@ -15,8 +15,8 @@ and Edge.
 Usually, no configuration is required in the browser itself. The main differences from regular
 Chrome/Edge are in the required capabilities:
 
-* The target browser must be specified by customizing the path to the browser binary, using the [`goog:chromeOptions`](../reference/capabilities.md#google-specific) capability
-* Most browsers will require the [`appium:executable`](../reference/capabilities.md#appium-specific) capability in order to specify a compatible `chromedriver` binary
+* The target browser must be specified by customizing the path to the browser binary, using the [`goog:chromeOptions`](../reference/capabilities.md#chromeoptions) capability
+* Most browsers will require the [`appium:executable`](../reference/capabilities.md#executable) capability in order to specify a compatible `chromedriver` binary
     * The browser's Chromium version can usually be found in its About page. You can then download a compatible `chromedriver` binary either manually or using the [`install-chromedriver`](../reference/scripts.md) driver script. Note that there may not always be a binary with the exact same version as Chromium, but the closest match should still work.
 
 ### Background

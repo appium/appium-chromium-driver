@@ -1,7 +1,4 @@
 ---
-hide:
-  - toc
-
 title: Scripts
 ---
 
@@ -30,7 +27,7 @@ appium driver run chromium install-chromedriver
 
 ##### Optional Environment Variables
 
-|<div style="width:15em">Variable</div>|<div style="width:22em">Description</div>|Default|
+|<div style="width:15em">Variable</div>|<div style="width:14em">Description</div>|Default|
 |--|--|--|
 |`CHROMEDRIVER_VERSION`|Specific version of `chromedriver` to download|Latest known good stable|
 |`CHROMEDRIVER_EXECUTABLE_DIR`|Directory where the binary should be installed|The `chromedrivers` directory under [`envPaths('appium-chromium-driver').data`](https://github.com/sindresorhus/env-paths#pathsdata)|
