@@ -68,7 +68,7 @@
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
   "dependencies": {
-    "@appium/strongbox": "^1.0.0",
+    "@appium/strongbox": "^2.0.0",
     "appium-chromedriver": "^9.0.3",
     "teen_process": "^4.1.0"
   },
