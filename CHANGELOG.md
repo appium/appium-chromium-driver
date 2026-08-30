@@ -1,3 +1,9 @@
+## [3.0.10](https://github.com/appium/appium-chromium-driver/compare/v3.0.9...v3.0.10) (2026-08-30)
+
+### Miscellaneous Chores
+
+* **deps:** bump @appium/strongbox from 1.1.3 to 2.0.0 ([#464](https://github.com/appium/appium-chromium-driver/issues/464)) ([0d81f05](https://github.com/appium/appium-chromium-driver/commit/0d81f0506cc4855645154607446a104de86ec6fb))
+
 ## [3.0.9](https://github.com/appium/appium-chromium-driver/compare/v3.0.8...v3.0.9) (2026-08-30)
 
 ### Miscellaneous Chores
