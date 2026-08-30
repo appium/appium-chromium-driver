@@ -1,3 +1,9 @@
+## [3.0.9](https://github.com/appium/appium-chromium-driver/compare/v3.0.8...v3.0.9) (2026-08-30)
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @appium/docutils from 2.5.2 to 3.0.0 ([#463](https://github.com/appium/appium-chromium-driver/issues/463)) ([b5abd1d](https://github.com/appium/appium-chromium-driver/commit/b5abd1da7687a5e45fd2ec813b55c57f0c4c8aef))
+
 ## [3.0.8](https://github.com/appium/appium-chromium-driver/compare/v3.0.7...v3.0.8) (2026-08-03)
 
 ### Miscellaneous Chores
