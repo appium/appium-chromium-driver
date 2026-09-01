@@ -1,3 +1,9 @@
+## [3.0.11](https://github.com/appium/appium-chromium-driver/compare/v3.0.10...v3.0.11) (2026-09-01)
+
+### Miscellaneous Chores
+
+* bump support & other deps ([#465](https://github.com/appium/appium-chromium-driver/issues/465)) ([a3678cc](https://github.com/appium/appium-chromium-driver/commit/a3678cc25a378a557d7a884483719c4ebefcd005))
+
 ## [3.0.10](https://github.com/appium/appium-chromium-driver/compare/v3.0.9...v3.0.10) (2026-08-30)
 
 ### Miscellaneous Chores
