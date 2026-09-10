@@ -1,3 +1,9 @@
+## [3.0.12](https://github.com/appium/appium-chromium-driver/compare/v3.0.11...v3.0.12) (2026-09-10)
+
+### Miscellaneous Chores
+
+* **ci:** publish via bundled dependencies instead of npm-shrinkwrap ([#466](https://github.com/appium/appium-chromium-driver/issues/466)) ([0d1d785](https://github.com/appium/appium-chromium-driver/commit/0d1d7853bca7ef3546e4237d1d40e5395b2dddf4))
+
 ## [3.0.11](https://github.com/appium/appium-chromium-driver/compare/v3.0.10...v3.0.11) (2026-09-01)
 
 ### Miscellaneous Chores
