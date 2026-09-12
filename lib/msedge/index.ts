@@ -2,7 +2,7 @@ import type {BrowserInfo} from '../types.js';
 import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
 import {isMsEdge} from './browser-identity.js';
-import {deployDriverArtifact, locateDriverExecutableInDir} from './deployment.js';
+import {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} from './deployment.js';
 import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
 import {getDriverExecutableName, getPlatformConfig} from './platform.js';
 import {Version} from './version.js';
@@ -17,8 +17,8 @@ interface DriverResolveOpts {
  * Determine the MSEdgeDriver executable path for the current session request.
  * It returns opts.executable if it is provided.
  * If not, it checks whether the browser is Microsoft Edge and returns undefined for non-Edge sessions.
- * For Edge sessions it prefers an existing executable from opts.executableDir, then falls back to
- * resolving, downloading, and deploying a compatible driver artifact when autodownload is enabled.
+ * For Edge sessions it trusts an existing executable from opts.executableDir. Otherwise, it reuses
+ * a compatible driver from the default cache before downloading when autodownload is enabled.
  * If any step fails for a Microsoft Edge session, it throws an error.
  * @param opts The options for resolving the driver executable.
  * @param browserVersionInfo The information about the browser version.
@@ -47,20 +47,27 @@ export async function determineDriverExecutable(
     }
   }
 
+  const browserVersionStr = browserVersionInfo?.info?.Browser;
+  const browserVersion = browserVersionStr ? Version.from(browserVersionStr) : undefined;
+  const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
+  if (!opts.executableDir && browserVersion) {
+    const cachedExecutable = await locateCachedDriverExecutable(executableDir, executableName, browserVersion);
+    if (cachedExecutable) {
+      return cachedExecutable;
+    }
+  }
+
   if (!isAutodownloadEnabled) {
     return undefined;
   }
 
-  const browserVersionStr = browserVersionInfo?.info?.Browser;
-  if (!browserVersionStr) {
+  if (!browserVersion) {
     throw new Error(
       'Could not determine the installed Microsoft Edge version required for autodownload. ' +
         'Provide ms:edgeOptions.binary or appium:executable.',
     );
   }
 
-  const browserVersion = Version.from(browserVersionStr);
-  const executableDir = opts.executableDir || getDefaultMsEdgeDriverDir();
   try {
     const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
     const artifact = {

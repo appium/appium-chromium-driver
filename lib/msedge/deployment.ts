@@ -2,6 +2,8 @@ import path from 'node:path';
 
 import {fs, tempDir, zip} from 'appium/support.js';
 
+import {Version} from './version.js';
+
 interface DriverDeploymentArtifact {
   archiveName: string;
   executableName: string;
@@ -70,4 +72,31 @@ export async function locateDriverExecutableInDir(
   });
   const [match] = candidates.sort((a, b) => a.length - b.length);
   return match ?? null;
+}
+
+/** Find a compatible executable in the versioned cache created by deployDriverArtifact. */
+export async function locateCachedDriverExecutable(
+  executableDir: string,
+  executableName: string,
+  browserVersion: Version,
+): Promise<string | null> {
+  const candidates = await fs.glob(`*/${executableName}`, {
+    cwd: executableDir,
+    absolute: true,
+    nodir: true,
+  });
+  // Edge requires the first three version components to match. The directory name
+  // records the downloaded version; prefer the newest compatible patch.
+  const compatible = candidates
+    .flatMap((executable) => {
+      const version = Version.tryFrom(path.basename(path.dirname(executable)));
+      return version?.isCompatibleWith(browserVersion) ? [{executable, version}] : [];
+    })
+    .sort((a, b) => b.version.patch - a.version.patch);
+  for (const {executable} of compatible) {
+    if (await fs.isExecutable(executable)) {
+      return executable;
+    }
+  }
+  return null;
 }

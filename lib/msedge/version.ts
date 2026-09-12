@@ -22,13 +22,29 @@ export class Version {
    * @throws Error if the version string is invalid.
    */
   static from(version: string): Version {
-    const match = this.VERSION_PATTERN.exec(version);
-    if (!match) {
+    const parsed = this.tryFrom(version);
+    if (!parsed) {
       throw new Error(
         `Invalid version format: '${version}'. Please report it to the Appium team as it might be a new version format.`,
       );
     }
-    return new Version(version, match[1]);
+    return parsed;
+  }
+
+  /** Parse a version, returning null for non-version cache directory names. */
+  static tryFrom(version: string): Version | null {
+    const match = this.VERSION_PATTERN.exec(version);
+    return match ? new Version(version, match[1]) : null;
+  }
+
+  /** Edge browser and driver versions must share the first three components. */
+  isCompatibleWith(other: Version): boolean {
+    return this.rawVersion.split('.').slice(0, 3).join('.') === other.rawVersion.split('.').slice(0, 3).join('.');
+  }
+
+  /** The patch component used to order compatible cached versions. */
+  get patch(): number {
+    return Number(this.rawVersion.split('.')[3]);
   }
 
   /**
