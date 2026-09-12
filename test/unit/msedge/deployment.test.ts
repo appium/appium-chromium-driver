@@ -1,14 +1,53 @@
 import assert from 'node:assert/strict';
+import {mkdtemp} from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
 import {fs, tempDir, zip} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {deployDriverArtifact, locateDriverExecutableInDir} from '../../../lib/msedge/deployment.js';
+import {
+  deployDriverArtifact,
+  locateCachedDriverExecutable,
+  locateDriverExecutableInDir,
+} from '../../../lib/msedge/deployment.js';
+import {getDriverExecutableName} from '../../../lib/msedge/platform.js';
+import {Version} from '../../../lib/msedge/version.js';
 
 describe('msedge deployment domain', () => {
   afterEach(() => {
     sinon.restore();
+  });
+
+  it('selects the newest compatible patch from a versioned cache on disk', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'msedge-cache-'));
+    const name = getDriverExecutableName();
+    try {
+      assert.equal(await locateCachedDriverExecutable(root, name, Version.from('147.0.3179.85')), null);
+      for (const version of ['146.0.3179.100', '147.0.3180.100', '147.0.3179.9', '147.0.3179.98', 'current']) {
+        const dir = path.join(root, version);
+        await fs.mkdirp(dir);
+        await fs.writeFile(path.join(dir, name), 'cached executable', {mode: 0o755});
+      }
+      assert.equal(
+        await locateCachedDriverExecutable(root, name, Version.from('147.0.3179.85')),
+        path.join(root, '147.0.3179.98', name),
+      );
+      assert.equal(await locateCachedDriverExecutable(root, name, Version.from('148.0.3179.85')), null);
+    } finally {
+      await fs.rimraf(root);
+    }
+  });
+
+  it('skips cached files that are not executable', async () => {
+    const root = path.join(os.tmpdir(), 'msedge-cache');
+    const name = getDriverExecutableName();
+    const newest = path.join(root, '147.0.3179.98', name);
+    const older = path.join(root, '147.0.3179.9', name);
+    sinon.stub(fs, 'glob').resolves([newest, older]);
+    sinon.stub(fs, 'isExecutable').callsFake(async (file) => file === older);
+    assert.equal(await locateCachedDriverExecutable(root, name, Version.from('147.0.3179.85')), older);
   });
 
   describe('findDriverExecutable', () => {
