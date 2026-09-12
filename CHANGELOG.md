@@ -1,3 +1,9 @@
+## [3.0.13](https://github.com/appium/appium-chromium-driver/compare/v3.0.12...v3.0.13) (2026-09-12)
+
+### Bug Fixes
+
+* improve autodownload behavior in Edge ([#467](https://github.com/appium/appium-chromium-driver/issues/467)) ([b3e4ae1](https://github.com/appium/appium-chromium-driver/commit/b3e4ae1474febd0f9a315f3fa7b96f85c05a16aa))
+
 ## [3.0.12](https://github.com/appium/appium-chromium-driver/compare/v3.0.11...v3.0.12) (2026-09-10)
 
 ### Miscellaneous Chores
