@@ -125,11 +125,6 @@ to have matching versions. Maps to the `--disable-build-check` flag of the
 Whether to automatically download a compatible `chromedriver`/`msedgedriver` when starting a new
 session
 
-For Edge, when neither `appium:executable` nor `appium:executableDir` is specified, a compatible
-driver in the default cache is reused before any network request, even when autodownload is disabled.
-Cache selection requires detecting the installed browser version and matches the first three version
-components, preferring the newest cached patch.
-
 ### useSystemExecutable
 
 | Name | Type | Default |
