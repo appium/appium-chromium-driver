@@ -4,12 +4,14 @@ import type {
   ExternalDriver,
   HTTPMethod,
   InitialOpts,
+  RouteMatcher,
   StringRecord,
 } from '@appium/types';
 import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 
 import * as chrome from './chrome/index.js';
+import * as findCommands from './commands/find.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
@@ -17,6 +19,13 @@ import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './typ
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
 const EDGE_VENDOR_PREFIX = 'ms:';
+
+const NO_PROXY: RouteMatcher[] = [
+  ['GET', new RegExp('^/session/[^/]+/appium')],
+  ['POST', new RegExp('^/session/[^/]+/appium')],
+  ['POST', new RegExp('^/session/[^/]+/element/[^/]+/elements?$')],
+  ['POST', new RegExp('^/session/[^/]+/elements?$')],
+];
 
 interface BrowserDriverStrategy {
   discoverBrowserVersion(browserBinary?: string): Promise<string>;
@@ -35,6 +44,9 @@ export class ChromiumDriver
   proxyReqRes: ((...args: any[]) => any) | null = null;
   proxyCommand?: <TReq = any, TRes = unknown>(url: string, method: HTTPMethod, body?: TReq) => Promise<TRes>;
   doesSupportBidi = true;
+
+  findElOrEls = findCommands.findElOrEls;
+
   private _proxyActive = false;
   private _cd: Chromedriver | null = null;
   private _bidiProxyUrl: string | null = null;
@@ -56,6 +68,10 @@ export class ChromiumDriver
 
   override proxyActive(): boolean {
     return this._proxyActive;
+  }
+
+  override getProxyAvoidList(): RouteMatcher[] {
+    return NO_PROXY;
   }
 
   override canProxy(): boolean {
