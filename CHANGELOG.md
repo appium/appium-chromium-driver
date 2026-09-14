@@ -1,3 +1,9 @@
+## [3.1.0](https://github.com/appium/appium-chromium-driver/compare/v3.0.13...v3.1.0) (2026-09-14)
+
+### Features
+
+* add support for Appium protocol methods + search by image ([#468](https://github.com/appium/appium-chromium-driver/issues/468)) ([1af381f](https://github.com/appium/appium-chromium-driver/commit/1af381ff77e708825376e0e7bdac973679e076b0))
+
 ## [3.0.13](https://github.com/appium/appium-chromium-driver/compare/v3.0.12...v3.0.13) (2026-09-12)
 
 ### Bug Fixes
