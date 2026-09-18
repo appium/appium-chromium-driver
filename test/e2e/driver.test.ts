@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {describe, it, before, after} from 'node:test';
 
+import {util} from 'appium/support.js';
 import {waitForCondition} from 'asyncbox';
 
 type AppiumServer = any;
@@ -99,6 +100,17 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
     it('should get page soruce', async () => {
       const pageSource = await ctx.driver!.getPageSource();
       assert.match(pageSource, /value.+build.+version/);
+    });
+
+    it('should find elements using standard W3C locator strategies', async () => {
+      const d = ctx.driver!;
+      const body = await d.findElement('css selector', 'body');
+      const bodyId = body[util.W3C_WEB_ELEMENT_IDENTIFIER];
+
+      assert.ok(bodyId);
+      assert.ok((await d.findElements('xpath', '//body')).length > 0);
+      assert.ok(await d.findElementFromElement(bodyId, 'tag name', 'pre'));
+      assert.ok((await d.findElementsFromElement(bodyId, 'tag name', 'pre')).length > 0);
     });
   });
 
