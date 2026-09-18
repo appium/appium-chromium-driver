@@ -30,6 +30,13 @@ describe('driver', () => {
     assert.ok(new ChromiumDriver());
   });
 
+  it('supports standard W3C locator strategies', () => {
+    const driver = new ChromiumDriver();
+    for (const strategy of ['css selector', 'link text', 'partial link text', 'tag name', 'xpath']) {
+      assert.doesNotThrow(() => driver.validateLocatorStrategy(strategy));
+    }
+  });
+
   it('delegates executable resolution to msedge orchestrator for Edge', async () => {
     sinon.stub(fs, 'glob').resolves(['/auto/msedgedriver']);
     const driver = new TestDriver();
