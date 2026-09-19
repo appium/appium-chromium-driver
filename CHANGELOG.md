@@ -1,3 +1,9 @@
+## [3.1.1](https://github.com/appium/appium-chromium-driver/compare/v3.1.0...v3.1.1) (2026-09-19)
+
+### Bug Fixes
+
+* configure supported locator strategies ([#470](https://github.com/appium/appium-chromium-driver/issues/470)) ([cb2f7b7](https://github.com/appium/appium-chromium-driver/commit/cb2f7b7ad2bc9ae153affe088f5ac2c039ba0f90))
+
 ## [3.1.0](https://github.com/appium/appium-chromium-driver/compare/v3.0.13...v3.1.0) (2026-09-14)
 
 ### Features
