@@ -53,6 +53,7 @@ export class ChromiumDriver
 
   constructor(opts: InitialOpts = {} as InitialOpts) {
     super(opts);
+    this.locatorStrategies = ['css selector', 'link text', 'partial link text', 'tag name', 'xpath'];
   }
 
   get bidiProxyUrl(): string | null {
