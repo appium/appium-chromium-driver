@@ -1,13 +1,20 @@
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
+import {getWindowsExecutableCandidatesInDriverOrder, pathExists, readBrowserVersion} from '../utils/index.js';
 
+/**
+ * Without a `goog:chromeOptions.binary`, ChromeDriver launches the first `chrome.exe` it finds
+ * in Google Chrome, then Chrome for Testing, then Chromium installation folders (each checked
+ * in LOCALAPPDATA, PROGRAMFILES, PROGRAMFILES(X86) order) and never looks at Beta or Dev.
+ * Detect versions in that same order so the downloaded chromedriver matches the browser that
+ * actually starts; Beta and Dev stay as a last resort.
+ */
 const DEFAULT_WIN_CANDIDATES = () =>
-  getWindowsExecutableCandidates(
+  getWindowsExecutableCandidatesInDriverOrder(
     [
       'Google\\Chrome\\Application',
+      'Google\\Chrome for Testing\\Application',
+      'Chromium\\Application',
       'Google\\Chrome Beta\\Application',
       'Google\\Chrome Dev\\Application',
-      'Google\\Google Chrome for Testing\\Application',
-      'Chromium\\Application',
     ],
     'chrome.exe',
   );
@@ -58,6 +65,10 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
 
   const candidates = listBrowserBinaryCandidates();
   for (const binary of candidates) {
+    // Reading a version on Windows spawns PowerShell, so skip the paths that don't exist.
+    if (process.platform === 'win32' && !(await pathExists(binary))) {
+      continue;
+    }
     const version = await readBrowserVersion(binary);
     if (version) {
       return version;

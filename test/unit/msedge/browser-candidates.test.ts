@@ -8,7 +8,8 @@ const IS_WIN = process.platform === 'win32';
 
 function resolveEffectiveBinary(binary: string, args: string[]): string {
   if (binary === 'powershell' && args[2]) {
-    const match = /Get-Item '(.+)'/.exec(args[2]);
+    // readBrowserVersionWin passes the path as `$target = '<path>'` (single quotes doubled).
+    const match = /\$target = '((?:[^']|'')+)'/.exec(args[2]) ?? /Get-Item '(.+)'/.exec(args[2]);
     if (match) {
       return match[1].replace(/''/g, "'");
     }

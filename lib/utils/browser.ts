@@ -1,9 +1,21 @@
+import {access} from 'node:fs/promises';
 import path from 'node:path';
 
 import {exec as defaultExec} from 'teen_process';
 
 type ExecFn = typeof defaultExec;
 let execImpl: ExecFn = defaultExec;
+
+type PathExistsFn = (filePath: string) => Promise<boolean>;
+const defaultPathExists: PathExistsFn = async (filePath) => {
+  try {
+    await access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+};
+let pathExistsImpl: PathExistsFn = defaultPathExists;
 
 /** @internal */
 export function __setExecForTests(fn: ExecFn): void {
@@ -13,6 +25,45 @@ export function __setExecForTests(fn: ExecFn): void {
 /** @internal */
 export function __resetExecForTests(): void {
   execImpl = defaultExec;
+}
+
+/** @internal */
+export function __setPathExistsForTests(fn: PathExistsFn): void {
+  pathExistsImpl = fn;
+}
+
+/** @internal */
+export function __resetPathExistsForTests(): void {
+  pathExistsImpl = defaultPathExists;
+}
+
+/**
+ * Check whether a file exists without spawning a process.
+ * @param filePath Absolute file path.
+ * @returns `true` if the path exists.
+ */
+export async function pathExists(filePath: string): Promise<boolean> {
+  return await pathExistsImpl(filePath);
+}
+
+/**
+ * Build Windows executable candidate paths in the order ChromeDriver searches them when no
+ * browser binary is given (`chrome/test/chromedriver/chrome/chrome_finder.cc`): each
+ * installation subdirectory is tried in every base folder, LOCALAPPDATA first, before moving
+ * on to the next subdirectory. Paths always use Windows separators.
+ * @param subdirs Relative installation subdirectories, in priority order.
+ * @param exe Executable file name.
+ * @returns Absolute candidate executable paths.
+ */
+export function getWindowsExecutableCandidatesInDriverOrder(subdirs: string[], exe: string): string[] {
+  const bases = [
+    process.env.LOCALAPPDATA,
+    process.env.PROGRAMFILES,
+    process.env['PROGRAMFILES(X86)'],
+    process.env.PROGRAMW6432,
+  ].filter((base): base is string => Boolean(base));
+  const uniqueBases = [...new Set(bases.map((base) => path.win32.normalize(base)))];
+  return subdirs.flatMap((sub) => uniqueBases.map((base) => path.win32.join(base, sub, exe)));
 }
 
 /**
