@@ -1,4 +1,4 @@
-import {getWindowsExecutableCandidatesInDriverOrder, pathExists, readBrowserVersion} from '../utils/index.js';
+import {getWindowsExecutableCandidates, pathExists, readBrowserVersion} from '../utils/index.js';
 
 /**
  * Without a `goog:chromeOptions.binary`, ChromeDriver launches the first `chrome.exe` it finds
@@ -8,7 +8,7 @@ import {getWindowsExecutableCandidatesInDriverOrder, pathExists, readBrowserVers
  * actually starts; Beta and Dev stay as a last resort.
  */
 const DEFAULT_WIN_CANDIDATES = () =>
-  getWindowsExecutableCandidatesInDriverOrder(
+  getWindowsExecutableCandidates(
     [
       'Google\\Chrome\\Application',
       'Google\\Chrome for Testing\\Application',

@@ -8,7 +8,7 @@ import {
   __resetPathExistsForTests,
   __setExecForTests,
   __setPathExistsForTests,
-  getWindowsExecutableCandidatesInDriverOrder,
+  getWindowsExecutableCandidates,
 } from '../../../lib/utils/browser.js';
 
 const IS_WIN = process.platform === 'win32';
@@ -105,7 +105,7 @@ describe('Windows candidates in ChromeDriver search order', () => {
   }
 
   it('tries each install folder in LOCALAPPDATA, PROGRAMFILES, PROGRAMFILES(X86) before the next folder', () => {
-    const candidates = withWindowsEnv(() => getWindowsExecutableCandidatesInDriverOrder(['A', 'B'], 'x.exe'));
+    const candidates = withWindowsEnv(() => getWindowsExecutableCandidates(['A', 'B'], 'x.exe'));
     assert.deepEqual(candidates, [
       path.win32.join(LOCAL, 'A', 'x.exe'),
       path.win32.join(PF, 'A', 'x.exe'),

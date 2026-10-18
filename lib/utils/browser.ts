@@ -47,15 +47,15 @@ export async function pathExists(filePath: string): Promise<boolean> {
 }
 
 /**
- * Build Windows executable candidate paths in the order ChromeDriver searches them when no
- * browser binary is given (`chrome/test/chromedriver/chrome/chrome_finder.cc`): each
- * installation subdirectory is tried in every base folder, LOCALAPPDATA first, before moving
- * on to the next subdirectory. Paths always use Windows separators.
+ * Build Windows executable candidate paths in the order ChromeDriver and msedgedriver search
+ * them when no browser binary is given (`chrome/test/chromedriver/chrome/chrome_finder.cc`):
+ * each installation subdirectory is tried in every base folder, LOCALAPPDATA first, before
+ * moving on to the next subdirectory. Paths always use Windows separators.
  * @param subdirs Relative installation subdirectories, in priority order.
  * @param exe Executable file name.
  * @returns Absolute candidate executable paths.
  */
-export function getWindowsExecutableCandidatesInDriverOrder(subdirs: string[], exe: string): string[] {
+export function getWindowsExecutableCandidates(subdirs: string[], exe: string): string[] {
   const bases = [
     process.env.LOCALAPPDATA,
     process.env.PROGRAMFILES,
@@ -64,19 +64,6 @@ export function getWindowsExecutableCandidatesInDriverOrder(subdirs: string[], e
   ].filter((base): base is string => Boolean(base));
   const uniqueBases = [...new Set(bases.map((base) => path.win32.normalize(base)))];
   return subdirs.flatMap((sub) => uniqueBases.map((base) => path.win32.join(base, sub, exe)));
-}
-
-/**
- * Build Windows executable candidate paths from common installation base folders.
- * @param subdirs Relative installation subdirectories.
- * @param exe Executable file name.
- * @returns Absolute candidate executable paths.
- */
-export function getWindowsExecutableCandidates(subdirs: string[], exe: string): string[] {
-  const bases = [process.env.PROGRAMFILES, process.env['PROGRAMFILES(X86)'], process.env.LOCALAPPDATA];
-  return bases
-    .filter((base): base is string => Boolean(base))
-    .flatMap((base) => subdirs.map((sub) => path.join(base, sub, exe)));
 }
 
 /**
