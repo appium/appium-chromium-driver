@@ -66,7 +66,7 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
   const candidates = listBrowserBinaryCandidates();
   for (const binary of candidates) {
     // Reading a version on Windows spawns PowerShell, so skip the paths that don't exist.
-    if (process.platform === 'win32' && !(await pathExists(binary))) {
+    if (process.platform === 'win32' && !(await fs.exists(binary))) {
       continue;
     }
     const version = await readBrowserVersion(binary);
