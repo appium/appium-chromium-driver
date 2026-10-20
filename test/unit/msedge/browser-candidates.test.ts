@@ -2,13 +2,11 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
+import {fs} from 'appium/support.js';
+import sinon from 'sinon';
+
 import {discoverMsEdgeBrowserVersion} from '../../../lib/msedge/index.js';
-import {
-  __resetExecForTests,
-  __resetPathExistsForTests,
-  __setExecForTests,
-  __setPathExistsForTests,
-} from '../../../lib/utils/browser.js';
+import {__resetExecForTests, __setExecForTests} from '../../../lib/utils/browser.js';
 
 const IS_WIN = process.platform === 'win32';
 
@@ -26,7 +24,7 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
 describe('msedge browser candidates domain', () => {
   afterEach(() => {
     __resetExecForTests();
-    __resetPathExistsForTests();
+    sinon.restore();
   });
 
   it('discovers version from explicit Edge binary', async () => {
@@ -77,7 +75,7 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
     saved = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
     Object.assign(process.env, {LOCALAPPDATA: LOCAL, PROGRAMFILES: PF, 'PROGRAMFILES(X86)': PF86, PROGRAMW6432: PF});
     const spawned: string[] = [];
-    __setPathExistsForTests(async (p) => p in installed);
+    sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
     __setExecForTests((async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       spawned.push(effective);
@@ -97,7 +95,7 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
       }
     }
     __resetExecForTests();
-    __resetPathExistsForTests();
+    sinon.restore();
   });
 
   it('prefers stable Edge in any install folder over Edge Beta, as msedgedriver does', async () => {

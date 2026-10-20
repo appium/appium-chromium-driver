@@ -1,4 +1,6 @@
-import {getWindowsExecutableCandidates, pathExists, readBrowserVersion} from '../utils/index.js';
+import {fs} from 'appium/support.js';
+
+import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
 
 /**
  * Without an `ms:edgeOptions.binary`, msedgedriver only looks for `Microsoft\Edge\Application`
@@ -49,7 +51,7 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
   const candidates = getBrowserCandidates();
   for (const binary of candidates) {
     // Reading a version on Windows spawns PowerShell, so skip the paths that don't exist.
-    if (process.platform === 'win32' && !(await pathExists(binary))) {
+    if (process.platform === 'win32' && !(await fs.exists(binary))) {
       continue;
     }
     const version = await readBrowserVersion(binary);

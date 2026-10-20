@@ -1,4 +1,6 @@
-import {getWindowsExecutableCandidates, pathExists, readBrowserVersion} from '../utils/index.js';
+import {fs} from 'appium/support.js';
+
+import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
 
 /**
  * Without a `goog:chromeOptions.binary`, ChromeDriver launches the first `chrome.exe` it finds

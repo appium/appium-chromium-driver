@@ -2,14 +2,11 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
+import {fs} from 'appium/support.js';
+import sinon from 'sinon';
+
 import {detectBrowserVersion, listBrowserBinaryCandidates} from '../../../lib/chrome/index.js';
-import {
-  __resetExecForTests,
-  __resetPathExistsForTests,
-  __setExecForTests,
-  __setPathExistsForTests,
-  getWindowsExecutableCandidates,
-} from '../../../lib/utils/browser.js';
+import {__resetExecForTests, __setExecForTests, getWindowsExecutableCandidates} from '../../../lib/utils/browser.js';
 
 const IS_WIN = process.platform === 'win32';
 
@@ -27,7 +24,7 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
 describe('chrome browser candidates domain', () => {
   afterEach(() => {
     __resetExecForTests();
-    __resetPathExistsForTests();
+    sinon.restore();
   });
 
   it('discovers version from explicit Chrome binary', async () => {
@@ -46,7 +43,7 @@ describe('chrome browser candidates domain', () => {
   });
 
   it('supports candidate fallback for default discovery', async () => {
-    __setPathExistsForTests(async () => true);
+    sinon.stub(fs, 'exists').resolves(true);
     __setExecForTests((async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === 'google-chrome') {
@@ -119,12 +116,12 @@ describe('Windows candidates in ChromeDriver search order', () => {
   describe('detection on Windows', {skip: !IS_WIN}, () => {
     afterEach(() => {
       __resetExecForTests();
-      __resetPathExistsForTests();
+      sinon.restore();
     });
 
     function fakeInstalls(installed: Record<string, string>) {
       const spawned: string[] = [];
-      __setPathExistsForTests(async (p) => p in installed);
+      sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
       __setExecForTests((async (binary: string, args: string[] = []) => {
         const effective = resolveEffectiveBinary(binary, args);
         spawned.push(effective);

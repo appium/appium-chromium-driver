@@ -1,21 +1,9 @@
-import {access} from 'node:fs/promises';
 import path from 'node:path';
 
 import {exec as defaultExec} from 'teen_process';
 
 type ExecFn = typeof defaultExec;
 let execImpl: ExecFn = defaultExec;
-
-type PathExistsFn = (filePath: string) => Promise<boolean>;
-const defaultPathExists: PathExistsFn = async (filePath) => {
-  try {
-    await access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-};
-let pathExistsImpl: PathExistsFn = defaultPathExists;
 
 /** @internal */
 export function __setExecForTests(fn: ExecFn): void {
@@ -25,25 +13,6 @@ export function __setExecForTests(fn: ExecFn): void {
 /** @internal */
 export function __resetExecForTests(): void {
   execImpl = defaultExec;
-}
-
-/** @internal */
-export function __setPathExistsForTests(fn: PathExistsFn): void {
-  pathExistsImpl = fn;
-}
-
-/** @internal */
-export function __resetPathExistsForTests(): void {
-  pathExistsImpl = defaultPathExists;
-}
-
-/**
- * Check whether a file exists without spawning a process.
- * @param filePath Absolute file path.
- * @returns `true` if the path exists.
- */
-export async function pathExists(filePath: string): Promise<boolean> {
-  return await pathExistsImpl(filePath);
 }
 
 /**
