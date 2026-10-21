@@ -77,7 +77,7 @@
     "@appium/semantic-release-config": "^1.1.0",
     "@appium/support": "^7.2.6",
     "@appium/tsconfig": "^1.2.0",
-    "@appium/types": "^1.0.0-rc.1",
+    "@appium/types": "^2.0.0-beta.0",
     "@types/node": "^26.0.0",
     "@types/sinon": "^22.0.0",
     "asyncbox": "^6.4.3",
