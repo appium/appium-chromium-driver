@@ -1,3 +1,9 @@
+## [3.1.2](https://github.com/appium/appium-chromium-driver/compare/v3.1.1...v3.1.2) (2026-10-21)
+
+### Bug Fixes
+
+* **chrome:** detect the Chrome that ChromeDriver will launch on Windows ([#474](https://github.com/appium/appium-chromium-driver/issues/474)) ([e52b461](https://github.com/appium/appium-chromium-driver/commit/e52b461ff11fb6c665760f16649ea60585b62e6c)), closes [#423](https://github.com/appium/appium-chromium-driver/issues/423)
+
 ## [3.1.1](https://github.com/appium/appium-chromium-driver/compare/v3.1.0...v3.1.1) (2026-09-19)
 
 ### Bug Fixes
