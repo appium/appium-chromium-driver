@@ -16,16 +16,23 @@ export function __resetExecForTests(): void {
 }
 
 /**
- * Build Windows executable candidate paths from common installation base folders.
- * @param subdirs Relative installation subdirectories.
+ * Build Windows executable candidate paths in the order ChromeDriver and msedgedriver search
+ * them when no browser binary is given (`chrome/test/chromedriver/chrome/chrome_finder.cc`):
+ * each installation subdirectory is tried in every base folder, LOCALAPPDATA first, before
+ * moving on to the next subdirectory. Paths always use Windows separators.
+ * @param subdirs Relative installation subdirectories, in priority order.
  * @param exe Executable file name.
  * @returns Absolute candidate executable paths.
  */
 export function getWindowsExecutableCandidates(subdirs: string[], exe: string): string[] {
-  const bases = [process.env.PROGRAMFILES, process.env['PROGRAMFILES(X86)'], process.env.LOCALAPPDATA];
-  return bases
-    .filter((base): base is string => Boolean(base))
-    .flatMap((base) => subdirs.map((sub) => path.join(base, sub, exe)));
+  const bases = [
+    process.env.LOCALAPPDATA,
+    process.env.PROGRAMFILES,
+    process.env['PROGRAMFILES(X86)'],
+    process.env.PROGRAMW6432,
+  ].filter((base): base is string => Boolean(base));
+  const uniqueBases = [...new Set(bases.map((base) => path.win32.normalize(base)))];
+  return subdirs.flatMap((sub) => uniqueBases.map((base) => path.win32.join(base, sub, exe)));
 }
 
 /**

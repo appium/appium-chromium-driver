@@ -1,5 +1,12 @@
+import {fs} from 'appium/support.js';
+
 import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
 
+/**
+ * Without an `ms:edgeOptions.binary`, msedgedriver only looks for `Microsoft\Edge\Application`
+ * (stable Edge), in the same base folders and order as ChromeDriver. Beta and Dev stay as a
+ * last resort.
+ */
 const DEFAULT_WIN_CANDIDATES = () =>
   getWindowsExecutableCandidates(
     ['Microsoft\\Edge\\Application', 'Microsoft\\Edge Beta\\Application', 'Microsoft\\Edge Dev\\Application'],
@@ -43,6 +50,10 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
 
   const candidates = getBrowserCandidates();
   for (const binary of candidates) {
+    // Reading a version on Windows spawns PowerShell, so skip the paths that don't exist.
+    if (process.platform === 'win32' && !(await fs.exists(binary))) {
+      continue;
+    }
     const version = await readBrowserVersion(binary);
     if (version) {
       return version;
