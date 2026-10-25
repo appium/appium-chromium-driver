@@ -1,6 +1,20 @@
 import {fs} from 'appium/support.js';
 
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
+import {
+  getWindowsExecutableCandidates,
+  readBrowserVersion,
+  readBrowserVersionFromMacSpotlight,
+  readBrowserVersionFromWindowsRegistry,
+  type MacAppBundleCandidate,
+} from '../utils/index.js';
+
+const DEFAULT_WIN_REGISTRY_SUBKEYS = [
+  'Google\\Chrome\\BLBeacon',
+  'Google\\Chrome for Testing\\BLBeacon',
+  'Chromium\\BLBeacon',
+  'Google\\Chrome Beta\\BLBeacon',
+  'Google\\Chrome Dev\\BLBeacon',
+];
 
 /**
  * Without a `goog:chromeOptions.binary`, ChromeDriver launches the first `chrome.exe` it finds
@@ -21,12 +35,35 @@ const DEFAULT_WIN_CANDIDATES = () =>
     'chrome.exe',
   );
 
+const DEFAULT_MAC_BUNDLES: MacAppBundleCandidate[] = [
+  {
+    bundleId: 'com.google.Chrome',
+    executableSubpath: 'Contents/MacOS/Google Chrome',
+  },
+  {
+    bundleId: 'com.google.Chrome.for.testing',
+    executableSubpath: 'Contents/MacOS/Google Chrome for Testing',
+  },
+  {
+    bundleId: 'org.chromium.Chromium',
+    executableSubpath: 'Contents/MacOS/Chromium',
+  },
+  {
+    bundleId: 'com.google.Chrome.beta',
+    executableSubpath: 'Contents/MacOS/Google Chrome Beta',
+  },
+  {
+    bundleId: 'com.google.Chrome.dev',
+    executableSubpath: 'Contents/MacOS/Google Chrome Dev',
+  },
+];
+
 const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
-  '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
   '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
   '/Applications/Chromium.app/Contents/MacOS/Chromium',
+  '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
+  '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
 ];
 
 const DEFAULT_LINUX_CANDIDATES = [
@@ -63,6 +100,18 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
       return version;
     }
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
+
+  if (process.platform === 'win32') {
+    const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
+    if (registryVersion) {
+      return registryVersion;
+    }
+  } else if (process.platform === 'darwin') {
+    const spotlightVersion = await readBrowserVersionFromMacSpotlight(DEFAULT_MAC_BUNDLES);
+    if (spotlightVersion) {
+      return spotlightVersion;
+    }
   }
 
   const candidates = listBrowserBinaryCandidates();

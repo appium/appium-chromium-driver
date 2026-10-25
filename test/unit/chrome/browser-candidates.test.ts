@@ -6,7 +6,12 @@ import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
 import {detectBrowserVersion, listBrowserBinaryCandidates} from '../../../lib/chrome/index.js';
-import {__resetExecForTests, __setExecForTests, getWindowsExecutableCandidates} from '../../../lib/utils/browser.js';
+import {
+  __resetExecForTests,
+  __setExecForTests,
+  getWindowsExecutableCandidates,
+  getWindowsRegistryKeys,
+} from '../../../lib/utils/browser.js';
 
 const IS_WIN = process.platform === 'win32';
 
@@ -17,6 +22,12 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
     if (match) {
       return match[1].replace(/''/g, "'");
     }
+  }
+  if (binary === 'reg' && args[1]) {
+    return args[1];
+  }
+  if (binary === 'mdfind' && args[0]) {
+    return args[0];
   }
   return binary;
 }
@@ -49,7 +60,7 @@ describe('chrome browser candidates domain', () => {
       if (effective === 'google-chrome') {
         return {stdout: '', stderr: 'not found', code: 1};
       }
-      if (effective.includes('Chromium') || effective === 'chromium') {
+      if ((effective.includes('Chromium') || effective === 'chromium') && binary !== 'reg' && binary !== 'mdfind') {
         return {stdout: IS_WIN ? '135.0.7049.0' : 'Chromium/135.0.7049.0', stderr: '', code: 0};
       }
       return {stdout: '', stderr: 'not found', code: 1};
@@ -60,6 +71,66 @@ describe('chrome browser candidates domain', () => {
   it('throws when no candidate succeeds', async () => {
     __setExecForTests((async () => ({stdout: '', stderr: 'not found', code: 1})) as any);
     await assert.rejects(() => detectBrowserVersion(), /Could not determine browser version/);
+  });
+
+  it('reads Chrome version from Windows Registry before spawning PowerShell', async () => {
+    sinon.stub(process, 'platform').value('win32');
+    const calls: string[] = [];
+    __setExecForTests((async (binary: string, args: string[] = []) => {
+      calls.push(`${binary}:${args.join(' ')}`);
+      if (binary === 'reg' && args[1] === 'HKLM\\Software\\Google\\Chrome\\BLBeacon') {
+        return {
+          stdout:
+            '\r\nHKEY_LOCAL_MACHINE\\Software\\Google\\Chrome\\BLBeacon\r\n    version    REG_SZ    141.0.7390.54\r\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      throw new Error('not found');
+    }) as any);
+    assert.equal(await detectBrowserVersion(), '141.0.7390.54');
+    assert.equal(
+      calls.some((call) => call.startsWith('powershell:')),
+      false,
+    );
+  });
+
+  it('discovers Chrome via mdfind on macOS and falls back to static paths when mdfind returns nothing', async () => {
+    sinon.stub(process, 'platform').value('darwin');
+    __setExecForTests((async (binary: string, args: string[] = []) => {
+      if (binary === 'mdfind' && args[0] === "kMDItemCFBundleIdentifier == 'com.google.Chrome'") {
+        return {
+          stdout: '/Users/me/Applications/Google Chrome.app\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      if (binary === '/Users/me/Applications/Google Chrome.app/Contents/MacOS/Google Chrome') {
+        return {
+          stdout: 'Google Chrome 141.0.7390.54\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      return {stdout: '', stderr: 'not found', code: 1};
+    }) as any);
+    assert.equal(await detectBrowserVersion(), '141.0.7390.54');
+
+    // When mdfind returns empty output (e.g. app not yet launched), fall back to static candidate paths.
+    __setExecForTests((async (binary: string) => {
+      if (binary === 'mdfind') {
+        return {stdout: '', stderr: '', code: 0};
+      }
+      if (binary === '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing') {
+        return {
+          stdout: 'Google Chrome for Testing 141.0.7390.54\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      return {stdout: '', stderr: 'not found', code: 1};
+    }) as any);
+    assert.equal(await detectBrowserVersion(), '141.0.7390.54');
   });
 });
 
@@ -113,6 +184,17 @@ describe('Windows candidates in ChromeDriver search order', () => {
     ]);
   });
 
+  it('builds Windows registry keys in HKCU, HKLM, WOW6432Node order for each subkey', () => {
+    assert.deepEqual(getWindowsRegistryKeys(['Google\\Chrome\\BLBeacon', 'Chromium\\BLBeacon']), [
+      'HKCU\\Software\\Google\\Chrome\\BLBeacon',
+      'HKLM\\Software\\Google\\Chrome\\BLBeacon',
+      'HKLM\\Software\\WOW6432Node\\Google\\Chrome\\BLBeacon',
+      'HKCU\\Software\\Chromium\\BLBeacon',
+      'HKLM\\Software\\Chromium\\BLBeacon',
+      'HKLM\\Software\\WOW6432Node\\Chromium\\BLBeacon',
+    ]);
+  });
+
   describe('detection on Windows', {skip: !IS_WIN}, () => {
     afterEach(() => {
       __resetExecForTests();
@@ -123,6 +205,9 @@ describe('Windows candidates in ChromeDriver search order', () => {
       const spawned: string[] = [];
       sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
       __setExecForTests((async (binary: string, args: string[] = []) => {
+        if (binary === 'reg') {
+          throw new Error('registry key not found');
+        }
         const effective = resolveEffectiveBinary(binary, args);
         spawned.push(effective);
         return effective in installed

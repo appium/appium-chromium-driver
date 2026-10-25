@@ -18,6 +18,12 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
       return match[1].replace(/''/g, "'");
     }
   }
+  if (binary === 'reg' && args[1]) {
+    return args[1];
+  }
+  if (binary === 'mdfind' && args[0]) {
+    return args[0];
+  }
   return binary;
 }
 
@@ -62,6 +68,65 @@ describe('msedge browser candidates domain', () => {
       /Could not determine browser version/,
     );
   });
+
+  it('reads Edge version from Windows Registry before spawning PowerShell', async () => {
+    sinon.stub(process, 'platform').value('win32');
+    const calls: string[] = [];
+    __setExecForTests((async (binary: string, args: string[] = []) => {
+      calls.push(`${binary}:${args.join(' ')}`);
+      if (binary === 'reg' && args[1] === 'HKCU\\Software\\Microsoft\\Edge\\BLBeacon') {
+        return {
+          stdout:
+            '\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\Edge\\BLBeacon\r\n    version    REG_SZ    141.0.3537.57\r\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      throw new Error('not found');
+    }) as any);
+    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
+    assert.equal(
+      calls.some((call) => call.startsWith('powershell:')),
+      false,
+    );
+  });
+
+  it('discovers Edge via mdfind on macOS and falls back to static paths when mdfind returns nothing', async () => {
+    sinon.stub(process, 'platform').value('darwin');
+    __setExecForTests((async (binary: string, args: string[] = []) => {
+      if (binary === 'mdfind' && args[0] === "kMDItemCFBundleIdentifier == 'com.microsoft.edgemac'") {
+        return {
+          stdout: '/Users/me/Applications/Microsoft Edge.app\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      if (binary === '/Users/me/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge') {
+        return {
+          stdout: 'Microsoft Edge 141.0.3537.57\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      return {stdout: '', stderr: 'not found', code: 1};
+    }) as any);
+    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
+
+    __setExecForTests((async (binary: string) => {
+      if (binary === 'mdfind') {
+        return {stdout: '', stderr: '', code: 0};
+      }
+      if (binary === '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge') {
+        return {
+          stdout: 'Microsoft Edge 141.0.3537.57\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      return {stdout: '', stderr: 'not found', code: 1};
+    }) as any);
+    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
+  });
 });
 
 describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}, () => {
@@ -77,6 +142,9 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
     const spawned: string[] = [];
     sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
     __setExecForTests((async (binary: string, args: string[] = []) => {
+      if (binary === 'reg') {
+        throw new Error('registry key not found');
+      }
       const effective = resolveEffectiveBinary(binary, args);
       spawned.push(effective);
       return effective in installed

@@ -1,6 +1,18 @@
 import {fs} from 'appium/support.js';
 
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
+import {
+  getWindowsExecutableCandidates,
+  readBrowserVersion,
+  readBrowserVersionFromMacSpotlight,
+  readBrowserVersionFromWindowsRegistry,
+  type MacAppBundleCandidate,
+} from '../utils/index.js';
+
+const DEFAULT_WIN_REGISTRY_SUBKEYS = [
+  'Microsoft\\Edge\\BLBeacon',
+  'Microsoft\\Edge Beta\\BLBeacon',
+  'Microsoft\\Edge Dev\\BLBeacon',
+];
 
 /**
  * Without an `ms:edgeOptions.binary`, msedgedriver only looks for `Microsoft\Edge\Application`
@@ -12,6 +24,21 @@ const DEFAULT_WIN_CANDIDATES = () =>
     ['Microsoft\\Edge\\Application', 'Microsoft\\Edge Beta\\Application', 'Microsoft\\Edge Dev\\Application'],
     'msedge.exe',
   );
+
+const DEFAULT_MAC_BUNDLES: MacAppBundleCandidate[] = [
+  {
+    bundleId: 'com.microsoft.edgemac',
+    executableSubpath: 'Contents/MacOS/Microsoft Edge',
+  },
+  {
+    bundleId: 'com.microsoft.edgemac.Beta',
+    executableSubpath: 'Contents/MacOS/Microsoft Edge Beta',
+  },
+  {
+    bundleId: 'com.microsoft.edgemac.Dev',
+    executableSubpath: 'Contents/MacOS/Microsoft Edge Dev',
+  },
+];
 
 const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
@@ -46,6 +73,18 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
       return version;
     }
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
+
+  if (process.platform === 'win32') {
+    const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
+    if (registryVersion) {
+      return registryVersion;
+    }
+  } else if (process.platform === 'darwin') {
+    const spotlightVersion = await readBrowserVersionFromMacSpotlight(DEFAULT_MAC_BUNDLES);
+    if (spotlightVersion) {
+      return spotlightVersion;
+    }
   }
 
   const candidates = getBrowserCandidates();
