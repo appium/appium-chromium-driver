@@ -70,7 +70,11 @@ for more details.
 | -- | -- | -- |
 | `appium:chromedriverPort` | `number` | `9515` |
 
-The port to use for starting `chromedriver`/`msedgedriver`
+The port to use for starting `chromedriver`/`msedgedriver`.
+
+When starting a new session, any existing `chromedriver`/`msedgedriver` process listening on the
+same port is terminated first. To run multiple Chromium driver sessions in parallel on the same
+host, assign a unique `appium:chromedriverPort` to each session.
 
 ### executable
 
@@ -94,8 +98,9 @@ Custom path to a directory containing `chromedriver`/`msedgedriver` binaries
 | -- | -- | -- |
 | `appium:verbose` | `boolean` | `false` |
 
-Whether to enable verbose logging. Maps to the `--verbose` flag of the `chromedriver`/`msedgedriver`
-binary.
+Whether to forward `chromedriver`/`msedgedriver` `stdout` and `stderr` output to the Appium server
+debug log. Note that the `--verbose` flag is always passed to the `chromedriver`/`msedgedriver`
+binary regardless of this capability.
 
 ### logPath
 
