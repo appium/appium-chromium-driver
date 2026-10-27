@@ -21,9 +21,6 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
   if (binary === 'reg' && args[1]) {
     return args[1];
   }
-  if (binary === 'mdfind' && args[0]) {
-    return args[0];
-  }
   return binary;
 }
 
@@ -89,43 +86,6 @@ describe('msedge browser candidates domain', () => {
       calls.some((call) => call.startsWith('powershell:')),
       false,
     );
-  });
-
-  it('discovers Edge via mdfind on macOS and falls back to static paths when mdfind returns nothing', async () => {
-    sinon.stub(process, 'platform').value('darwin');
-    __setExecForTests((async (binary: string, args: string[] = []) => {
-      if (binary === 'mdfind' && args[0] === "kMDItemCFBundleIdentifier == 'com.microsoft.edgemac'") {
-        return {
-          stdout: '/Users/me/Applications/Microsoft Edge.app\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      if (binary === '/Users/me/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge') {
-        return {
-          stdout: 'Microsoft Edge 141.0.3537.57\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      return {stdout: '', stderr: 'not found', code: 1};
-    }) as any);
-    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
-
-    __setExecForTests((async (binary: string) => {
-      if (binary === 'mdfind') {
-        return {stdout: '', stderr: '', code: 0};
-      }
-      if (binary === '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge') {
-        return {
-          stdout: 'Microsoft Edge 141.0.3537.57\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      return {stdout: '', stderr: 'not found', code: 1};
-    }) as any);
-    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
   });
 });
 

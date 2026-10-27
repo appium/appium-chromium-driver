@@ -5,11 +5,6 @@ import {exec as defaultExec} from 'teen_process';
 type ExecFn = typeof defaultExec;
 let execImpl: ExecFn = defaultExec;
 
-export interface MacAppBundleCandidate {
-  bundleId: string;
-  executableSubpath: string;
-}
-
 const WINDOWS_REGISTRY_ROOTS = ['HKCU\\Software', 'HKLM\\Software', 'HKLM\\Software\\WOW6432Node'];
 
 /** @internal */
@@ -49,36 +44,6 @@ export async function readBrowserVersionFromWindowsRegistry(subkeys: string[]): 
       }
     } catch {
       // registry key not present or reg query failed; try next candidate
-    }
-  }
-  return null;
-}
-
-/**
- * Locate an installed macOS browser bundle via Spotlight (`mdfind`) and read its version.
- * Note that `mdfind` may return empty output for an app bundle that has not been launched
- * or indexed yet, in which case callers should fall back to static candidate paths.
- * @param bundles macOS bundle identifiers and relative executable subpaths, in priority order.
- * @returns Detected browser version if found, otherwise null.
- */
-export async function readBrowserVersionFromMacSpotlight(bundles: MacAppBundleCandidate[]): Promise<string | null> {
-  for (const {bundleId, executableSubpath} of bundles) {
-    let stdout: string;
-    try {
-      ({stdout} = await execImpl('mdfind', [`kMDItemCFBundleIdentifier == '${bundleId}'`]));
-    } catch {
-      continue;
-    }
-    const appPaths = stdout
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean);
-    for (const appPath of appPaths) {
-      const binaryPath = path.posix.join(appPath, executableSubpath);
-      const version = await readBrowserVersion(binaryPath);
-      if (version) {
-        return version;
-      }
     }
   }
   return null;

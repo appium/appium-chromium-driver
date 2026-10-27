@@ -3,9 +3,7 @@ import {fs} from 'appium/support.js';
 import {
   getWindowsExecutableCandidates,
   readBrowserVersion,
-  readBrowserVersionFromMacSpotlight,
   readBrowserVersionFromWindowsRegistry,
-  type MacAppBundleCandidate,
 } from '../utils/index.js';
 
 const DEFAULT_WIN_REGISTRY_SUBKEYS = [
@@ -24,21 +22,6 @@ const DEFAULT_WIN_CANDIDATES = () =>
     ['Microsoft\\Edge\\Application', 'Microsoft\\Edge Beta\\Application', 'Microsoft\\Edge Dev\\Application'],
     'msedge.exe',
   );
-
-const DEFAULT_MAC_BUNDLES: MacAppBundleCandidate[] = [
-  {
-    bundleId: 'com.microsoft.edgemac',
-    executableSubpath: 'Contents/MacOS/Microsoft Edge',
-  },
-  {
-    bundleId: 'com.microsoft.edgemac.Beta',
-    executableSubpath: 'Contents/MacOS/Microsoft Edge Beta',
-  },
-  {
-    bundleId: 'com.microsoft.edgemac.Dev',
-    executableSubpath: 'Contents/MacOS/Microsoft Edge Dev',
-  },
-];
 
 const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
@@ -79,11 +62,6 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
     const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
     if (registryVersion) {
       return registryVersion;
-    }
-  } else if (process.platform === 'darwin') {
-    const spotlightVersion = await readBrowserVersionFromMacSpotlight(DEFAULT_MAC_BUNDLES);
-    if (spotlightVersion) {
-      return spotlightVersion;
     }
   }
 

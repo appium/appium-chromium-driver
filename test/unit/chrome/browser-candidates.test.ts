@@ -26,9 +26,6 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
   if (binary === 'reg' && args[1]) {
     return args[1];
   }
-  if (binary === 'mdfind' && args[0]) {
-    return args[0];
-  }
   return binary;
 }
 
@@ -60,7 +57,7 @@ describe('chrome browser candidates domain', () => {
       if (effective === 'google-chrome') {
         return {stdout: '', stderr: 'not found', code: 1};
       }
-      if ((effective.includes('Chromium') || effective === 'chromium') && binary !== 'reg' && binary !== 'mdfind') {
+      if ((effective.includes('Chromium') || effective === 'chromium') && binary !== 'reg') {
         return {stdout: IS_WIN ? '135.0.7049.0' : 'Chromium/135.0.7049.0', stderr: '', code: 0};
       }
       return {stdout: '', stderr: 'not found', code: 1};
@@ -93,44 +90,6 @@ describe('chrome browser candidates domain', () => {
       calls.some((call) => call.startsWith('powershell:')),
       false,
     );
-  });
-
-  it('discovers Chrome via mdfind on macOS and falls back to static paths when mdfind returns nothing', async () => {
-    sinon.stub(process, 'platform').value('darwin');
-    __setExecForTests((async (binary: string, args: string[] = []) => {
-      if (binary === 'mdfind' && args[0] === "kMDItemCFBundleIdentifier == 'com.google.Chrome'") {
-        return {
-          stdout: '/Users/me/Applications/Google Chrome.app\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      if (binary === '/Users/me/Applications/Google Chrome.app/Contents/MacOS/Google Chrome') {
-        return {
-          stdout: 'Google Chrome 141.0.7390.54\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      return {stdout: '', stderr: 'not found', code: 1};
-    }) as any);
-    assert.equal(await detectBrowserVersion(), '141.0.7390.54');
-
-    // When mdfind returns empty output (e.g. app not yet launched), fall back to static candidate paths.
-    __setExecForTests((async (binary: string) => {
-      if (binary === 'mdfind') {
-        return {stdout: '', stderr: '', code: 0};
-      }
-      if (binary === '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing') {
-        return {
-          stdout: 'Google Chrome for Testing 141.0.7390.54\n',
-          stderr: '',
-          code: 0,
-        };
-      }
-      return {stdout: '', stderr: 'not found', code: 1};
-    }) as any);
-    assert.equal(await detectBrowserVersion(), '141.0.7390.54');
   });
 });
 

@@ -3,9 +3,7 @@ import {fs} from 'appium/support.js';
 import {
   getWindowsExecutableCandidates,
   readBrowserVersion,
-  readBrowserVersionFromMacSpotlight,
   readBrowserVersionFromWindowsRegistry,
-  type MacAppBundleCandidate,
 } from '../utils/index.js';
 
 const DEFAULT_WIN_REGISTRY_SUBKEYS = [
@@ -34,29 +32,6 @@ const DEFAULT_WIN_CANDIDATES = () =>
     ],
     'chrome.exe',
   );
-
-const DEFAULT_MAC_BUNDLES: MacAppBundleCandidate[] = [
-  {
-    bundleId: 'com.google.Chrome',
-    executableSubpath: 'Contents/MacOS/Google Chrome',
-  },
-  {
-    bundleId: 'com.google.Chrome.for.testing',
-    executableSubpath: 'Contents/MacOS/Google Chrome for Testing',
-  },
-  {
-    bundleId: 'org.chromium.Chromium',
-    executableSubpath: 'Contents/MacOS/Chromium',
-  },
-  {
-    bundleId: 'com.google.Chrome.beta',
-    executableSubpath: 'Contents/MacOS/Google Chrome Beta',
-  },
-  {
-    bundleId: 'com.google.Chrome.dev',
-    executableSubpath: 'Contents/MacOS/Google Chrome Dev',
-  },
-];
 
 const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -106,11 +81,6 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
     const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
     if (registryVersion) {
       return registryVersion;
-    }
-  } else if (process.platform === 'darwin') {
-    const spotlightVersion = await readBrowserVersionFromMacSpotlight(DEFAULT_MAC_BUNDLES);
-    if (spotlightVersion) {
-      return spotlightVersion;
     }
   }
 
