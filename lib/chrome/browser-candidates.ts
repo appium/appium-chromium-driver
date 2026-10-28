@@ -1,4 +1,4 @@
-import {fs} from 'appium/support.js';
+import {fs, system} from 'appium/support.js';
 
 import {
   getWindowsExecutableCandidates,
@@ -77,7 +77,7 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
   }
 
-  if (process.platform === 'win32') {
+  if (system.isWindows()) {
     const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
     if (registryVersion) {
       return registryVersion;
