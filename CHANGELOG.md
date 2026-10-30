@@ -1,3 +1,9 @@
+## [3.2.0](https://github.com/appium/appium-chromium-driver/compare/v3.1.2...v3.2.0) (2026-10-30)
+
+### Features
+
+* detect browser version via Windows registry before static path fallback ([#476](https://github.com/appium/appium-chromium-driver/issues/476)) ([3208b9b](https://github.com/appium/appium-chromium-driver/commit/3208b9b2c569df6f65daee8697429b9371ee355e))
+
 ## [3.1.2](https://github.com/appium/appium-chromium-driver/compare/v3.1.1...v3.1.2) (2026-10-21)
 
 ### Bug Fixes
