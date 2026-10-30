@@ -1,6 +1,18 @@
-import {fs} from 'appium/support.js';
+import {fs, system} from 'appium/support.js';
 
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
+import {
+  getWindowsExecutableCandidates,
+  readBrowserVersion,
+  readBrowserVersionFromWindowsRegistry,
+} from '../utils/index.js';
+
+const DEFAULT_WIN_REGISTRY_SUBKEYS = [
+  'Google\\Chrome\\BLBeacon',
+  'Google\\Chrome for Testing\\BLBeacon',
+  'Chromium\\BLBeacon',
+  'Google\\Chrome Beta\\BLBeacon',
+  'Google\\Chrome Dev\\BLBeacon',
+];
 
 /**
  * Without a `goog:chromeOptions.binary`, ChromeDriver launches the first `chrome.exe` it finds
@@ -23,10 +35,10 @@ const DEFAULT_WIN_CANDIDATES = () =>
 
 const DEFAULT_MAC_CANDIDATES = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
-  '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
   '/Applications/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing',
   '/Applications/Chromium.app/Contents/MacOS/Chromium',
+  '/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta',
+  '/Applications/Google Chrome Dev.app/Contents/MacOS/Google Chrome Dev',
 ];
 
 const DEFAULT_LINUX_CANDIDATES = [
@@ -63,6 +75,13 @@ export async function detectBrowserVersion(browserBinary?: string): Promise<stri
       return version;
     }
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
+
+  if (system.isWindows()) {
+    const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
+    if (registryVersion) {
+      return registryVersion;
+    }
   }
 
   const candidates = listBrowserBinaryCandidates();

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
-import {fs} from 'appium/support.js';
+import {fs, system} from 'appium/support.js';
 import sinon from 'sinon';
 
 import {discoverMsEdgeBrowserVersion} from '../../../lib/msedge/index.js';
@@ -17,6 +17,9 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
     if (match) {
       return match[1].replace(/''/g, "'");
     }
+  }
+  if (binary === 'reg' && args[1]) {
+    return args[1];
   }
   return binary;
 }
@@ -62,6 +65,28 @@ describe('msedge browser candidates domain', () => {
       /Could not determine browser version/,
     );
   });
+
+  it('reads Edge version from Windows Registry before spawning PowerShell', async () => {
+    sinon.stub(system, 'isWindows').returns(true);
+    const calls: string[] = [];
+    __setExecForTests((async (binary: string, args: string[] = []) => {
+      calls.push(`${binary}:${args.join(' ')}`);
+      if (binary === 'reg' && args[1] === 'HKCU\\Software\\Microsoft\\Edge\\BLBeacon') {
+        return {
+          stdout:
+            '\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\Edge\\BLBeacon\r\n    version    REG_SZ    141.0.3537.57\r\n',
+          stderr: '',
+          code: 0,
+        };
+      }
+      throw new Error('not found');
+    }) as any);
+    assert.equal(await discoverMsEdgeBrowserVersion(), '141.0.3537.57');
+    assert.equal(
+      calls.some((call) => call.startsWith('powershell:')),
+      false,
+    );
+  });
 });
 
 describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}, () => {
@@ -77,6 +102,9 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
     const spawned: string[] = [];
     sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
     __setExecForTests((async (binary: string, args: string[] = []) => {
+      if (binary === 'reg') {
+        throw new Error('registry key not found');
+      }
       const effective = resolveEffectiveBinary(binary, args);
       spawned.push(effective);
       return effective in installed

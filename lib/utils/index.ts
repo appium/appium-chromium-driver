@@ -1,2 +1,7 @@
-export {getWindowsExecutableCandidates, readBrowserVersion} from './browser.js';
+export {
+  getWindowsExecutableCandidates,
+  getWindowsRegistryKeys,
+  readBrowserVersion,
+  readBrowserVersionFromWindowsRegistry,
+} from './browser.js';
 export {getDefaultChromeDriverDir, getDefaultMsEdgeDriverDir} from './storage.js';

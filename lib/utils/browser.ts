@@ -5,6 +5,8 @@ import {exec as defaultExec} from 'teen_process';
 type ExecFn = typeof defaultExec;
 let execImpl: ExecFn = defaultExec;
 
+const WINDOWS_REGISTRY_ROOTS = ['HKCU\\Software', 'HKLM\\Software', 'HKLM\\Software\\WOW6432Node'];
+
 /** @internal */
 export function __setExecForTests(fn: ExecFn): void {
   execImpl = fn;
@@ -13,6 +15,38 @@ export function __setExecForTests(fn: ExecFn): void {
 /** @internal */
 export function __resetExecForTests(): void {
   execImpl = defaultExec;
+}
+
+/**
+ * Build Windows registry key paths in the same user-then-system order as
+ * {@link getWindowsExecutableCandidates}: `HKCU\Software` (per-user install) first,
+ * then `HKLM\Software` (64-bit system install), then `HKLM\Software\WOW6432Node`
+ * (32-bit system install on 64-bit Windows) for each browser subkey.
+ * @param subkeys Relative registry subkeys under `Software`, in priority order.
+ * @returns Full registry key paths for `reg query`.
+ */
+export function getWindowsRegistryKeys(subkeys: string[]): string[] {
+  return subkeys.flatMap((sub) => WINDOWS_REGISTRY_ROOTS.map((root) => `${root}\\${sub}`));
+}
+
+/**
+ * Read browser version from Windows Registry `BLBeacon` keys using `reg query`.
+ * @param subkeys Relative registry subkeys under `Software`, in priority order.
+ * @returns Detected browser version if found, otherwise null.
+ */
+export async function readBrowserVersionFromWindowsRegistry(subkeys: string[]): Promise<string | null> {
+  for (const regKey of getWindowsRegistryKeys(subkeys)) {
+    try {
+      const {stdout} = await execImpl('reg', ['query', regKey, '/v', 'version']);
+      const match = /\bREG_SZ\s+(\d+\.\d+\.\d+\.\d+)/i.exec(stdout);
+      if (match) {
+        return match[1];
+      }
+    } catch {
+      // registry key not present or reg query failed; try next candidate
+    }
+  }
+  return null;
 }
 
 /**

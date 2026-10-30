@@ -1,6 +1,16 @@
-import {fs} from 'appium/support.js';
+import {fs, system} from 'appium/support.js';
 
-import {getWindowsExecutableCandidates, readBrowserVersion} from '../utils/index.js';
+import {
+  getWindowsExecutableCandidates,
+  readBrowserVersion,
+  readBrowserVersionFromWindowsRegistry,
+} from '../utils/index.js';
+
+const DEFAULT_WIN_REGISTRY_SUBKEYS = [
+  'Microsoft\\Edge\\BLBeacon',
+  'Microsoft\\Edge Beta\\BLBeacon',
+  'Microsoft\\Edge Dev\\BLBeacon',
+];
 
 /**
  * Without an `ms:edgeOptions.binary`, msedgedriver only looks for `Microsoft\Edge\Application`
@@ -46,6 +56,13 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
       return version;
     }
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
+  }
+
+  if (system.isWindows()) {
+    const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
+    if (registryVersion) {
+      return registryVersion;
+    }
   }
 
   const candidates = getBrowserCandidates();
