@@ -31,9 +31,15 @@ export function resetModuleMocks(): void {
 
 resetModuleMocks();
 
+// Node 22 rejects a `default` key in namedExports, so pass it separately.
+function withoutDefault<T extends {default?: unknown}>(ns: T): Omit<T, 'default'> {
+  const {default: _default, ...rest} = ns;
+  return rest;
+}
 mock.module('appium/support.js', {
+  defaultExport: real.default,
   namedExports: {
-    ...real,
+    ...withoutDefault(real),
     system: {...real.system, isWindows: supportStubs.isWindows},
     net: {...real.net, downloadFile: supportStubs.downloadFile},
     tempDir: {...real.tempDir, openDir: supportStubs.openTempDir},
