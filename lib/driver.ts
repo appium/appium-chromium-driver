@@ -1,6 +1,5 @@
 import type {
   DefaultCreateSessionResult,
-  DriverData,
   ExternalDriver,
   HTTPMethod,
   InitialOpts,
@@ -84,17 +83,9 @@ export class ChromiumDriver
   }
 
   override async createSession(
-    jsonwpDesiredCapabilities: W3CChromiumDriverCaps,
-    jsonwpRequiredCaps?: W3CChromiumDriverCaps,
-    w3cCapabilities?: W3CChromiumDriverCaps,
-    driverData?: DriverData[],
+    w3cCapabilities: W3CChromiumDriverCaps,
   ): Promise<DefaultCreateSessionResult<CDConstraints>> {
-    const [sessionId] = await super.createSession(
-      jsonwpDesiredCapabilities,
-      jsonwpRequiredCaps,
-      w3cCapabilities,
-      driverData,
-    );
+    const [sessionId] = await super.createSession(w3cCapabilities);
     const returnedCaps = await this.startChromedriverSession();
     if (returnedCaps.webSocketUrl) {
       this._bidiProxyUrl = String(returnedCaps.webSocketUrl);
@@ -182,7 +173,7 @@ export class ChromiumDriver
   }
 
   private async getExecutable(
-    browserVersionInfo?: BrowserInfo | undefined,
+    browserVersionInfo?: BrowserInfo,
     isAutodownloadEnabled: boolean = true,
   ): Promise<string | undefined> {
     if (this.opts.executable) {
@@ -232,5 +223,3 @@ export class ChromiumDriver
     }, {} as StringRecord);
   }
 }
-
-export default ChromiumDriver;

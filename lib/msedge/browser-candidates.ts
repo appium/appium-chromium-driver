@@ -1,10 +1,11 @@
-import {fs, system} from 'appium/support.js';
+import {fs} from 'appium/support.js';
 
 import {
   getWindowsExecutableCandidates,
   readBrowserVersion,
   readBrowserVersionFromWindowsRegistry,
 } from '../utils/index.js';
+import {support} from '../utils/support.js';
 
 const DEFAULT_WIN_REGISTRY_SUBKEYS = [
   'Microsoft\\Edge\\BLBeacon',
@@ -58,7 +59,7 @@ export async function discoverBrowserVersion(browserBinary?: string): Promise<st
     throw new Error(`Could not determine browser version from binary: ${browserBinary}`);
   }
 
-  if (system.isWindows()) {
+  if (support.isWindows()) {
     const registryVersion = await readBrowserVersionFromWindowsRegistry(DEFAULT_WIN_REGISTRY_SUBKEYS);
     if (registryVersion) {
       return registryVersion;

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
-import {fs, system} from 'appium/support.js';
+import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
 import {detectBrowserVersion, listBrowserBinaryCandidates} from '../../../lib/chrome/index.js';
@@ -12,6 +12,7 @@ import {
   getWindowsExecutableCandidates,
   getWindowsRegistryKeys,
 } from '../../../lib/utils/browser.js';
+import {support} from '../../../lib/utils/support.js';
 
 const IS_WIN = process.platform === 'win32';
 
@@ -71,7 +72,7 @@ describe('chrome browser candidates domain', () => {
   });
 
   it('reads Chrome version from Windows Registry before spawning PowerShell', async () => {
-    sinon.stub(system, 'isWindows').returns(true);
+    sinon.stub(support, 'isWindows').returns(true);
     const calls: string[] = [];
     __setExecForTests((async (binary: string, args: string[] = []) => {
       calls.push(`${binary}:${args.join(' ')}`);

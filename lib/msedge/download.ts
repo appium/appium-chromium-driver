@@ -1,5 +1,4 @@
-import {net} from 'appium/support.js';
-
+import {support} from '../utils/support.js';
 import {getPlatformConfig} from './platform.js';
 import {Version} from './version.js';
 
@@ -21,7 +20,7 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
   });
   if (!response.ok) {
     throw new Error(
-      `Cannot retrieve MSEdgeDriver version for Edge '${browserVersion}' from '${releaseUrl}' ` +
+      `Cannot retrieve MSEdgeDriver version for Edge '${browserVersion.toString()}' from '${releaseUrl}' ` +
         `(status ${response.status})`,
     );
   }
@@ -37,7 +36,7 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
  * @param archivePath The local path where the archive should be written.
  */
 export async function fetchDriverArchive(driverVersion: Version, archivePath: string): Promise<void> {
-  await net.downloadFile(getDriverDownloadUrl(driverVersion), archivePath);
+  await support.downloadFile(getDriverDownloadUrl(driverVersion), archivePath);
 }
 
 function getLatestReleaseUrl(browserVersion: Version): string {
@@ -46,7 +45,7 @@ function getLatestReleaseUrl(browserVersion: Version): string {
 }
 
 function getDriverDownloadUrl(driverVersion: Version): string {
-  return `${DRIVER_STORAGE_BASE_URL}/${driverVersion}/${getPlatformConfig().archiveName}`;
+  return `${DRIVER_STORAGE_BASE_URL}/${driverVersion.toString()}/${getPlatformConfig().archiveName}`;
 }
 
 function decodeVersionResponse(payload: Buffer): string {

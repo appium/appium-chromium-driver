@@ -1,4 +1,1 @@
-import {ChromiumDriver} from './driver.js';
-
-export default ChromiumDriver;
-export {ChromiumDriver};
+export {ChromiumDriver} from './driver.js';
