@@ -7,17 +7,17 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {
-  deployDriverArtifact,
-  locateCachedDriverExecutable,
-  locateDriverExecutableInDir,
-} from '../../../lib/msedge/deployment.js';
-import {getDriverExecutableName} from '../../../lib/msedge/platform.js';
-import {Version} from '../../../lib/msedge/version.js';
-import {support} from '../../../lib/utils/support.js';
+import {resetSupportStubs, supportStubs} from '../helpers/support-mock.js';
+
+// Load after the module mock is installed.
+const {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} =
+  await import('../../../lib/msedge/deployment.js');
+const {getDriverExecutableName} = await import('../../../lib/msedge/platform.js');
+const {Version} = await import('../../../lib/msedge/version.js');
 
 describe('msedge deployment domain', () => {
   afterEach(() => {
+    resetSupportStubs();
     sinon.restore();
   });
 
@@ -96,8 +96,8 @@ describe('msedge deployment domain', () => {
     it('deploys using artifact metadata without platform helpers', async () => {
       sinon.stub(fs, 'isExecutable').resolves(false);
       sinon.stub(fs, 'mkdirp').resolves();
-      sinon.stub(support, 'openTempDir').resolves('/tmp/extract-root');
-      sinon.stub(support, 'extractAllTo').resolves();
+      supportStubs.openTempDir.resolves('/tmp/extract-root');
+      supportStubs.extractAllTo.resolves();
       sinon.stub(fs, 'chmod').resolves();
       sinon.stub(fs, 'mv').resolves();
       sinon.stub(fs, 'rimraf').resolves();

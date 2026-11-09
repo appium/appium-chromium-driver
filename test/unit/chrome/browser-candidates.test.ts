@@ -5,14 +5,12 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {detectBrowserVersion, listBrowserBinaryCandidates} from '../../../lib/chrome/index.js';
-import {
-  __resetExecForTests,
-  __setExecForTests,
-  getWindowsExecutableCandidates,
-  getWindowsRegistryKeys,
-} from '../../../lib/utils/browser.js';
-import {support} from '../../../lib/utils/support.js';
+import {resetSupportStubs, supportStubs} from '../helpers/support-mock.js';
+
+// Load after the module mock is installed.
+const {detectBrowserVersion, listBrowserBinaryCandidates} = await import('../../../lib/chrome/index.js');
+const {__resetExecForTests, __setExecForTests, getWindowsExecutableCandidates, getWindowsRegistryKeys} =
+  await import('../../../lib/utils/browser.js');
 
 const IS_WIN = process.platform === 'win32';
 
@@ -32,6 +30,7 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
 
 describe('chrome browser candidates domain', () => {
   afterEach(() => {
+    resetSupportStubs();
     __resetExecForTests();
     sinon.restore();
   });
@@ -72,7 +71,7 @@ describe('chrome browser candidates domain', () => {
   });
 
   it('reads Chrome version from Windows Registry before spawning PowerShell', async () => {
-    sinon.stub(support, 'isWindows').returns(true);
+    supportStubs.isWindows.returns(true);
     const calls: string[] = [];
     __setExecForTests((async (binary: string, args: string[] = []) => {
       calls.push(`${binary}:${args.join(' ')}`);

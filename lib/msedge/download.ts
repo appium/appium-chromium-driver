@@ -1,4 +1,5 @@
-import {support} from '../utils/support.js';
+import {net} from 'appium/support.js';
+
 import {getPlatformConfig} from './platform.js';
 import {Version} from './version.js';
 
@@ -36,7 +37,7 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
  * @param archivePath The local path where the archive should be written.
  */
 export async function fetchDriverArchive(driverVersion: Version, archivePath: string): Promise<void> {
-  await support.downloadFile(getDriverDownloadUrl(driverVersion), archivePath);
+  await net.downloadFile(getDriverDownloadUrl(driverVersion), archivePath);
 }
 
 function getLatestReleaseUrl(browserVersion: Version): string {
