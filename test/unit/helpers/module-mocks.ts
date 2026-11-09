@@ -2,9 +2,12 @@ import {mock} from 'node:test';
 
 import * as real from 'appium/support.js';
 import sinon from 'sinon';
+import * as realTeenProcess from 'teen_process';
 
 // Appium 4 exposes net/system/tempDir/zip as read-only ES namespaces, so they can only be mocked at module level.
 // Import this file first, then load the code under test via dynamic import().
+export const execStub = sinon.stub();
+
 export const supportStubs = {
   isWindows: sinon.stub(),
   downloadFile: sinon.stub(),
@@ -13,7 +16,9 @@ export const supportStubs = {
 };
 
 /** Reset call history and make every stub delegate to the real implementation again. */
-export function resetSupportStubs(): void {
+export function resetModuleMocks(): void {
+  execStub.reset();
+  execStub.callsFake(realTeenProcess.exec);
   supportStubs.isWindows.reset();
   supportStubs.isWindows.callsFake(real.system.isWindows);
   supportStubs.downloadFile.reset();
@@ -24,7 +29,7 @@ export function resetSupportStubs(): void {
   supportStubs.extractAllTo.callsFake(real.zip.extractAllTo);
 }
 
-resetSupportStubs();
+resetModuleMocks();
 
 mock.module('appium/support.js', {
   namedExports: {
@@ -34,4 +39,8 @@ mock.module('appium/support.js', {
     tempDir: {...real.tempDir, openDir: supportStubs.openTempDir},
     zip: {...real.zip, extractAllTo: supportStubs.extractAllTo},
   },
+});
+
+mock.module('teen_process', {
+  namedExports: {...realTeenProcess, exec: execStub},
 });

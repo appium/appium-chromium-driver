@@ -5,11 +5,10 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {resetSupportStubs, supportStubs} from '../helpers/support-mock.js';
+import {execStub, resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
 const {discoverMsEdgeBrowserVersion} = await import('../../../lib/msedge/index.js');
-const {__resetExecForTests, __setExecForTests} = await import('../../../lib/utils/browser.js');
 
 const IS_WIN = process.platform === 'win32';
 
@@ -29,13 +28,12 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
 
 describe('msedge browser candidates domain', () => {
   afterEach(() => {
-    resetSupportStubs();
-    __resetExecForTests();
+    resetModuleMocks();
     sinon.restore();
   });
 
   it('discovers version from explicit Edge binary', async () => {
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === '/usr/bin/msedge') {
         return {
@@ -51,7 +49,7 @@ describe('msedge browser candidates domain', () => {
 
   it('default discovery checks only Edge candidates', async () => {
     const visited: string[] = [];
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       visited.push(resolveEffectiveBinary(binary, args));
       throw new Error('not found');
     }) as any);
@@ -63,7 +61,7 @@ describe('msedge browser candidates domain', () => {
   });
 
   it('throws when explicit binary cannot be resolved', async () => {
-    __setExecForTests((async () => ({stdout: '', stderr: 'not found', code: 1})) as any);
+    execStub.callsFake((async () => ({stdout: '', stderr: 'not found', code: 1})) as any);
     await assert.rejects(
       () => discoverMsEdgeBrowserVersion('/nonexistent/msedge'),
       /Could not determine browser version/,
@@ -73,7 +71,7 @@ describe('msedge browser candidates domain', () => {
   it('reads Edge version from Windows Registry before spawning PowerShell', async () => {
     supportStubs.isWindows.returns(true);
     const calls: string[] = [];
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       calls.push(`${binary}:${args.join(' ')}`);
       if (binary === 'reg' && args[1] === 'HKCU\\Software\\Microsoft\\Edge\\BLBeacon') {
         return {
@@ -105,7 +103,7 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
     Object.assign(process.env, {LOCALAPPDATA: LOCAL, PROGRAMFILES: PF, 'PROGRAMFILES(X86)': PF86, PROGRAMW6432: PF});
     const spawned: string[] = [];
     sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       if (binary === 'reg') {
         throw new Error('registry key not found');
       }
@@ -126,7 +124,6 @@ describe('Windows Edge candidates in msedgedriver search order', {skip: !IS_WIN}
         process.env[key] = saved[key];
       }
     }
-    __resetExecForTests();
     sinon.restore();
   });
 

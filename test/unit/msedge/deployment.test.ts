@@ -7,7 +7,7 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {resetSupportStubs, supportStubs} from '../helpers/support-mock.js';
+import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
 const {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} =
@@ -17,7 +17,7 @@ const {Version} = await import('../../../lib/msedge/version.js');
 
 describe('msedge deployment domain', () => {
   afterEach(() => {
-    resetSupportStubs();
+    resetModuleMocks();
     sinon.restore();
   });
 

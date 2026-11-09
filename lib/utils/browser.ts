@@ -1,21 +1,8 @@
 import path from 'node:path';
 
-import {exec as defaultExec} from 'teen_process';
-
-type ExecFn = typeof defaultExec;
-let execImpl: ExecFn = defaultExec;
+import {exec} from 'teen_process';
 
 const WINDOWS_REGISTRY_ROOTS = ['HKCU\\Software', 'HKLM\\Software', 'HKLM\\Software\\WOW6432Node'];
-
-/** @internal */
-export function __setExecForTests(fn: ExecFn): void {
-  execImpl = fn;
-}
-
-/** @internal */
-export function __resetExecForTests(): void {
-  execImpl = defaultExec;
-}
 
 /**
  * Build Windows registry key paths in the same user-then-system order as
@@ -37,7 +24,7 @@ export function getWindowsRegistryKeys(subkeys: string[]): string[] {
 export async function readBrowserVersionFromWindowsRegistry(subkeys: string[]): Promise<string | null> {
   for (const regKey of getWindowsRegistryKeys(subkeys)) {
     try {
-      const {stdout} = await execImpl('reg', ['query', regKey, '/v', 'version']);
+      const {stdout} = await exec('reg', ['query', regKey, '/v', 'version']);
       const match = /\bREG_SZ\s+(\d+\.\d+\.\d+\.\d+)/i.exec(stdout);
       if (match) {
         return match[1];
@@ -86,7 +73,7 @@ async function readBrowserVersionWin(binaryPath: string): Promise<string | null>
   // Escape single quotes for PowerShell single-quoted strings
   const safePath = binaryPath.replace(/'/g, "''");
   try {
-    const {stdout} = await execImpl('powershell', [
+    const {stdout} = await exec('powershell', [
       '-NoProfile',
       '-Command',
       [
@@ -113,7 +100,7 @@ async function readBrowserVersionWin(binaryPath: string): Promise<string | null>
  */
 async function readBrowserVersionUnix(binary: string): Promise<string | null> {
   try {
-    const {stdout} = await execImpl(binary, ['--version']);
+    const {stdout} = await exec(binary, ['--version']);
     const match = /(\d+\.\d+\.\d+\.\d+)/.exec(stdout);
     if (match) {
       return match[1];
