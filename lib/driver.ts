@@ -10,7 +10,7 @@ import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 
 import * as chrome from './chrome/index.js';
-import * as findCommands from './commands/find.js';
+import {findElOrEls} from './commands/find.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
@@ -43,8 +43,6 @@ export class ChromiumDriver
   proxyReqRes: ((...args: any[]) => any) | null = null;
   proxyCommand?: <TReq = any, TRes = unknown>(url: string, method: HTTPMethod, body?: TReq) => Promise<TRes>;
   doesSupportBidi = true;
-
-  findElOrEls = findCommands.findElOrEls;
 
   private _proxyActive = false;
   private _cd: Chromedriver | null = null;
@@ -223,3 +221,7 @@ export class ChromiumDriver
     }, {} as StringRecord);
   }
 }
+
+Object.assign(ChromiumDriver.prototype, {
+  findElOrEls,
+});
