@@ -62,7 +62,7 @@
     "prepare": "npm run build",
     "test": "node --test --experimental-test-module-mocks --enable-source-maps --test-timeout=60000 \"build/test/unit/**/*.test.js\"",
     "test:unit": "npm run test",
-    "test:e2e": "npm run build && node --test --test-timeout=300000 \"build/test/e2e/**/*.test.js\"",
+    "test:e2e": "npm run build && node --test --enable-source-maps --test-timeout=300000 \"build/test/e2e/**/*.test.js\"",
     "test:smoke": "node ./build/lib/index.js",
     "test:ci": "npm run test:unit && npm run test:e2e && npm run test:smoke"
   },
