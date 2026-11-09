@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {describe, it, afterEach} from 'node:test';
+import {describe, it, afterEach, beforeEach} from 'node:test';
 
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
@@ -16,6 +16,11 @@ function makeMsedgeVersionResponse(version: string): Response {
 }
 
 describe('msedge index orchestrator domain', () => {
+  beforeEach(() => {
+    // Globbed paths are fake; treat them all as regular files.
+    sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
+  });
+
   afterEach(() => {
     sinon.restore();
   });
