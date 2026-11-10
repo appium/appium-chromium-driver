@@ -1,6 +1,5 @@
 import type {
   DefaultCreateSessionResult,
-  DriverData,
   ExternalDriver,
   HTTPMethod,
   InitialOpts,
@@ -11,7 +10,7 @@ import {Chromedriver, type ChromedriverOpts} from 'appium-chromedriver';
 import {BaseDriver, STANDARD_CAPS} from 'appium/driver.js';
 
 import * as chrome from './chrome/index.js';
-import * as findCommands from './commands/find.js';
+import {findElOrEls} from './commands/find.js';
 import {desiredCapConstraints, type CDConstraints} from './desired-caps.js';
 import * as msedge from './msedge/index.js';
 import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './types.js';
@@ -44,8 +43,6 @@ export class ChromiumDriver
   proxyReqRes: ((...args: any[]) => any) | null = null;
   proxyCommand?: <TReq = any, TRes = unknown>(url: string, method: HTTPMethod, body?: TReq) => Promise<TRes>;
   doesSupportBidi = true;
-
-  findElOrEls = findCommands.findElOrEls;
 
   private _proxyActive = false;
   private _cd: Chromedriver | null = null;
@@ -84,17 +81,9 @@ export class ChromiumDriver
   }
 
   override async createSession(
-    jsonwpDesiredCapabilities: W3CChromiumDriverCaps,
-    jsonwpRequiredCaps?: W3CChromiumDriverCaps,
-    w3cCapabilities?: W3CChromiumDriverCaps,
-    driverData?: DriverData[],
+    w3cCapabilities: W3CChromiumDriverCaps,
   ): Promise<DefaultCreateSessionResult<CDConstraints>> {
-    const [sessionId] = await super.createSession(
-      jsonwpDesiredCapabilities,
-      jsonwpRequiredCaps,
-      w3cCapabilities,
-      driverData,
-    );
+    const [sessionId] = await super.createSession(w3cCapabilities);
     const returnedCaps = await this.startChromedriverSession();
     if (returnedCaps.webSocketUrl) {
       this._bidiProxyUrl = String(returnedCaps.webSocketUrl);
@@ -182,7 +171,7 @@ export class ChromiumDriver
   }
 
   private async getExecutable(
-    browserVersionInfo?: BrowserInfo | undefined,
+    browserVersionInfo?: BrowserInfo,
     isAutodownloadEnabled: boolean = true,
   ): Promise<string | undefined> {
     if (this.opts.executable) {
@@ -233,4 +222,6 @@ export class ChromiumDriver
   }
 }
 
-export default ChromiumDriver;
+Object.assign(ChromiumDriver.prototype, {
+  findElOrEls,
+});

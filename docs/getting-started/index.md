@@ -24,7 +24,8 @@ and prerequisites of Appium itself can be found in [the Appium documentation](ht
 
 | Chromium driver version | Supported Appium server version |
 | --- | --- |
-| >= 2.0.0 | Appium 3 |
+| >= 4.0.0 | Appium 4 |
+| 2.0.0 - 3.2.0 | Appium 3 |
 | 1.0.0 - 1.5.1 | Appium 2 |
 
 ## Installation

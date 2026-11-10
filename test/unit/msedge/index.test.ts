@@ -1,13 +1,16 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {describe, it, afterEach} from 'node:test';
+import {describe, it, afterEach, beforeEach} from 'node:test';
 
-import {fs, net, tempDir, zip} from 'appium/support.js';
+import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {determineDriverExecutable, getDefaultDriverDir} from '../../../lib/msedge/index.js';
-import {getDriverExecutableName} from '../../../lib/msedge/platform.js';
 import type {BrowserInfo} from '../../../lib/types.js';
+import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+
+// Load after the module mock is installed.
+const {determineDriverExecutable, getDefaultDriverDir} = await import('../../../lib/msedge/index.js');
+const {getDriverExecutableName} = await import('../../../lib/msedge/platform.js');
 
 function makeMsedgeVersionResponse(version: string): Response {
   const payload = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(`${version}\n`, 'utf16le')]);
@@ -15,7 +18,13 @@ function makeMsedgeVersionResponse(version: string): Response {
 }
 
 describe('msedge index orchestrator domain', () => {
+  beforeEach(() => {
+    // Globbed paths are fake; treat them all as regular files.
+    sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
+  });
+
   afterEach(() => {
+    resetModuleMocks();
     sinon.restore();
   });
 
@@ -46,7 +55,7 @@ describe('msedge index orchestrator domain', () => {
       sinon.stub(fs, 'glob').resolves([cached]);
       sinon.stub(fs, 'isExecutable').resolves(true);
       const fetchStub = sinon.stub(globalThis, 'fetch').rejects(new Error('offline'));
-      const downloadStub = sinon.stub(net, 'downloadFile').rejects(new Error('offline'));
+      const downloadStub = supportStubs.downloadFile.rejects(new Error('offline'));
 
       assert.equal(
         await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo, autodownloadEnabled),
@@ -88,9 +97,9 @@ describe('msedge index orchestrator domain', () => {
     sinon.stub(globalThis, 'fetch').resolves(makeMsedgeVersionResponse('147.0.3179.98'));
     sinon.stub(fs, 'isExecutable').resolves(false);
     sinon.stub(fs, 'mkdirp').resolves();
-    sinon.stub(tempDir, 'openDir').resolves('/tmp/extract-root');
-    sinon.stub(net, 'downloadFile').resolves();
-    sinon.stub(zip, 'extractAllTo').resolves();
+    supportStubs.openTempDir.resolves('/tmp/extract-root');
+    supportStubs.downloadFile.resolves();
+    supportStubs.extractAllTo.resolves();
     sinon.stub(fs, 'chmod').resolves();
     sinon.stub(fs, 'mv').resolves();
     sinon.stub(fs, 'rimraf').resolves();
@@ -115,9 +124,9 @@ describe('msedge index orchestrator domain', () => {
     const fetchStub = sinon.stub(globalThis, 'fetch').resolves(makeMsedgeVersionResponse('147.0.3179.98'));
     sinon.stub(fs, 'isExecutable').resolves(false);
     sinon.stub(fs, 'mkdirp').resolves();
-    sinon.stub(tempDir, 'openDir').resolves('/tmp/extract-root');
-    const downloadStub = sinon.stub(net, 'downloadFile').resolves();
-    sinon.stub(zip, 'extractAllTo').resolves();
+    supportStubs.openTempDir.resolves('/tmp/extract-root');
+    const downloadStub = supportStubs.downloadFile.resolves();
+    supportStubs.extractAllTo.resolves();
     sinon.stub(fs, 'chmod').resolves();
     sinon.stub(fs, 'rimraf').resolves();
     sinon

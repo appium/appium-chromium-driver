@@ -68,10 +68,16 @@ export async function locateDriverExecutableInDir(
   const candidates = await fs.glob(`**/${executableName}`, {
     cwd: executableDir,
     absolute: true,
-    nodir: true,
   });
-  const [match] = candidates.sort((a, b) => a.length - b.length);
+  const files = await filterFiles(candidates);
+  const [match] = files.sort((a, b) => a.length - b.length);
   return match ?? null;
+}
+
+/** Drop paths that are not regular files (e.g. a directory named like the executable). */
+async function filterFiles(paths: string[]): Promise<string[]> {
+  const flags = await Promise.all(paths.map(async (p) => (await fs.stat(p).catch(() => null))?.isFile()));
+  return paths.filter((_, i) => flags[i]);
 }
 
 /** Find a compatible executable in the versioned cache created by deployDriverArtifact. */
@@ -83,11 +89,10 @@ export async function locateCachedDriverExecutable(
   const candidates = await fs.glob(`*/${executableName}`, {
     cwd: executableDir,
     absolute: true,
-    nodir: true,
   });
   // Edge requires the first three version components to match. The directory name
   // records the downloaded version; prefer the newest compatible patch.
-  const compatible = candidates
+  const compatible = (await filterFiles(candidates))
     .flatMap((executable) => {
       const version = Version.tryFrom(path.basename(path.dirname(executable)));
       return version?.isCompatibleWith(browserVersion) ? [{executable, version}] : [];

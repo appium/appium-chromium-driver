@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {describe, it, before, after} from 'node:test';
 
+import type {main} from 'appium';
 import {util} from 'appium/support.js';
 import {waitForCondition} from 'asyncbox';
+import type {Browser} from 'webdriverio';
 
-type AppiumServer = any;
-type Browser = any;
+type AppiumServer = Awaited<ReturnType<typeof main>>;
 
 const PLATFORM_ENV = process.env.TEST_PLATFORM || '';
 
@@ -81,7 +82,7 @@ describe('ChromeDriver', {timeout: 300_000}, () => {
 
   before(async () => {
     const appiumPkg = await import('appium');
-    appium = await appiumPkg.default.main({port: Number(PORT)});
+    appium = await appiumPkg.main({port: Number(PORT)});
   });
 
   after(async () => {

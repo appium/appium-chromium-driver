@@ -2,16 +2,14 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
-import {fs, system} from 'appium/support.js';
+import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {detectBrowserVersion, listBrowserBinaryCandidates} from '../../../lib/chrome/index.js';
-import {
-  __resetExecForTests,
-  __setExecForTests,
-  getWindowsExecutableCandidates,
-  getWindowsRegistryKeys,
-} from '../../../lib/utils/browser.js';
+import {execStub, resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+
+// Load after the module mock is installed.
+const {detectBrowserVersion, listBrowserBinaryCandidates} = await import('../../../lib/chrome/index.js');
+const {getWindowsExecutableCandidates, getWindowsRegistryKeys} = await import('../../../lib/utils/browser.js');
 
 const IS_WIN = process.platform === 'win32';
 
@@ -31,12 +29,12 @@ function resolveEffectiveBinary(binary: string, args: string[]): string {
 
 describe('chrome browser candidates domain', () => {
   afterEach(() => {
-    __resetExecForTests();
+    resetModuleMocks();
     sinon.restore();
   });
 
   it('discovers version from explicit Chrome binary', async () => {
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === '/usr/bin/chrome') {
         return {
@@ -52,7 +50,7 @@ describe('chrome browser candidates domain', () => {
 
   it('supports candidate fallback for default discovery', async () => {
     sinon.stub(fs, 'exists').resolves(true);
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       const effective = resolveEffectiveBinary(binary, args);
       if (effective === 'google-chrome') {
         return {stdout: '', stderr: 'not found', code: 1};
@@ -66,14 +64,14 @@ describe('chrome browser candidates domain', () => {
   });
 
   it('throws when no candidate succeeds', async () => {
-    __setExecForTests((async () => ({stdout: '', stderr: 'not found', code: 1})) as any);
+    execStub.callsFake((async () => ({stdout: '', stderr: 'not found', code: 1})) as any);
     await assert.rejects(() => detectBrowserVersion(), /Could not determine browser version/);
   });
 
   it('reads Chrome version from Windows Registry before spawning PowerShell', async () => {
-    sinon.stub(system, 'isWindows').returns(true);
+    supportStubs.isWindows.returns(true);
     const calls: string[] = [];
-    __setExecForTests((async (binary: string, args: string[] = []) => {
+    execStub.callsFake((async (binary: string, args: string[] = []) => {
       calls.push(`${binary}:${args.join(' ')}`);
       if (binary === 'reg' && args[1] === 'HKLM\\Software\\Google\\Chrome\\BLBeacon') {
         return {
@@ -156,14 +154,13 @@ describe('Windows candidates in ChromeDriver search order', () => {
 
   describe('detection on Windows', {skip: !IS_WIN}, () => {
     afterEach(() => {
-      __resetExecForTests();
       sinon.restore();
     });
 
     function fakeInstalls(installed: Record<string, string>) {
       const spawned: string[] = [];
       sinon.stub(fs, 'exists').callsFake(async (p) => String(p) in installed);
-      __setExecForTests((async (binary: string, args: string[] = []) => {
+      execStub.callsFake((async (binary: string, args: string[] = []) => {
         if (binary === 'reg') {
           throw new Error('registry key not found');
         }

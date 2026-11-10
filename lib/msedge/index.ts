@@ -80,7 +80,7 @@ export async function determineDriverExecutable(
     });
   } catch (err) {
     throw new Error(
-      `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion}' ` +
+      `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion.toString()}' ` +
         `in '${executableDir}': ${(err as Error).message}`,
       {cause: err},
     );

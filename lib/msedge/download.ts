@@ -21,7 +21,7 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
   });
   if (!response.ok) {
     throw new Error(
-      `Cannot retrieve MSEdgeDriver version for Edge '${browserVersion}' from '${releaseUrl}' ` +
+      `Cannot retrieve MSEdgeDriver version for Edge '${browserVersion.toString()}' from '${releaseUrl}' ` +
         `(status ${response.status})`,
     );
   }
@@ -46,7 +46,7 @@ function getLatestReleaseUrl(browserVersion: Version): string {
 }
 
 function getDriverDownloadUrl(driverVersion: Version): string {
-  return `${DRIVER_STORAGE_BASE_URL}/${driverVersion}/${getPlatformConfig().archiveName}`;
+  return `${DRIVER_STORAGE_BASE_URL}/${driverVersion.toString()}/${getPlatformConfig().archiveName}`;
 }
 
 function decodeVersionResponse(payload: Buffer): string {

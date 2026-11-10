@@ -39,6 +39,7 @@ describe('driver', () => {
 
   it('delegates executable resolution to msedge orchestrator for Edge', async () => {
     sinon.stub(fs, 'glob').resolves(['/auto/msedgedriver']);
+    sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
     const driver = new TestDriver();
     driver.setOpts({browserName: 'msedge', executableDir: '/tmp/msedgedrivers'});
     assert.equal(await driver.getExecutableExposed(), '/auto/msedgedriver');

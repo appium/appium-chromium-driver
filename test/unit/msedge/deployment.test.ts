@@ -4,19 +4,20 @@ import os from 'node:os';
 import path from 'node:path';
 import {describe, it, afterEach} from 'node:test';
 
-import {fs, tempDir, zip} from 'appium/support.js';
+import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {
-  deployDriverArtifact,
-  locateCachedDriverExecutable,
-  locateDriverExecutableInDir,
-} from '../../../lib/msedge/deployment.js';
-import {getDriverExecutableName} from '../../../lib/msedge/platform.js';
-import {Version} from '../../../lib/msedge/version.js';
+import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+
+// Load after the module mock is installed.
+const {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} =
+  await import('../../../lib/msedge/deployment.js');
+const {getDriverExecutableName} = await import('../../../lib/msedge/platform.js');
+const {Version} = await import('../../../lib/msedge/version.js');
 
 describe('msedge deployment domain', () => {
   afterEach(() => {
+    resetModuleMocks();
     sinon.restore();
   });
 
@@ -46,13 +47,43 @@ describe('msedge deployment domain', () => {
     const newest = path.join(root, '147.0.3179.98', name);
     const older = path.join(root, '147.0.3179.9', name);
     sinon.stub(fs, 'glob').resolves([newest, older]);
+    sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
     sinon.stub(fs, 'isExecutable').callsFake(async (file) => file === older);
     assert.equal(await locateCachedDriverExecutable(root, name, Version.from('147.0.3179.85')), older);
   });
 
+  it('ignores a same-named directory when locating the cached executable', async () => {
+    const root = await mkdtemp(path.join(os.tmpdir(), 'msedge-cache-'));
+    const name = getDriverExecutableName();
+    try {
+      await fs.mkdirp(path.join(root, '147.0.3179.98', name));
+      await fs.mkdirp(path.join(root, '147.0.3179.9'));
+      await fs.writeFile(path.join(root, '147.0.3179.9', name), 'cached executable', {mode: 0o755});
+      assert.equal(
+        await locateCachedDriverExecutable(root, name, Version.from('147.0.3179.85')),
+        path.join(root, '147.0.3179.9', name),
+      );
+    } finally {
+      await fs.rimraf(root);
+    }
+  });
+
   describe('findDriverExecutable', () => {
+    it('prefers a file over a shorter same-named directory', async () => {
+      const root = await mkdtemp(path.join(os.tmpdir(), 'msedge-dir-'));
+      try {
+        await fs.mkdirp(path.join(root, 'msedgedriver'));
+        await fs.mkdirp(path.join(root, 'real'));
+        await fs.writeFile(path.join(root, 'real', 'msedgedriver'), 'x');
+        assert.equal(await locateDriverExecutableInDir(root, 'msedgedriver'), path.join(root, 'real', 'msedgedriver'));
+      } finally {
+        await fs.rimraf(root);
+      }
+    });
+
     it('uses the provided executable name to search candidates', async () => {
       const globStub = sinon.stub(fs, 'glob').resolves(['/tmp/a/custom-driver-bin']);
+      sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
 
       const executable = await locateDriverExecutableInDir('/tmp/a', 'custom-driver-bin');
 
@@ -65,12 +96,13 @@ describe('msedge deployment domain', () => {
     it('deploys using artifact metadata without platform helpers', async () => {
       sinon.stub(fs, 'isExecutable').resolves(false);
       sinon.stub(fs, 'mkdirp').resolves();
-      sinon.stub(tempDir, 'openDir').resolves('/tmp/extract-root');
-      sinon.stub(zip, 'extractAllTo').resolves();
+      supportStubs.openTempDir.resolves('/tmp/extract-root');
+      supportStubs.extractAllTo.resolves();
       sinon.stub(fs, 'chmod').resolves();
       sinon.stub(fs, 'mv').resolves();
       sinon.stub(fs, 'rimraf').resolves();
       sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/123/Driver/custom-msedge-driver']);
+      sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
 
       const downloadArchive = sinon.stub().resolves();
 
