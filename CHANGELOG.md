@@ -1,3 +1,17 @@
+## [4.0.0](https://github.com/appium/appium-chromium-driver/compare/v3.2.0...v4.0.0) (2026-11-10)
+
+### ⚠ BREAKING CHANGES
+
+* Requires Appium ^4.0.0-beta.6 (peer dependency). No longer compatible with Appium 3.
+* Drops Node 20. The minimum is now ^22.22.2 || ^24.15.0 || >=26.0.0, matching Appium 4's engine range.
+* Driver API: createSession takes a single w3cCapabilities argument, following the Appium 4 base driver. This only matters to anyone subclassing the driver.
+* Default exports removed: the package no longer has a default export. Use the named export instead: import {ChromiumDriver} from 'appium-chromium-driver'.
+* Command methods live on the prototype: findElOrEls is attached to ChromiumDriver.prototype (with declare module typings) rather than being an instance field, so subclasses can call super for it.
+
+### Features
+
+* add Appium 4 support ([#481](https://github.com/appium/appium-chromium-driver/issues/481)) ([6dad41b](https://github.com/appium/appium-chromium-driver/commit/6dad41b85ff61db22579157c3357653a2adba810))
+
 ## [3.2.0](https://github.com/appium/appium-chromium-driver/compare/v3.1.2...v3.2.0) (2026-10-30)
 
 ### Features
