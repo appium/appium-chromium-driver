@@ -1,3 +1,9 @@
+## [4.0.1](https://github.com/appium/appium-chromium-driver/compare/v4.0.0...v4.0.1) (2026-11-12)
+
+### Miscellaneous Chores
+
+* **deps:** bump appium-chromedriver to 10.0.1 ([#483](https://github.com/appium/appium-chromium-driver/issues/483)) ([6d1cc41](https://github.com/appium/appium-chromium-driver/commit/6d1cc41b2bb58061495b5f33019a6ada0da5756e))
+
 ## [4.0.0](https://github.com/appium/appium-chromium-driver/compare/v3.2.0...v4.0.0) (2026-11-10)
 
 ### ⚠ BREAKING CHANGES
