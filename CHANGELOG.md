@@ -1,3 +1,9 @@
+## [4.0.2](https://github.com/appium/appium-chromium-driver/compare/v4.0.1...v4.0.2) (2026-11-13)
+
+### Miscellaneous Chores
+
+* **deps:** bump appium to 4.0.0-beta.8 ([#484](https://github.com/appium/appium-chromium-driver/issues/484)) ([5099ede](https://github.com/appium/appium-chromium-driver/commit/5099ede71059cc430312d213c4f563d32e35cb15))
+
 ## [4.0.1](https://github.com/appium/appium-chromium-driver/compare/v4.0.0...v4.0.1) (2026-11-12)
 
 ### Miscellaneous Chores
