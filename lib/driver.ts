@@ -39,7 +39,7 @@ export class ChromiumDriver
   extends BaseDriver<CDConstraints, StringRecord>
   implements ExternalDriver<CDConstraints, string, StringRecord>
 {
-  desiredCapConstraints = desiredCapConstraints;
+  override desiredCapConstraints = desiredCapConstraints;
   proxyReqRes: ((...args: any[]) => any) | null = null;
   proxyCommand?: <TReq = any, TRes = unknown>(url: string, method: HTTPMethod, body?: TReq) => Promise<TRes>;
   doesSupportBidi = true;
@@ -53,7 +53,7 @@ export class ChromiumDriver
     this.locatorStrategies = ['css selector', 'link text', 'partial link text', 'tag name', 'xpath'];
   }
 
-  get bidiProxyUrl(): string | null {
+  override get bidiProxyUrl(): string | null {
     return this._bidiProxyUrl;
   }
 
