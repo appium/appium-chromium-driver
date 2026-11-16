@@ -80,7 +80,7 @@
     "@appium/types": "^2.0.0-beta.6",
     "@types/node": "^26.0.0",
     "@types/sinon": "^22.0.0",
-    "asyncbox": "^6.4.3",
+    "asyncbox": "^7.0.0",
     "sinon": "^22.0.0",
     "webdriverio": "^10.1.0"
   },
