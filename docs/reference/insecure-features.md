@@ -20,14 +20,19 @@ For other insecure feature names recognized by the Appium server, see
 Allows running any `chromedriver`/`msedgedriver` executable, skipping the verification of its
 SHA-256 checksum.
 
-By default, the driver only runs executables that are builds distributed by Google (`chromedriver`)
-or Microsoft (`msedgedriver`), according to the checksums shipped with the
-[`appium-chromedriver`](https://github.com/appium/appium-android/tree/main/packages/chromedriver#executable-verification)
-package, or that were downloaded by the driver itself (including the ones installed with the
-[`install-chromedriver`](./scripts.md#install-chromedriver) script). This also applies to the executables
-provided via the [`appium:executable`](./capabilities.md#executable) and
-[`appium:executableDir`](./capabilities.md#executabledir) capabilities. Custom or self-built binaries
-and builds that are not covered by the shipped checksums require this feature to be enabled.
+By default, the driver checks each executable against the SHA-256 checksums shipped with
+[`appium-chromedriver`](https://github.com/appium/appium-android/tree/main/packages/chromedriver#executable-verification).
+
+- **ChromeDriver:** The ChromeDriver downloader also records the checksum of each binary it installs,
+  including downloads made by the [`install-chromedriver`](./scripts.md#install-chromedriver) script.
+  This lets Appium run those binaries even before their checksums ship with `appium-chromedriver`.
+- **Edge WebDriver:** The Edge downloader does not record checksums. If a downloaded build is missing
+  from the shipped checksums, session creation fails verification. To use that build with verification
+  enabled, update to a version of `appium-chromedriver` that includes its checksum.
+
+The same verification applies to executables supplied via [`appium:executable`](./capabilities.md#executable)
+or [`appium:executableDir`](./capabilities.md#executabledir). Running a binary with an unrecognized
+checksum requires enabling this feature.
 
 !!! warning
 
