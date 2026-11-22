@@ -7,7 +7,7 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+import {resetModuleMocks, supportStubs, trustChecksumOfStub} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
 const {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} =
@@ -99,9 +99,10 @@ describe('msedge deployment domain', () => {
       supportStubs.openTempDir.resolves('/tmp/extract-root');
       supportStubs.extractAllTo.resolves();
       sinon.stub(fs, 'chmod').resolves();
-      sinon.stub(fs, 'mv').resolves();
+      const move = sinon.stub(fs, 'mv').resolves();
       sinon.stub(fs, 'rimraf').resolves();
-      sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/123/Driver/custom-msedge-driver']);
+      const staged = path.join('/tmp/extract-root', 'extracted', 'Driver', 'custom-msedge-driver');
+      const glob = sinon.stub(fs, 'glob').resolves([staged]);
       sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
 
       const downloadArchive = sinon.stub().resolves();
@@ -116,6 +117,9 @@ describe('msedge deployment domain', () => {
         downloadArchive,
       );
 
+      assert.equal(glob.firstCall.args[1]?.cwd, path.join('/tmp/extract-root', 'extracted'));
+      sinon.assert.calledOnceWithExactly(trustChecksumOfStub, staged);
+      sinon.assert.callOrder(supportStubs.extractAllTo, trustChecksumOfStub, move);
       assert.equal(downloadArchive.firstCall.args[0], '/tmp/extract-root/custom-archive.zip');
       assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
     });
@@ -136,6 +140,7 @@ describe('msedge deployment domain', () => {
 
       assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
       assert.equal(downloadArchive.called, false);
+      sinon.assert.notCalled(trustChecksumOfStub);
     });
   });
 });

@@ -23,11 +23,12 @@ SHA-256 checksum.
 By default, the driver only runs executables that are builds distributed by Google (`chromedriver`)
 or Microsoft (`msedgedriver`), according to the checksums shipped with the
 [`appium-chromedriver`](https://github.com/appium/appium-android/tree/main/packages/chromedriver#executable-verification)
-package, or that were downloaded by the driver itself (including the ones installed with the
+package, or whose checksums were recorded when the driver downloaded them from Google or Microsoft
+(including ChromeDriver binaries installed with the
 [`install-chromedriver`](./scripts.md#install-chromedriver) script). This also applies to the executables
 provided via the [`appium:executable`](./capabilities.md#executable) and
 [`appium:executableDir`](./capabilities.md#executabledir) capabilities. Custom or self-built binaries
-and builds that are not covered by the shipped checksums require this feature to be enabled.
+and other builds with unrecognized checksums require this feature to be enabled.
 
 !!! warning
 

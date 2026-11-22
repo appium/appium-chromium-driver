@@ -1,11 +1,14 @@
 import {mock} from 'node:test';
 
+import * as chromedriver from 'appium-chromedriver';
 import * as real from 'appium/support.js';
 import sinon from 'sinon';
 import * as realTeenProcess from 'teen_process';
 
 // Appium 4 exposes net/system/tempDir/zip as read-only ES namespaces, so they can only be mocked at module level.
 // Import this file first, then load the code under test via dynamic import().
+export const trustChecksumOfStub = sinon.stub();
+
 export const execStub = sinon.stub();
 
 export const supportStubs = {
@@ -17,6 +20,7 @@ export const supportStubs = {
 
 /** Reset call history and make every stub delegate to the real implementation again. */
 export function resetModuleMocks(): void {
+  trustChecksumOfStub.reset();
   execStub.reset();
   execStub.callsFake(realTeenProcess.exec);
   supportStubs.isWindows.reset();
@@ -36,6 +40,11 @@ function withoutDefault<T extends {default?: unknown}>(ns: T): Omit<T, 'default'
   const {default: _default, ...rest} = ns;
   return rest;
 }
+mock.module('appium-chromedriver', {
+  defaultExport: chromedriver.default,
+  namedExports: {...withoutDefault(chromedriver), trustChecksumOf: trustChecksumOfStub},
+});
+
 mock.module('appium/support.js', {
   defaultExport: real.default,
   namedExports: {

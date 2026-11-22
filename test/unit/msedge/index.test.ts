@@ -108,7 +108,7 @@ describe('msedge index orchestrator domain', () => {
       .onFirstCall()
       .resolves([])
       .onSecondCall()
-      .resolves(['/tmp/msedgedrivers/147.0.3179.98/Driver/msedgedriver']);
+      .resolves([path.join('/tmp/extract-root', 'extracted', 'Driver', getDriverExecutableName())]);
 
     const executable = await determineDriverExecutable(
       {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},
@@ -125,6 +125,7 @@ describe('msedge index orchestrator domain', () => {
     sinon.stub(fs, 'isExecutable').resolves(false);
     sinon.stub(fs, 'mkdirp').resolves();
     supportStubs.openTempDir.resolves('/tmp/extract-root');
+    sinon.stub(fs, 'mv').resolves();
     const downloadStub = supportStubs.downloadFile.resolves();
     supportStubs.extractAllTo.resolves();
     sinon.stub(fs, 'chmod').resolves();
@@ -134,7 +135,7 @@ describe('msedge index orchestrator domain', () => {
       .onFirstCall()
       .resolves([path.join(executableDir, '147.0.3000.98', executableName)])
       .onSecondCall()
-      .resolves([downloaded]);
+      .resolves([path.join('/tmp/extract-root', 'extracted', executableName)]);
 
     assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), downloaded);
     assert.equal(fetchStub.callCount, 1);

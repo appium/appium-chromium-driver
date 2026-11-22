@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import {trustChecksumOf} from 'appium-chromedriver';
 import {fs, tempDir, zip} from 'appium/support.js';
 
 import {Version} from './version.js';
@@ -35,18 +36,19 @@ export async function deployDriverArtifact(
   const archivePath = path.join(tmpRoot, artifact.archiveName);
   try {
     await downloadArchive(archivePath);
-    await zip.extractAllTo(archivePath, targetDir);
-    const extractedExecutable = await locateDriverExecutableInDir(targetDir, artifact.executableName);
+    const stagingDir = path.join(tmpRoot, 'extracted');
+    await fs.mkdirp(stagingDir);
+    await zip.extractAllTo(archivePath, stagingDir);
+    const extractedExecutable = await locateDriverExecutableInDir(stagingDir, artifact.executableName);
     if (!extractedExecutable) {
-      throw new Error(`Cannot find '${artifact.executableName}' in '${targetDir}'`);
+      throw new Error(`Cannot find '${artifact.executableName}' in '${stagingDir}'`);
     }
     if (process.platform !== 'win32') {
       // This might not be necessary, but to be safe.
       await fs.chmod(extractedExecutable, 0o755);
     }
-    if (extractedExecutable !== targetExecutable) {
-      await fs.mv(extractedExecutable, targetExecutable, {mkdirp: true, clobber: true});
-    }
+    await trustChecksumOf(extractedExecutable);
+    await fs.mv(extractedExecutable, targetExecutable, {mkdirp: true, clobber: true});
     return targetExecutable;
   } finally {
     await fs.rimraf(tmpRoot);
