@@ -38,6 +38,8 @@ nav:
           - reference/capabilities.md
           - reference/endpoints.md
           - reference/bidi.md
+      - Security:
+          - reference/insecure-features.md
       - Element Management:
           - reference/locator-strategies.md
   - Guides:

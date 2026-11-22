@@ -18,6 +18,8 @@ import type {W3CChromiumDriverCaps, ChromiumDriverCaps, BrowserInfo} from './typ
 const STANDARD_CAPS_LOWER = new Set([...STANDARD_CAPS].map((cap) => cap.toLowerCase()));
 const CHROME_VENDOR_PREFIX = 'goog:';
 const EDGE_VENDOR_PREFIX = 'ms:';
+// Allows running chromedriver/msedgedriver executables that are not on the allowlist of appium-chromedriver
+export const ALLOW_ANY_EXECUTABLE_FEATURE = 'chromedriver_allow_any_executable';
 
 const NO_PROXY: RouteMatcher[] = [
   ['GET', new RegExp('^/session/[^/]+/appium')],
@@ -92,19 +94,7 @@ export class ChromiumDriver
   }
 
   async startChromedriverSession(): Promise<ChromiumDriverCaps> {
-    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersionInfo = await this.getBrowserInfo();
-    const cdOpts: ChromedriverOpts = {
-      port: this.opts.chromedriverPort?.toString(),
-      useSystemExecutable: this.opts.useSystemExecutable,
-      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
-      executableDir: this.getExecutableDir(),
-      verbose: this.opts.verbose,
-      logPath: this.opts.logPath,
-      disableBuildCheck: this.opts.disableBuildCheck,
-      details: browserVersionInfo,
-      isAutodownloadEnabled,
-    };
+    const cdOpts = await this.getChromedriverOpts();
     if (this.basePath) {
       cdOpts.reqBasePath = this.basePath;
     }
@@ -114,6 +104,23 @@ export class ChromiumDriver
     this.proxyReqRes = this._cd.proxyReq.bind(this._cd);
     this.proxyCommand = this._cd.sendCommand.bind(this._cd);
     return cdStartRes;
+  }
+
+  private async getChromedriverOpts(): Promise<ChromedriverOpts> {
+    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const browserVersionInfo = await this.getBrowserInfo();
+    return {
+      port: this.opts.chromedriverPort?.toString(),
+      useSystemExecutable: this.opts.useSystemExecutable,
+      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
+      executableDir: this.getExecutableDir(),
+      verbose: this.opts.verbose,
+      logPath: this.opts.logPath,
+      disableBuildCheck: this.opts.disableBuildCheck,
+      details: browserVersionInfo,
+      isAutodownloadEnabled,
+      allowUnverifiedExecutable: this.isFeatureEnabled(ALLOW_ANY_EXECUTABLE_FEATURE),
+    };
   }
 
   override async deleteSession(sessionId?: string): Promise<void> {
