@@ -106,23 +106,6 @@ export class ChromiumDriver
     return cdStartRes;
   }
 
-  private async getChromedriverOpts(): Promise<ChromedriverOpts> {
-    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
-    const browserVersionInfo = await this.getBrowserInfo();
-    return {
-      port: this.opts.chromedriverPort?.toString(),
-      useSystemExecutable: this.opts.useSystemExecutable,
-      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
-      executableDir: this.getExecutableDir(),
-      verbose: this.opts.verbose,
-      logPath: this.opts.logPath,
-      disableBuildCheck: this.opts.disableBuildCheck,
-      details: browserVersionInfo,
-      isAutodownloadEnabled,
-      allowUnverifiedExecutable: this.isFeatureEnabled(ALLOW_ANY_EXECUTABLE_FEATURE),
-    };
-  }
-
   override async deleteSession(sessionId?: string): Promise<void> {
     try {
       await super.deleteSession(sessionId);
@@ -140,6 +123,23 @@ export class ChromiumDriver
         this._cd = null;
       }
     }
+  }
+
+  private async getChromedriverOpts(): Promise<ChromedriverOpts> {
+    const isAutodownloadEnabled = this.opts.autodownloadEnabled ?? true;
+    const browserVersionInfo = await this.getBrowserInfo();
+    return {
+      port: this.opts.chromedriverPort?.toString(),
+      useSystemExecutable: this.opts.useSystemExecutable,
+      executable: await this.getExecutable(browserVersionInfo, isAutodownloadEnabled),
+      executableDir: this.getExecutableDir(),
+      verbose: this.opts.verbose,
+      logPath: this.opts.logPath,
+      disableBuildCheck: this.opts.disableBuildCheck,
+      details: browserVersionInfo,
+      isAutodownloadEnabled,
+      allowUnverifiedExecutable: this.isFeatureEnabled(ALLOW_ANY_EXECUTABLE_FEATURE),
+    };
   }
 
   /**
