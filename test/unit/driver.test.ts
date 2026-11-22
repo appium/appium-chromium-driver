@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import {describe, it, afterEach} from 'node:test';
 
+import type {ChromedriverOpts} from 'appium-chromedriver';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {ChromiumDriver} from '../../lib/driver.js';
+import {ALLOW_ANY_EXECUTABLE_FEATURE, ChromiumDriver} from '../../lib/driver.js';
 import type {BrowserInfo, ChromiumDriverCaps} from '../../lib/types.js';
 
 type ExecutableTestAccess = {
@@ -14,6 +15,10 @@ type ExecutableTestAccess = {
 class TestDriver extends ChromiumDriver {
   setOpts(opts: Partial<ChromiumDriverCaps>): void {
     Object.assign(this.opts, opts);
+  }
+
+  getChromedriverOptsExposed(): Promise<ChromedriverOpts> {
+    return (this as unknown as {getChromedriverOpts(): Promise<ChromedriverOpts>}).getChromedriverOpts();
   }
 
   getExecutableExposed(): Promise<string | undefined> {
@@ -49,5 +54,21 @@ describe('driver', () => {
     const driver = new TestDriver();
     driver.setOpts({browserName: 'chrome'});
     assert.equal(await driver.getExecutableExposed(), undefined);
+  });
+
+  describe('executable verification', () => {
+    it('does not allow unverified executables by default', async () => {
+      const driver = new TestDriver();
+      driver.setOpts({browserName: 'chrome'});
+      assert.equal((await driver.getChromedriverOptsExposed()).allowUnverifiedExecutable, false);
+    });
+
+    it('allows unverified executables if the server feature is enabled', async () => {
+      const driver = new TestDriver();
+      driver.setOpts({browserName: 'chrome'});
+      const isFeatureEnabled = sinon.stub(driver, 'isFeatureEnabled').returns(true);
+      assert.equal((await driver.getChromedriverOptsExposed()).allowUnverifiedExecutable, true);
+      sinon.assert.calledWith(isFeatureEnabled, ALLOW_ANY_EXECUTABLE_FEATURE);
+    });
   });
 });
