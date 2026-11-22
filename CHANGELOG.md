@@ -1,3 +1,15 @@
+## [5.0.0](https://github.com/appium/appium-chromium-driver/compare/v4.0.2...v5.0.0) (2026-11-22)
+
+### ⚠ BREAKING CHANGES
+
+* chromedriver and msedgedriver executables are verified against a SHA-256 allowlist
+before they are run. Custom or unlisted executables are rejected unless the
+chromedriver_allow_any_executable server feature is enabled.
+
+### Features
+
+* verify chromedriver/msedgedriver executables against a SHA-256 allowlist ([#490](https://github.com/appium/appium-chromium-driver/issues/490)) ([940aa1a](https://github.com/appium/appium-chromium-driver/commit/940aa1aba359d258a8ee2f293bc9b2157579b41f))
+
 ## [4.0.2](https://github.com/appium/appium-chromium-driver/compare/v4.0.1...v4.0.2) (2026-11-13)
 
 ### Miscellaneous Chores
