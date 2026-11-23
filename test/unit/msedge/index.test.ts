@@ -6,16 +6,11 @@ import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
 import type {BrowserInfo} from '../../../lib/types.js';
-import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+import {resetModuleMocks, installEdgeDriverStub} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
 const {determineDriverExecutable, getDefaultDriverDir} = await import('../../../lib/msedge/index.js');
 const {getDriverExecutableName} = await import('../../../lib/msedge/platform.js');
-
-function makeMsedgeVersionResponse(version: string): Response {
-  const payload = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(`${version}\n`, 'utf16le')]);
-  return new Response(payload, {status: 200});
-}
 
 describe('msedge index orchestrator domain', () => {
   beforeEach(() => {
@@ -54,23 +49,19 @@ describe('msedge index orchestrator domain', () => {
       const cached = path.join(getDefaultDriverDir(), '147.0.3179.98', getDriverExecutableName());
       sinon.stub(fs, 'glob').resolves([cached]);
       sinon.stub(fs, 'isExecutable').resolves(true);
-      const fetchStub = sinon.stub(globalThis, 'fetch').rejects(new Error('offline'));
-      const downloadStub = supportStubs.downloadFile.rejects(new Error('offline'));
 
       assert.equal(
         await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo, autodownloadEnabled),
         cached,
       );
-      assert.equal(fetchStub.called, false);
-      assert.equal(downloadStub.called, false);
+      sinon.assert.notCalled(installEdgeDriverStub);
     });
   }
 
   it('does not use an incompatible cache or access the network when autodownload is disabled', async () => {
     sinon.stub(fs, 'glob').resolves([path.join(getDefaultDriverDir(), '146.0.3179.98', getDriverExecutableName())]);
-    const fetchStub = sinon.stub(globalThis, 'fetch').rejects(new Error('unexpected network access'));
     assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo, false), undefined);
-    assert.equal(fetchStub.called, false);
+    sinon.assert.notCalled(installEdgeDriverStub);
   });
 
   it('returns undefined when autodownload is disabled and no driver exists in executableDir', async () => {
@@ -93,52 +84,17 @@ describe('msedge index orchestrator domain', () => {
     );
   });
 
-  it('autodownloads when candidate is absent', async () => {
-    sinon.stub(globalThis, 'fetch').resolves(makeMsedgeVersionResponse('147.0.3179.98'));
-    sinon.stub(fs, 'isExecutable').resolves(false);
-    sinon.stub(fs, 'mkdirp').resolves();
-    supportStubs.openTempDir.resolves('/tmp/extract-root');
-    supportStubs.downloadFile.resolves();
-    supportStubs.extractAllTo.resolves();
-    sinon.stub(fs, 'chmod').resolves();
-    sinon.stub(fs, 'mv').resolves();
-    sinon.stub(fs, 'rimraf').resolves();
-    sinon
-      .stub(fs, 'glob')
-      .onFirstCall()
-      .resolves([])
-      .onSecondCall()
-      .resolves([path.join('/tmp/extract-root', 'extracted', 'Driver', getDriverExecutableName())]);
-
-    const executable = await determineDriverExecutable(
-      {browserName: 'msedge', executableDir: '/tmp/msedgedrivers'},
-      browserVersionInfo,
-    );
-    assert.equal(executable, '/tmp/msedgedrivers/147.0.3179.98/msedgedriver');
-  });
-
-  it('downloads into the default cache when no compatible cached executable exists', async () => {
-    const executableDir = getDefaultDriverDir();
-    const executableName = getDriverExecutableName();
-    const downloaded = path.join(executableDir, '147.0.3179.98', executableName);
-    const fetchStub = sinon.stub(globalThis, 'fetch').resolves(makeMsedgeVersionResponse('147.0.3179.98'));
-    sinon.stub(fs, 'isExecutable').resolves(false);
-    sinon.stub(fs, 'mkdirp').resolves();
-    supportStubs.openTempDir.resolves('/tmp/extract-root');
-    sinon.stub(fs, 'mv').resolves();
-    const downloadStub = supportStubs.downloadFile.resolves();
-    supportStubs.extractAllTo.resolves();
-    sinon.stub(fs, 'chmod').resolves();
-    sinon.stub(fs, 'rimraf').resolves();
-    sinon
-      .stub(fs, 'glob')
-      .onFirstCall()
-      .resolves([path.join(executableDir, '147.0.3000.98', executableName)])
-      .onSecondCall()
-      .resolves([path.join('/tmp/extract-root', 'extracted', executableName)]);
-
-    assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), downloaded);
-    assert.equal(fetchStub.callCount, 1);
-    assert.equal(downloadStub.callCount, 1);
-  });
+  for (const customDir of [undefined, '/tmp/msedgedrivers']) {
+    it(`installs into ${customDir ?? 'the default cache'} when no candidate exists`, async () => {
+      sinon.stub(fs, 'glob').resolves([]);
+      const executableDir = customDir ?? getDefaultDriverDir();
+      const installed = path.join(executableDir, '147.0.3179.98', getDriverExecutableName());
+      installEdgeDriverStub.resolves(installed);
+      assert.equal(
+        await determineDriverExecutable({browserName: 'msedge', executableDir: customDir}, browserVersionInfo),
+        installed,
+      );
+      sinon.assert.calledOnceWithExactly(installEdgeDriverStub, {browserVersion: '147.0.3179.85', executableDir});
+    });
+  }
 });

@@ -1,10 +1,11 @@
+import {installEdgeDriver} from 'appium-chromedriver';
+
 import type {BrowserInfo} from '../types.js';
 import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
 import {isMsEdge} from './browser-identity.js';
-import {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} from './deployment.js';
-import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
-import {getDriverExecutableName, getPlatformConfig} from './platform.js';
+import {locateCachedDriverExecutable, locateDriverExecutableInDir} from './deployment.js';
+import {getDriverExecutableName} from './platform.js';
 import {Version} from './version.js';
 
 interface DriverResolveOpts {
@@ -69,15 +70,7 @@ export async function determineDriverExecutable(
   }
 
   try {
-    const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
-    const artifact = {
-      archiveName: getPlatformConfig().archiveName,
-      executableName,
-      version: driverVersion.toString(),
-    };
-    return await deployDriverArtifact(artifact, executableDir, async (archivePath) => {
-      await fetchDriverArchive(driverVersion, archivePath);
-    });
+    return await installEdgeDriver({browserVersion: browserVersion.toString(), executableDir});
   } catch (err) {
     throw new Error(
       `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion.toString()}' ` +
