@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import {installDriverFromArchive} from 'appium-chromedriver';
+import {fs} from 'appium/support.js';
 
 import type {BrowserInfo} from '../types.js';
 import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
@@ -75,6 +76,9 @@ export async function determineDriverExecutable(
   try {
     const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
     const destination = path.join(executableDir, driverVersion.toString(), executableName);
+    if (await fs.isExecutable(destination)) {
+      return destination;
+    }
     const archive = await fetchDriverArchive(driverVersion);
     return await installDriverFromArchive({archive, executableName, destination});
   } catch (err) {

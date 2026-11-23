@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import {Readable} from 'node:stream';
 import {describe, it, afterEach, beforeEach} from 'node:test';
 
 import {fs} from 'appium/support.js';
+import axios from 'axios';
 import sinon from 'sinon';
 
 import type {BrowserInfo} from '../../../lib/types.js';
@@ -97,26 +99,43 @@ describe('msedge index orchestrator domain', () => {
       fetchStub
         .withArgs(`${baseUrl}/LATEST_RELEASE_147_${releaseChannel}`, sinon.match.any)
         .resolves(new Response(Buffer.from('\uFEFF147.0.3179.98\n', 'utf16le')));
-      const response = new Response('archive');
-      fetchStub.withArgs(`${baseUrl}/147.0.3179.98/${archiveName}`, sinon.match.any).resolves(response);
+      sinon.stub(fs, 'isExecutable').resolves(false);
+      const archive = Readable.from('archive');
+      const getArchive = sinon.stub(axios, 'get').resolves({data: archive});
       installDriverFromArchiveStub.resolves(installed);
       assert.equal(
         await determineDriverExecutable({browserName: 'msedge', executableDir: customDir}, browserVersionInfo),
         installed,
       );
+      sinon.assert.calledOnceWithExactly(getArchive, `${baseUrl}/147.0.3179.98/${archiveName}`, {
+        responseType: 'stream',
+        timeout: 240_000,
+      });
       sinon.assert.calledOnceWithExactly(installDriverFromArchiveStub, {
-        archive: response.body,
+        archive,
         executableName: getDriverExecutableName(),
         destination: installed,
       });
     });
   }
 
+  it('reuses the resolved executable if another session installed it during version lookup', async () => {
+    sinon.stub(fs, 'glob').resolves([]);
+    const destination = path.join(getDefaultDriverDir(), '147.0.3179.98', getDriverExecutableName());
+    const isExecutable = sinon.stub(fs, 'isExecutable').withArgs(destination).resolves(true);
+    const lookup = sinon.stub(globalThis, 'fetch').resolves(new Response('147.0.3179.98'));
+    const getArchive = sinon.stub(axios, 'get');
+    assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), destination);
+    sinon.assert.callOrder(lookup, isExecutable);
+    sinon.assert.notCalled(getArchive);
+    sinon.assert.notCalled(installDriverFromArchiveStub);
+  });
+
   it('propagates a failed Microsoft archive download before registration', async () => {
     sinon.stub(fs, 'glob').resolves([]);
-    const fetchStub = sinon.stub(globalThis, 'fetch');
-    fetchStub.onFirstCall().resolves(new Response('147.0.3179.98'));
-    fetchStub.onSecondCall().resolves(new Response(null, {status: 404}));
+    sinon.stub(fs, 'isExecutable').resolves(false);
+    sinon.stub(globalThis, 'fetch').resolves(new Response('147.0.3179.98'));
+    sinon.stub(axios, 'get').rejects(new Error('status 404'));
     await assert.rejects(determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), /status 404/);
     sinon.assert.notCalled(installDriverFromArchiveStub);
   });

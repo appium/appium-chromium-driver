@@ -1,8 +1,14 @@
+import type {Readable} from 'node:stream';
+
+import axios from 'axios';
+
 import {getPlatformConfig} from './platform.js';
 import {Version} from './version.js';
 
 const DRIVER_STORAGE_BASE_URL = 'https://msedgedriver.microsoft.com';
 const STORAGE_REQUEST_TIMEOUT_MS = 10_000;
+// Match the HTTP timeout used by Appium's net.downloadFile for archive transfers.
+const ARCHIVE_REQUEST_TIMEOUT_MS = 4 * 60 * 1000;
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 
 /**
@@ -36,11 +42,8 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
  */
 export async function fetchDriverArchive(driverVersion: Version): Promise<AsyncIterable<Uint8Array>> {
   const url = getDriverDownloadUrl(driverVersion);
-  const response = await fetch(url, {signal: AbortSignal.timeout(120_000)});
-  if (!response.ok || !response.body) {
-    throw new Error(`Cannot retrieve MSEdgeDriver archive from '${url}' (status ${response.status})`);
-  }
-  return response.body;
+  const {data} = await axios.get<Readable>(url, {responseType: 'stream', timeout: ARCHIVE_REQUEST_TIMEOUT_MS});
+  return data;
 }
 
 function getLatestReleaseUrl(browserVersion: Version): string {
