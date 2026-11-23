@@ -7,7 +7,7 @@ import * as realTeenProcess from 'teen_process';
 
 // Appium 4 exposes system as a read-only ES namespace, so they can only be mocked at module level.
 // Import this file first, then load the code under test via dynamic import().
-export const installEdgeDriverStub = sinon.stub();
+export const installDriverFromArchiveStub = sinon.stub();
 
 export const execStub = sinon.stub();
 
@@ -17,7 +17,7 @@ export const supportStubs = {
 
 /** Reset call history and make every stub delegate to the real implementation again. */
 export function resetModuleMocks(): void {
-  installEdgeDriverStub.reset();
+  installDriverFromArchiveStub.reset();
   execStub.reset();
   execStub.callsFake(realTeenProcess.exec);
   supportStubs.isWindows.reset();
@@ -33,7 +33,7 @@ function withoutDefault<T extends {default?: unknown}>(ns: T): Omit<T, 'default'
 }
 mock.module('appium-chromedriver', {
   defaultExport: chromedriver.default,
-  namedExports: {...withoutDefault(chromedriver), installEdgeDriver: installEdgeDriverStub},
+  namedExports: {...withoutDefault(chromedriver), installDriverFromArchive: installDriverFromArchiveStub},
 });
 
 mock.module('appium/support.js', {
