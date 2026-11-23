@@ -20,15 +20,18 @@ For other insecure feature names recognized by the Appium server, see
 Allows running any `chromedriver`/`msedgedriver` executable, skipping the verification of its
 SHA-256 checksum.
 
-By default, the driver only runs executables that are builds distributed by Google (`chromedriver`)
-or Microsoft (`msedgedriver`), according to the checksums shipped with the
-[`appium-chromedriver`](https://github.com/appium/appium-android/tree/main/packages/chromedriver#executable-verification)
-package, or whose checksums were recorded when the driver downloaded them from Google or Microsoft
-(including ChromeDriver binaries installed with the
-[`install-chromedriver`](./scripts.md#install-chromedriver) script). This also applies to the executables
-provided via the [`appium:executable`](./capabilities.md#executable) and
-[`appium:executableDir`](./capabilities.md#executabledir) capabilities. Custom or self-built binaries
-and other builds with unrecognized checksums require this feature to be enabled.
+By default, the driver checks each executable against the SHA-256 checksums shipped with
+[`appium-chromedriver`](https://github.com/appium/appium-android/tree/main/packages/chromedriver#executable-verification).
+
+- **ChromeDriver:** The ChromeDriver downloader also records the checksum of each binary it installs,
+  including downloads made by the [`install-chromedriver`](./scripts.md#install-chromedriver) script.
+  This lets Appium run those binaries even before their checksums ship with `appium-chromedriver`.
+- **Edge WebDriver:** When autodownload installs a driver from Microsoft, Appium records the checksum
+  of the freshly extracted executable. Subsequent sessions can reuse that build from the cache.
+
+The same verification applies to executables supplied via [`appium:executable`](./capabilities.md#executable)
+or [`appium:executableDir`](./capabilities.md#executabledir). Running a binary with an unrecognized
+checksum requires enabling this feature.
 
 !!! warning
 

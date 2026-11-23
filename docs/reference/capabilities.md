@@ -82,9 +82,8 @@ host, assign a unique `appium:chromedriverPort` to each session.
 | -- | -- | -- |
 | `appium:executable` | `string` | Not specified |
 
-Custom path to a `chromedriver`/`msedgedriver` binary. Unless the
-[`chromedriver_allow_any_executable`](./insecure-features.md#chromedriver_allow_any_executable) server feature
-is enabled, the binary must be a known build distributed by Google/Microsoft.
+Custom path to a `chromedriver`/`msedgedriver` binary. The driver applies the default
+[executable verification rules](./insecure-features.md#chromedriver_allow_any_executable).
 
 ### executableDir
 
@@ -92,9 +91,8 @@ is enabled, the binary must be a known build distributed by Google/Microsoft.
 | -- | -- | -- |
 | `appium:executableDir` | `string` | Not specified |
 
-Custom path to a directory containing `chromedriver`/`msedgedriver` binaries. Unless the
-[`chromedriver_allow_any_executable`](./insecure-features.md#chromedriver_allow_any_executable) server feature
-is enabled, the binaries must be known builds distributed by Google/Microsoft.
+Custom path to a directory containing `chromedriver`/`msedgedriver` binaries. The driver applies the default
+[executable verification rules](./insecure-features.md#chromedriver_allow_any_executable).
 
 ### verbose
 
