@@ -80,7 +80,11 @@ export async function determineDriverExecutable(
       return destination;
     }
     const archive = await fetchDriverArchive(driverVersion);
-    return await installDriverFromArchive({archive, executableName, destination});
+    try {
+      return await installDriverFromArchive({archive, executableName, destination});
+    } finally {
+      archive.destroy();
+    }
   } catch (err) {
     throw new Error(
       `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion.toString()}' ` +

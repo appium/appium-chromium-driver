@@ -131,6 +131,21 @@ describe('msedge index orchestrator domain', () => {
     sinon.assert.notCalled(installDriverFromArchiveStub);
   });
 
+  it('closes the download stream when installation fails before consuming it', async () => {
+    sinon.stub(fs, 'glob').resolves([]);
+    sinon.stub(fs, 'isExecutable').resolves(false);
+    sinon.stub(globalThis, 'fetch').resolves(new Response('147.0.3179.98'));
+    const archive = Readable.from('archive');
+    sinon.stub(axios, 'get').resolves({data: archive});
+    installDriverFromArchiveStub.rejects(new Error('cannot create staging directory'));
+
+    await assert.rejects(
+      determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo),
+      /cannot create staging directory/,
+    );
+    assert.equal(archive.destroyed, true);
+  });
+
   it('propagates a failed Microsoft archive download before registration', async () => {
     sinon.stub(fs, 'glob').resolves([]);
     sinon.stub(fs, 'isExecutable').resolves(false);

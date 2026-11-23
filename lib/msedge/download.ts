@@ -40,7 +40,7 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
  * @param driverVersion The MSEdgeDriver version to download.
  * @returns The response body to consume while installing the driver.
  */
-export async function fetchDriverArchive(driverVersion: Version): Promise<AsyncIterable<Uint8Array>> {
+export async function fetchDriverArchive(driverVersion: Version): Promise<Readable> {
   const url = getDriverDownloadUrl(driverVersion);
   const {data} = await axios.get<Readable>(url, {responseType: 'stream', timeout: ARCHIVE_REQUEST_TIMEOUT_MS});
   return data;
