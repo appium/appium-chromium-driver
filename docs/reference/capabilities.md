@@ -27,8 +27,8 @@ This capability must be set to `mac`, `linux` or `windows` (case-insensitive)
 | -- | -- | -- |
 | `browserName` | `string` | Not specified |
 
-Must be set to `MicrosoftEdge` (case-sensitive) if automating MS Edge. Can be left unset for other
-Chromium-based browsers.
+Must be set to `MicrosoftEdge` (case-sensitive) if automating the Microsoft Edge browser. Can be
+left unset for other Chromium-based browsers.
 
 ## General
 
@@ -70,11 +70,11 @@ for more details.
 | -- | -- | -- |
 | `appium:chromedriverPort` | `number` | `9515` |
 
-The port to use for starting `chromedriver`/`msedgedriver`.
+The port to use for starting `chromedriver`/`msedgedriver`. Must be unique for each session - see
+the [Testing in Parallel guide](../guides/parallel-tests.md) for details.
 
-When starting a new session, any existing `chromedriver`/`msedgedriver` process listening on the
-same port is terminated first. To run multiple Chromium driver sessions in parallel on the same
-host, assign a unique `appium:chromedriverPort` to each session.
+When starting a new session, any existing `chromedriver`/`msedgedriver` processes listening on the
+same port are terminated.
 
 ### executable
 
@@ -82,7 +82,7 @@ host, assign a unique `appium:chromedriverPort` to each session.
 | -- | -- | -- |
 | `appium:executable` | `string` | Not specified |
 
-Custom path to a `chromedriver`/`msedgedriver` binary. The driver applies the default
+Custom path to a `chromedriver`/`msedgedriver` binary. This capability is subject to
 [executable verification rules](./insecure-features.md#chromedriver_allow_any_executable).
 
 ### executableDir
@@ -91,8 +91,8 @@ Custom path to a `chromedriver`/`msedgedriver` binary. The driver applies the de
 | -- | -- | -- |
 | `appium:executableDir` | `string` | Not specified |
 
-Custom path to a directory containing `chromedriver`/`msedgedriver` binaries. The driver applies the default
-[executable verification rules](./insecure-features.md#chromedriver_allow_any_executable).
+Custom path to a directory containing `chromedriver`/`msedgedriver` binaries. This capability is
+subject to [executable verification rules](./insecure-features.md#chromedriver_allow_any_executable).
 
 ### verbose
 
