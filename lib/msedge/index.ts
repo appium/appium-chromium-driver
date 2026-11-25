@@ -79,11 +79,11 @@ export async function determineDriverExecutable(
     if (await fs.isExecutable(destination)) {
       return destination;
     }
-    const archive = await fetchDriverArchive(driverVersion);
+    const archive = fetchDriverArchive(driverVersion);
     try {
       return await installDriverFromArchive({archive, executableName, destination});
     } finally {
-      archive.destroy();
+      await archive.return(undefined);
     }
   } catch (err) {
     throw new Error(
