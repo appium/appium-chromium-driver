@@ -1,5 +1,5 @@
 ---
-title: Other Browsers
+title: Other Chromium Browsers
 ---
 
 The Chromium driver theoretically supports automating any Chromium-based browser, not just Chrome
@@ -10,14 +10,19 @@ and Edge.
     Other browsers may not be fully compatible with the Chromium driver. They may require additional
     workarounds not listed in this guide, or may not support `chromedriver` at all (e.g. Vivaldi).
 
-## Configuration
+## Requirements
 
 Usually, no configuration is required in the browser itself. The main differences from regular
 Chrome/Edge are in the required capabilities:
 
-* The target browser must be specified by customizing the path to the browser binary, using the [`goog:chromeOptions`](../reference/capabilities.md#chromeoptions) capability
-* Most browsers will require the [`appium:executable`](../reference/capabilities.md#executable) capability in order to specify a compatible `chromedriver` binary
-    * The browser's Chromium version can usually be found in its About page. You can then download a compatible `chromedriver` binary either manually or using the [`install-chromedriver`](../reference/scripts.md) driver script. Note that there may not always be a binary with the exact same version as Chromium, but the closest match should still work.
+* The target browser must be specified by customizing the path to the browser binary, using the
+  [`goog:chromeOptions`](../reference/capabilities.md#chromeoptions) capability
+* Most browsers will require the [`appium:executable`](../reference/capabilities.md#executable)
+  capability in order to specify a compatible `chromedriver` binary
+    * The browser's Chromium version can usually be found in its About page. You can then download
+    a compatible `chromedriver` binary either manually or using the [`install-chromedriver`](../reference/scripts.md)
+    driver script. Note that there may not always be a binary with the exact same version as
+    Chromium, but the closest match should still work.
 
 ### Background
 
@@ -33,6 +38,8 @@ driver will simply download an incompatible `chromedriver` version, and session 
 The way to solve this problem is to explicitly provide a path to a compatible `chromedriver` binary.
 
 ## Examples
+
+### Opera
 
 The Opera browser does not expose its Chromium version, so the `chromedriver` path must be provided.
 The following capabilities can be used to launch Opera on macOS:
@@ -52,6 +59,8 @@ The following capabilities can be used to launch Opera on macOS:
 
     Opera also maintains its own [OperaChromiumDriver](https://github.com/operasoftware/operachromiumdriver),
     which may provide better compatibility than standard ChromeDriver.
+
+### Brave
 
 The Brave browser uses a custom approach and exposes both Chromium's and its own version (e.g.
 Brave 1.91.180 bundles Chromium 149, returning version 149.1.91.180). In practice this means that

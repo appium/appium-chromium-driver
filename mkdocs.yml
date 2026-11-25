@@ -42,7 +42,9 @@ nav:
       - Element Management:
           - reference/locator-strategies.md
   - Guides:
-      - Session Configuration:
+      - Platforms:
           - guides/ms-edge.md
           - guides/other-browsers.md
+      - Session Configuration:
+          - guides/parallel-tests.md
   - contributing.md
