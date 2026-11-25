@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/appium-logo.png">
-      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.8.2">
     
     
       
@@ -1767,6 +1767,8 @@
       
         
       
+        
+      
     
     
     
@@ -1848,7 +1850,7 @@
   <span class="md-ellipsis">
     
   
-    Session Configuration
+    Platforms
   
 
     
@@ -1864,7 +1866,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Session Configuration
+    Platforms
   
 
           </label>
@@ -1912,7 +1914,99 @@
   <span class="md-ellipsis">
     
   
-    Other Browsers
+    Other Chromium Browsers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Configuration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Session Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/parallel-tests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing in Parallel
   
 
     
@@ -2831,8 +2925,8 @@ for more information about these capabilities.</p>
 </tr>
 </tbody>
 </table>
-<p>Must be set to <code>MicrosoftEdge</code> (case-sensitive) if automating MS Edge. Can be left unset for other
-Chromium-based browsers.</p>
+<p>Must be set to <code>MicrosoftEdge</code> (case-sensitive) if automating the Microsoft Edge browser. Can be
+left unset for other Chromium-based browsers.</p>
 <h2 id="general">General<a class="headerlink" href="#general" title="Permanent link">&para;</a></h2>
 <h3 id="automationname">automationName<a class="headerlink" href="#automationname" title="Permanent link">&para;</a></h3>
 <table>
@@ -2910,10 +3004,10 @@ for more details.</p>
 </tr>
 </tbody>
 </table>
-<p>The port to use for starting <code>chromedriver</code>/<code>msedgedriver</code>.</p>
-<p>When starting a new session, any existing <code>chromedriver</code>/<code>msedgedriver</code> process listening on the
-same port is terminated first. To run multiple Chromium driver sessions in parallel on the same
-host, assign a unique <code>appium:chromedriverPort</code> to each session.</p>
+<p>The port to use for starting <code>chromedriver</code>/<code>msedgedriver</code>. Must be unique for each session - see
+the <a href="../../guides/parallel-tests/">Testing in Parallel guide</a> for details.</p>
+<p>When starting a new session, any existing <code>chromedriver</code>/<code>msedgedriver</code> processes listening on the
+same port are terminated.</p>
 <h3 id="executable">executable<a class="headerlink" href="#executable" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2931,7 +3025,7 @@ host, assign a unique <code>appium:chromedriverPort</code> to each session.</p>
 </tr>
 </tbody>
 </table>
-<p>Custom path to a <code>chromedriver</code>/<code>msedgedriver</code> binary. The driver applies the default
+<p>Custom path to a <code>chromedriver</code>/<code>msedgedriver</code> binary. This capability is subject to
 <a href="../insecure-features/#chromedriver_allow_any_executable">executable verification rules</a>.</p>
 <h3 id="executabledir">executableDir<a class="headerlink" href="#executabledir" title="Permanent link">&para;</a></h3>
 <table>
@@ -2950,8 +3044,8 @@ host, assign a unique <code>appium:chromedriverPort</code> to each session.</p>
 </tr>
 </tbody>
 </table>
-<p>Custom path to a directory containing <code>chromedriver</code>/<code>msedgedriver</code> binaries. The driver applies the default
-<a href="../insecure-features/#chromedriver_allow_any_executable">executable verification rules</a>.</p>
+<p>Custom path to a directory containing <code>chromedriver</code>/<code>msedgedriver</code> binaries. This capability is
+subject to <a href="../insecure-features/#chromedriver_allow_any_executable">executable verification rules</a>.</p>
 <h3 id="verbose">verbose<a class="headerlink" href="#verbose" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3070,7 +3164,7 @@ automatically downloaded <code>chromedriver</code> upon installation.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 23, 2026 00:11:39 UTC"><span class="timeago" datetime="2026-11-23T00:11:39+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 23, 2026 00:11:39 UTC">2026-11-23</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="November 25, 2026 18:05:19 UTC"><span class="timeago" datetime="2026-11-25T18:05:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="November 25, 2026 18:05:19 UTC">2026-11-25</span>
   </span>
 
     
@@ -3218,7 +3312,7 @@ automatically downloaded <code>chromedriver</code> upon installation.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.edit", "content.code.annotate", "content.code.copy", "content.footnote.tooltips", "content.tabs.link", "content.tooltips", "navigation.indexes", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.top", "toc.follow"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../js/timeago.min.js"></script>
       
