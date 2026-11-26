@@ -7,11 +7,10 @@ import {describe, it, afterEach} from 'node:test';
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
-import {resetModuleMocks, supportStubs} from '../helpers/module-mocks.js';
+import {resetModuleMocks} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
-const {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} =
-  await import('../../../lib/msedge/deployment.js');
+const {locateCachedDriverExecutable, locateDriverExecutableInDir} = await import('../../../lib/msedge/deployment.js');
 const {getDriverExecutableName} = await import('../../../lib/msedge/platform.js');
 const {Version} = await import('../../../lib/msedge/version.js');
 
@@ -89,53 +88,6 @@ describe('msedge deployment domain', () => {
 
       assert.equal(executable, '/tmp/a/custom-driver-bin');
       assert.equal(globStub.firstCall.args[0], '**/custom-driver-bin');
-    });
-  });
-
-  describe('ensureDriver', () => {
-    it('deploys using artifact metadata without platform helpers', async () => {
-      sinon.stub(fs, 'isExecutable').resolves(false);
-      sinon.stub(fs, 'mkdirp').resolves();
-      supportStubs.openTempDir.resolves('/tmp/extract-root');
-      supportStubs.extractAllTo.resolves();
-      sinon.stub(fs, 'chmod').resolves();
-      sinon.stub(fs, 'mv').resolves();
-      sinon.stub(fs, 'rimraf').resolves();
-      sinon.stub(fs, 'glob').resolves(['/tmp/msedgedrivers/123/Driver/custom-msedge-driver']);
-      sinon.stub(fs, 'stat').resolves({isFile: () => true} as Awaited<ReturnType<typeof fs.stat>>);
-
-      const downloadArchive = sinon.stub().resolves();
-
-      const executable = await deployDriverArtifact(
-        {
-          archiveName: 'custom-archive.zip',
-          executableName: 'custom-msedge-driver',
-          version: '123.0.0.0',
-        },
-        '/tmp/msedgedrivers',
-        downloadArchive,
-      );
-
-      assert.equal(downloadArchive.firstCall.args[0], '/tmp/extract-root/custom-archive.zip');
-      assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
-    });
-
-    it('returns existing executable when already present', async () => {
-      sinon.stub(fs, 'isExecutable').resolves(true);
-      const downloadArchive = sinon.stub().resolves();
-
-      const executable = await deployDriverArtifact(
-        {
-          archiveName: 'unused.zip',
-          executableName: 'custom-msedge-driver',
-          version: '123.0.0.0',
-        },
-        '/tmp/msedgedrivers',
-        downloadArchive,
-      );
-
-      assert.equal(executable, '/tmp/msedgedrivers/123.0.0.0/custom-msedge-driver');
-      assert.equal(downloadArchive.called, false);
     });
   });
 });

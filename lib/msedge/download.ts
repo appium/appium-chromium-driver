@@ -1,10 +1,9 @@
-import {net} from 'appium/support.js';
-
 import {getPlatformConfig} from './platform.js';
 import {Version} from './version.js';
 
 const DRIVER_STORAGE_BASE_URL = 'https://msedgedriver.microsoft.com';
 const STORAGE_REQUEST_TIMEOUT_MS = 10_000;
+const ARCHIVE_IDLE_TIMEOUT_MS = 4 * 60 * 1000;
 const UTF16LE_BOM = Buffer.from([0xff, 0xfe]);
 
 /**
@@ -34,10 +33,32 @@ export async function resolveDriverVersionForBrowser(browserVersion: Version): P
 /**
  * Fetch the MSEdgeDriver archive for the given driver version.
  * @param driverVersion The MSEdgeDriver version to download.
- * @param archivePath The local path where the archive should be written.
+ * @yields The downloaded ZIP bytes.
  */
-export async function fetchDriverArchive(driverVersion: Version, archivePath: string): Promise<void> {
-  await net.downloadFile(getDriverDownloadUrl(driverVersion), archivePath);
+export async function* fetchDriverArchive(driverVersion: Version): AsyncGenerator<Uint8Array> {
+  const url = getDriverDownloadUrl(driverVersion);
+  const controller = new AbortController();
+  const timer = setTimeout(
+    () => controller.abort(new Error('Edge WebDriver download timed out')),
+    ARCHIVE_IDLE_TIMEOUT_MS,
+  );
+  try {
+    const response = await fetch(url, {signal: controller.signal});
+    if (!response.ok) {
+      throw new Error(`Cannot retrieve MSEdgeDriver archive from '${url}' (status ${response.status})`);
+    }
+    if (!response.body) {
+      throw new Error(`Cannot retrieve MSEdgeDriver archive from '${url}': response has no body`);
+    }
+    timer.refresh();
+    for await (const chunk of response.body) {
+      timer.refresh();
+      yield chunk;
+    }
+  } finally {
+    clearTimeout(timer);
+    controller.abort();
+  }
 }
 
 function getLatestReleaseUrl(browserVersion: Version): string {

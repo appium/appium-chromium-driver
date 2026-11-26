@@ -26,9 +26,8 @@ By default, the driver checks each executable against the SHA-256 checksums ship
 - **ChromeDriver:** Checksums are recorded for each downloaded binary, including downloads made by
   the [`install-chromedriver`](./scripts.md#install-chromedriver) script. This allows the driver to
   run such binaries even before their checksums ship with `appium-chromedriver`.
-- **Edge WebDriver:** Checksums for downloads are not recorded. If a downloaded build is missing
-  from the shipped checksums, session creation fails verification. To use that build with
-  verification enabled, update to a version of `appium-chromedriver` that includes its checksum.
+- **Edge WebDriver:** When the Chromium driver installs Edge WebDriver from Microsoft, it records
+  the checksum of the freshly extracted executable. Subsequent sessions can reuse that build from the cache.
 
 The same verification applies to executables supplied via [`appium:executable`](./capabilities.md#executable)
 or [`appium:executableDir`](./capabilities.md#executabledir). Running a binary with an unrecognized

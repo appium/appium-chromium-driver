@@ -1,10 +1,15 @@
+import path from 'node:path';
+
+import {installDriverFromArchive} from 'appium-chromedriver';
+import {fs} from 'appium/support.js';
+
 import type {BrowserInfo} from '../types.js';
 import {getDefaultMsEdgeDriverDir} from '../utils/index.js';
 import {discoverBrowserVersion, getBrowserCandidates} from './browser-candidates.js';
 import {isMsEdge} from './browser-identity.js';
-import {deployDriverArtifact, locateCachedDriverExecutable, locateDriverExecutableInDir} from './deployment.js';
+import {locateCachedDriverExecutable, locateDriverExecutableInDir} from './deployment.js';
 import {fetchDriverArchive, resolveDriverVersionForBrowser} from './download.js';
-import {getDriverExecutableName, getPlatformConfig} from './platform.js';
+import {getDriverExecutableName} from './platform.js';
 import {Version} from './version.js';
 
 interface DriverResolveOpts {
@@ -17,7 +22,7 @@ interface DriverResolveOpts {
  * Determine the MSEdgeDriver executable path for the current session request.
  * It returns opts.executable if it is provided.
  * If not, it checks whether the browser is Microsoft Edge and returns undefined for non-Edge sessions.
- * For Edge sessions it trusts an existing executable from opts.executableDir. Otherwise, it reuses
+ * For Edge sessions it selects an existing executable from opts.executableDir. Otherwise, it reuses
  * a compatible driver from the default cache before downloading when autodownload is enabled.
  * If any step fails for a Microsoft Edge session, it throws an error.
  * @param opts The options for resolving the driver executable.
@@ -70,14 +75,16 @@ export async function determineDriverExecutable(
 
   try {
     const driverVersion = await resolveDriverVersionForBrowser(browserVersion);
-    const artifact = {
-      archiveName: getPlatformConfig().archiveName,
-      executableName,
-      version: driverVersion.toString(),
-    };
-    return await deployDriverArtifact(artifact, executableDir, async (archivePath) => {
-      await fetchDriverArchive(driverVersion, archivePath);
-    });
+    const destination = path.join(executableDir, driverVersion.toString(), executableName);
+    if (await fs.isExecutable(destination)) {
+      return destination;
+    }
+    const archive = fetchDriverArchive(driverVersion);
+    try {
+      return await installDriverFromArchive({archive, executableName, destination});
+    } finally {
+      await archive.return(undefined);
+    }
   } catch (err) {
     throw new Error(
       `Failed to resolve MSEdgeDriver executable for Edge version '${browserVersion.toString()}' ` +
