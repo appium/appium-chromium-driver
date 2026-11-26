@@ -1,3 +1,9 @@
+## [5.1.0](https://github.com/appium/appium-chromium-driver/compare/v5.0.0...v5.1.0) (2026-11-26)
+
+### Features
+
+* register official Edge WebDriver downloads via the archive installer ([#492](https://github.com/appium/appium-chromium-driver/issues/492)) ([b10a8f3](https://github.com/appium/appium-chromium-driver/commit/b10a8f30abc1dc8b6ac98d1ae355a43b3095cd39))
+
 ## [5.0.0](https://github.com/appium/appium-chromium-driver/compare/v4.0.2...v5.0.0) (2026-11-22)
 
 ### ⚠ BREAKING CHANGES
