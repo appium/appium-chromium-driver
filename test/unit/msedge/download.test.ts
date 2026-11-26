@@ -38,6 +38,12 @@ it('allows transfers longer than four minutes and aborts after four minutes with
   await stalled;
 });
 
+it('reports a missing body when the archive request succeeds', async () => {
+  sinon.stub(globalThis, 'fetch').resolves(new Response(null, {status: 200}));
+  const archive = fetchDriverArchive(Version.from('147.0.3179.98'));
+  await assert.rejects(archive.next(), /response has no body/);
+});
+
 it('cancels the response body when the installer stops reading', async () => {
   const cancel = sinon.spy();
   const body = new ReadableStream<Uint8Array>({

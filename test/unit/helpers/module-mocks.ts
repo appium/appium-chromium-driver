@@ -5,7 +5,7 @@ import * as real from 'appium/support.js';
 import sinon from 'sinon';
 import * as realTeenProcess from 'teen_process';
 
-// Appium 4 exposes system as a read-only ES namespace, so they can only be mocked at module level.
+// Mock the modules to stub the read-only system.isWindows and installDriverFromArchive exports.
 // Import this file first, then load the code under test via dynamic import().
 export const installDriverFromArchiveStub = sinon.stub();
 
@@ -15,7 +15,7 @@ export const supportStubs = {
   isWindows: sinon.stub(),
 };
 
-/** Reset call history and make every stub delegate to the real implementation again. */
+/** Reset the stubs and restore the default implementations for exec and isWindows. */
 export function resetModuleMocks(): void {
   installDriverFromArchiveStub.reset();
   execStub.reset();

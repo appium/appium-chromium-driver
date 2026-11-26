@@ -63,7 +63,9 @@ describe('msedge index orchestrator domain', () => {
 
   it('does not use an incompatible cache or access the network when autodownload is disabled', async () => {
     sinon.stub(fs, 'glob').resolves([path.join(getDefaultDriverDir(), '146.0.3179.98', getDriverExecutableName())]);
+    const fetchStub = sinon.stub(globalThis, 'fetch');
     assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo, false), undefined);
+    sinon.assert.notCalled(fetchStub);
     sinon.assert.notCalled(installDriverFromArchiveStub);
   });
 

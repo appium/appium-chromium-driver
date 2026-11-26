@@ -44,8 +44,11 @@ export async function* fetchDriverArchive(driverVersion: Version): AsyncGenerato
   );
   try {
     const response = await fetch(url, {signal: controller.signal});
-    if (!response.ok || !response.body) {
+    if (!response.ok) {
       throw new Error(`Cannot retrieve MSEdgeDriver archive from '${url}' (status ${response.status})`);
+    }
+    if (!response.body) {
+      throw new Error(`Cannot retrieve MSEdgeDriver archive from '${url}': response has no body`);
     }
     timer.refresh();
     for await (const chunk of response.body) {
