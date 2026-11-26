@@ -11,21 +11,21 @@ appium driver run chromium <script-name>
 
 For more information about the `appium driver run` command, refer to [the Appium docs](https://appium.io/docs/en/latest/reference/cli/extensions/#run).
 
-### `install-chromedriver`
+## `install-chromedriver`
 
-Downloads and installs a `chromedriver` server binary. Available since Chromium driver version 1.4.0.
+Downloads and installs a `chromedriver` server binary.
 
 By default, [the last known good stable version](https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints)
 for the current host platform is installed. This behavior can be adjusted with the environment
 variables listed below.
 
-#### Usage
+### Usage
 
 ```
 appium driver run chromium install-chromedriver
 ```
 
-##### Optional Environment Variables
+#### Optional Environment Variables
 
 |<div style="width:15em">Variable</div>|<div style="width:14em">Description</div>|Default|
 |--|--|--|
@@ -34,10 +34,10 @@ appium driver run chromium install-chromedriver
 |`CHROMEDRIVER_CDNURL`|Custom CDN to use for downloading binary versions below 115|https://chromedriver.storage.googleapis.com|
 |`CHROMELABS_URL`|Custom CDN to use for downloading binary version 115 or above|https://googlechromelabs.github.io|
 
-Refer to the [`appium-chromedriver` documentation](https://github.com/appium/appium-chromedriver#custom-binaries-url)
+Refer to the [`appium-chromedriver` documentation](https://github.com/appium/appium-android/tree/main/packages/chromedriver#custom-binaries-url)
 for more information about the latter two variables.
 
-#### Examples
+### Examples
 
 - Install the latest known good stable version of `chromedriver`:
 
