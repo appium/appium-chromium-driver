@@ -5,9 +5,9 @@ import * as real from 'appium/support.js';
 import sinon from 'sinon';
 import * as realTeenProcess from 'teen_process';
 
-// Mock the modules to stub the read-only system.isWindows and installDriverFromArchive exports.
+// Mock the modules to stub the read-only system.isWindows and installDriverFromCdn exports.
 // Import this file first, then load the code under test via dynamic import().
-export const installDriverFromArchiveStub = sinon.stub();
+export const installDriverFromCdnStub = sinon.stub();
 
 export const execStub = sinon.stub();
 
@@ -17,7 +17,7 @@ export const supportStubs = {
 
 /** Reset the stubs and restore the default implementations for exec and isWindows. */
 export function resetModuleMocks(): void {
-  installDriverFromArchiveStub.reset();
+  installDriverFromCdnStub.reset();
   execStub.reset();
   execStub.callsFake(realTeenProcess.exec);
   supportStubs.isWindows.reset();
@@ -33,7 +33,7 @@ function withoutDefault<T extends {default?: unknown}>(ns: T): Omit<T, 'default'
 }
 mock.module('appium-chromedriver', {
   defaultExport: chromedriver.default,
-  namedExports: {...withoutDefault(chromedriver), installDriverFromArchive: installDriverFromArchiveStub},
+  namedExports: {...withoutDefault(chromedriver), installDriverFromCdn: installDriverFromCdnStub},
 });
 
 mock.module('appium/support.js', {
