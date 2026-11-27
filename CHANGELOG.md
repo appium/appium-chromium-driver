@@ -1,3 +1,9 @@
+## [5.1.1](https://github.com/appium/appium-chromium-driver/compare/v5.1.0...v5.1.1) (2026-11-27)
+
+### Miscellaneous Chores
+
+* bump @appium/types to v3 ([#494](https://github.com/appium/appium-chromium-driver/issues/494)) ([749268b](https://github.com/appium/appium-chromium-driver/commit/749268b392e9941d452f89376f8888c105d5385a))
+
 ## [5.1.0](https://github.com/appium/appium-chromium-driver/compare/v5.0.0...v5.1.0) (2026-11-26)
 
 ### Features
