@@ -1,17 +1,16 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import {buffer} from 'node:stream/consumers';
 import {describe, it, afterEach, beforeEach} from 'node:test';
 
 import {fs} from 'appium/support.js';
 import sinon from 'sinon';
 
 import type {BrowserInfo} from '../../../lib/types.js';
-import {resetModuleMocks, installDriverFromArchiveStub} from '../helpers/module-mocks.js';
+import {resetModuleMocks, installDriverFromCdnStub} from '../helpers/module-mocks.js';
 
 // Load after the module mock is installed.
 const {determineDriverExecutable, getDefaultDriverDir} = await import('../../../lib/msedge/index.js');
-const {getDriverExecutableName, getPlatformConfig} = await import('../../../lib/msedge/platform.js');
+const {getDriverExecutableName, getReleaseChannel} = await import('../../../lib/msedge/platform.js');
 
 describe('msedge index orchestrator domain', () => {
   beforeEach(() => {
@@ -57,7 +56,7 @@ describe('msedge index orchestrator domain', () => {
         cached,
       );
       sinon.assert.notCalled(fetchStub);
-      sinon.assert.notCalled(installDriverFromArchiveStub);
+      sinon.assert.notCalled(installDriverFromCdnStub);
     });
   }
 
@@ -66,7 +65,7 @@ describe('msedge index orchestrator domain', () => {
     const fetchStub = sinon.stub(globalThis, 'fetch');
     assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo, false), undefined);
     sinon.assert.notCalled(fetchStub);
-    sinon.assert.notCalled(installDriverFromArchiveStub);
+    sinon.assert.notCalled(installDriverFromCdnStub);
   });
 
   it('returns undefined when autodownload is disabled and no driver exists in executableDir', async () => {
@@ -94,27 +93,23 @@ describe('msedge index orchestrator domain', () => {
       sinon.stub(fs, 'glob').resolves([]);
       const executableDir = customDir ?? getDefaultDriverDir();
       const installed = path.join(executableDir, '147.0.3179.98', getDriverExecutableName());
-      const {releaseChannel, archiveName} = getPlatformConfig();
-      const baseUrl = 'https://msedgedriver.microsoft.com';
       const fetchStub = sinon.stub(globalThis, 'fetch');
       fetchStub
-        .withArgs(`${baseUrl}/LATEST_RELEASE_147_${releaseChannel}`, sinon.match.any)
+        .withArgs(`https://msedgedriver.microsoft.com/LATEST_RELEASE_147_${getReleaseChannel()}`, sinon.match.any)
         .resolves(new Response(Buffer.from('\uFEFF147.0.3179.98\n', 'utf16le')));
       sinon.stub(fs, 'isExecutable').resolves(false);
-      const archiveUrl = `${baseUrl}/147.0.3179.98/${archiveName}`;
-      fetchStub.withArgs(archiveUrl, sinon.match.any).resolves(new Response('archive'));
-      installDriverFromArchiveStub.callsFake(async ({archive, executableName, destination}) => {
-        assert.equal((await buffer(archive)).toString(), 'archive');
-        assert.equal(executableName, getDriverExecutableName());
-        assert.equal(destination, installed);
-        return installed;
-      });
+      installDriverFromCdnStub.resolves(installed);
+
       assert.equal(
         await determineDriverExecutable({browserName: 'msedge', executableDir: customDir}, browserVersionInfo),
         installed,
       );
-      sinon.assert.calledTwice(fetchStub);
-      sinon.assert.calledOnce(installDriverFromArchiveStub);
+      sinon.assert.calledOnce(fetchStub);
+      sinon.assert.calledOnceWithExactly(installDriverFromCdnStub, {
+        browser: 'edge',
+        version: '147.0.3179.98',
+        destination: installed,
+      });
     });
   }
 
@@ -126,29 +121,18 @@ describe('msedge index orchestrator domain', () => {
     assert.equal(await determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), destination);
     sinon.assert.callOrder(lookup, isExecutable);
     sinon.assert.calledOnce(lookup);
-    sinon.assert.notCalled(installDriverFromArchiveStub);
+    sinon.assert.notCalled(installDriverFromCdnStub);
   });
 
-  it('skips the archive request when installation fails before consuming it', async () => {
+  it('wraps installation failures with the browser version and directory', async () => {
     sinon.stub(fs, 'glob').resolves([]);
     sinon.stub(fs, 'isExecutable').resolves(false);
-    const lookup = sinon.stub(globalThis, 'fetch').resolves(new Response('147.0.3179.98'));
-    installDriverFromArchiveStub.rejects(new Error('cannot create staging directory'));
+    sinon.stub(globalThis, 'fetch').resolves(new Response('147.0.3179.98'));
+    installDriverFromCdnStub.rejects(new Error('status 404'));
 
     await assert.rejects(
       determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo),
-      /cannot create staging directory/,
+      /Failed to resolve MSEdgeDriver executable for Edge version '147\.0\.3179\.85'.*status 404/,
     );
-    sinon.assert.calledOnce(lookup);
-  });
-
-  it('propagates a failed Microsoft archive download before registration', async () => {
-    sinon.stub(fs, 'glob').resolves([]);
-    sinon.stub(fs, 'isExecutable').resolves(false);
-    const lookup = sinon.stub(globalThis, 'fetch');
-    lookup.onFirstCall().resolves(new Response('147.0.3179.98'));
-    lookup.onSecondCall().resolves(new Response(null, {status: 404}));
-    installDriverFromArchiveStub.callsFake(({archive}) => buffer(archive));
-    await assert.rejects(determineDriverExecutable({browserName: 'msedge'}, browserVersionInfo), /status 404/);
   });
 });

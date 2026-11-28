@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@appium/strongbox": "^3.0.0",
-    "appium-chromedriver": "^11.1.1",
+    "appium-chromedriver": "^11.2.0",
     "teen_process": "^5.0.1"
   },
   "devDependencies": {

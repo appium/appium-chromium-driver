@@ -1,37 +1,22 @@
-export interface DriverPlatformConfig {
-  archiveName: string;
-  releaseChannel: 'WINDOWS' | 'MACOS' | 'LINUX';
-}
+export type ReleaseChannel = 'WINDOWS' | 'MACOS' | 'LINUX';
+
+const RELEASE_CHANNELS: Partial<Record<NodeJS.Platform, ReleaseChannel>> = {
+  win32: 'WINDOWS',
+  darwin: 'MACOS',
+  linux: 'LINUX',
+};
 
 /**
- * Get the platform-specific configuration for MSEdgeDriver.
+ * Get the MSEdgeDriver release channel of the platform.
  * @param platform The platform name.
- * @param arch The architecture name.
- * @returns The platform configuration.
+ * @returns The release channel.
  */
-export function getPlatformConfig(platform = process.platform, arch = process.arch): DriverPlatformConfig {
-  if (platform === 'win32') {
-    if (arch === 'arm64') {
-      return {archiveName: 'edgedriver_arm64.zip', releaseChannel: 'WINDOWS'};
-    }
-    if (arch === 'x64') {
-      return {archiveName: 'edgedriver_win64.zip', releaseChannel: 'WINDOWS'};
-    }
-    return {archiveName: 'edgedriver_win32.zip', releaseChannel: 'WINDOWS'};
+export function getReleaseChannel(platform = process.platform): ReleaseChannel {
+  const channel = RELEASE_CHANNELS[platform];
+  if (!channel) {
+    throw new Error(`Unsupported platform for MSEdgeDriver autodownload: ${platform}`);
   }
-
-  if (platform === 'darwin') {
-    return {
-      archiveName: arch === 'arm64' ? 'edgedriver_mac64_m1.zip' : 'edgedriver_mac64.zip',
-      releaseChannel: 'MACOS',
-    };
-  }
-
-  if (platform === 'linux') {
-    return {archiveName: 'edgedriver_linux64.zip', releaseChannel: 'LINUX'};
-  }
-
-  throw new Error(`Unsupported platform for MSEdgeDriver autodownload: ${platform}`);
+  return channel;
 }
 
 /**
